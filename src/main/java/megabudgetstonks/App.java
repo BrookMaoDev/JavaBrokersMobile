@@ -1,11 +1,17 @@
 package megabudgetstonks;
 
 /**
- * Last modified: Mon Dec 19, 2022
+ * Last modified: ___ ___ __, 2022
  *
  */
 public class App {
+    public static void cls() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+    
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        APIAccess api = new APIAccess("AAPL");
+        System.out.println(api.getSymbol());
     }
 }
