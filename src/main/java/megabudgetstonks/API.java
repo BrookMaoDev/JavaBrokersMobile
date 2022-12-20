@@ -6,16 +6,10 @@ import yahoofinance.quotes.stock.StockQuote;
 import yahoofinance.YahooFinance;
 import java.math.BigDecimal;
 
-class APIAccess {
+class API {
     public StockQuote stock;
 
-    public APIAccess(String symbol) {
-        try {
-            stock = YahooFinance.get(symbol.toUpperCase()).getQuote();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
+    public API() {}
 
     public void setSymbol(String symbol) {
         try {
