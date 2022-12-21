@@ -14,10 +14,14 @@ public class StockData {
     public ArrayList<String> getData(String dataType) {
         // Data types: "trending-tickers", "gainers", "losers", "crypto"
         ArrayList<String> data = new ArrayList<String>();
+        // URL with data type to determine what data to scrape
         String url = "https://finance.yahoo.com/" + dataType;
         try {
+            // Parse site to HTML
             Document doc = Jsoup.connect(url).get();
+            // Retrieve elements from table
             Elements tickers = doc.getElementsByClass("simpTblRow");
+            // Retrieve all ticker names
             for (Element ticker : tickers) {
                 data.add((String) ticker.text().substring(0, ticker.text().indexOf(' ')));
             }
