@@ -1,6 +1,5 @@
 package megabudgetstonks;
 
-
 import java.io.IOException;
 import yahoofinance.quotes.stock.StockQuote;
 import yahoofinance.YahooFinance;
