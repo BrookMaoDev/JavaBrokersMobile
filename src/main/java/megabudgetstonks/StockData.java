@@ -5,43 +5,76 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class StockData {
     public StockData() {
     }
 
-    public String[] getTrendingTickers() throws IOException {
-        String[] trendingTickers = new String[20];
-        int numTickers = 0;
-        final String url = "https://stockanalysis.com/trending/";
-        try {
-            final Document document = Jsoup.connect(url).get();
-            String tickerIdx = "td:nth-of-type(2)";
-            for (Element row : document.select("table.symbol-table.svelte-1ga61q3 tr")) {
-                if (row.select(tickerIdx).text().equals("")) {
-                    continue;
-                } else {
-                    trendingTickers[numTickers] = row.select(tickerIdx).text();
-                    numTickers++;
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return trendingTickers;
-    }
-
-    public void test() {
-        String url = "https://finance.yahoo.com/trending-tickers/";
+    public ArrayList<String> getData(String dataType) {
+        // Data types: "trending-tickers", "gainers", "losers", "crypto"
+        ArrayList<String> data = new ArrayList<String>();
+        String url = "https://finance.yahoo.com/" + dataType;
         try {
             Document doc = Jsoup.connect(url).get();
-            Elements content = doc.getElementsByClass(
-                    "Va(m).Ta(start).Pstart(6px).Pend(15px).Start(0).Pend(10px).simpTblRow:h_Bgc($hoverBgColor).Pos(st).Bgc($lv3BgColor).Z(1).Bgc($lv2BgColor).Ta(start)!.Fz(s)");
-            for (Element e : content) {
-                System.out.println(e.text());
+            Elements tickers = doc.getElementsByClass("simpTblRow");
+            for (Element ticker : tickers) {
+                data.add((String) ticker.text().substring(0, ticker.text().indexOf(' ')));
             }
+            return data;
         } catch (IOException e) {
             System.out.println(e);
         }
+        return null;
     }
+
+    // More specific methods
+
+    // public ArrayList<String> getCryptoTickers() {
+    //     ArrayList<String> crypto = new ArrayList<String>();
+    //     String url = "https://finance.yahoo.com/crypto";
+    //     try {
+    //         Document doc = Jsoup.connect(url).get();
+    //         Elements tickers = doc.getElementsByClass("simpTblRow");
+    //         for (Element ticker : tickers) {
+    //             crypto.add((String) ticker.text().substring(0, ticker.text().indexOf(' ')));
+    //         }
+    //         return crypto;
+    //     } catch (IOException e) {
+    //         System.out.println(e);
+    //     }
+    //     return null;
+    // }
+
+    // public ArrayList<String> getGainers() {
+    //     ArrayList<String> gainers = new ArrayList<String>();
+    //     String url = "https://finance.yahoo.com/gainers";
+    //     try {
+    //         Document doc = Jsoup.connect(url).get();
+    //         Elements tickers = doc.getElementsByClass("simpTblRow");
+    //         for (Element ticker : tickers) {
+    //             gainers.add((String) ticker.text().substring(0, ticker.text().indexOf(' ')));
+    //         }
+    //         return gainers;
+    //     } catch (IOException e) {
+    //         System.out.println(e);
+    //     }
+    //     return null;
+    // }
+
+    // public ArrayList<String> getLosers() {
+    //     ArrayList<String> losers = new ArrayList<String>();
+    //     String url = "https://finance.yahoo.com/losers";
+    //     try {
+    //         Document doc = Jsoup.connect(url).get();
+    //         Elements tickers = doc.getElementsByClass("simpTblRow");
+    //         for (Element ticker : tickers) {
+    //             losers.add((String) ticker.text().substring(0, ticker.text().indexOf(' ')));
+    //         }
+    //         return losers;
+    //     } catch (IOException e) {
+    //         System.out.println(e);
+    //     }
+    //     return null;
+    // }
 }
