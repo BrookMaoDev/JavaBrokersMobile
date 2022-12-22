@@ -10,9 +10,11 @@ import java.util.ArrayList;
 public class StockData {
     public StockData() {
     }
-
+    
+    /**
+     * Data types: "trending-tickers", "gainers", "losers", "crypto"
+    */
     public ArrayList<String> getData(String dataType) {
-        // Data types: "trending-tickers", "gainers", "losers", "crypto"
         ArrayList<String> data = new ArrayList<String>();
         // URL with data type to determine what data to scrape
         String url = "https://finance.yahoo.com/" + dataType;
