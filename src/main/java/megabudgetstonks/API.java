@@ -6,9 +6,10 @@ import yahoofinance.YahooFinance;
 import java.math.BigDecimal;
 
 class API {
-    public StockQuote stock;
+    private StockQuote stock;
 
-    public API() {}
+    public API() {
+    }
 
     public void setSymbol(String symbol) {
         try {
@@ -34,7 +35,7 @@ class API {
         return stock.getOpen();
     }
 
-    public BigDecimal getBid( ){
+    public BigDecimal getBid() {
         return stock.getBid();
     }
 
@@ -44,10 +45,6 @@ class API {
 
     public Long getVolume() {
         return stock.getVolume();
-    }
-
-    public Long getAvgVolume() {
-        return stock.getAvgVolume();
     }
 
     public BigDecimal getChange() {

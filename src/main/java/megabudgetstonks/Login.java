@@ -7,8 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Login {
-    private final int KEY = 5;
-    private final String DB_PATH = "src/main/java/megabudgetstonks/logins.db";
+    private static final int KEY = 5;
+    private static final String DB_PATH = "src/main/java/megabudgetstonks/logins.db";
 
     public Login() {
     }
@@ -18,8 +18,9 @@ public class Login {
             // Searches for username & password combination
             BufferedReader br = new BufferedReader(new FileReader(DB_PATH));
             String line = "";
+            String encryptedPassword = encryptPassword(password);
             while ((line = br.readLine()) != null) {
-                if (line.equals(username) && br.readLine().equals(encryptPassword(password))) {
+                if (line.equals(username) && br.readLine().equals(encryptedPassword)) {
                     br.close();
                     return true;
                 }
