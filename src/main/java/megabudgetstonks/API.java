@@ -4,6 +4,8 @@ import java.io.IOException;
 import yahoofinance.quotes.stock.StockQuote;
 import yahoofinance.YahooFinance;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 class API {
     private StockQuote stock;
@@ -23,35 +25,32 @@ class API {
         return stock.getSymbol();
     }
 
-    public BigDecimal getPrice() {
-        return stock.getPrice();
+    public String getPrice() {
+        return stock.getPrice().setScale(2, RoundingMode.HALF_EVEN).toString();
     }
 
-    public BigDecimal getPreviousClose() {
-        return stock.getPreviousClose();
+    public String getPreviousClose() {
+        return stock.getPreviousClose().setScale(2, RoundingMode.HALF_EVEN).toString();
     }
 
-    public BigDecimal getOpen() {
-        return stock.getOpen();
+    public String getOpen() {
+        return stock.getOpen().setScale(2, RoundingMode.HALF_EVEN).toString();
     }
 
-    public BigDecimal getBid() {
-        return stock.getBid();
+    public String getVolume() {
+        return stock.getVolume().toString();
     }
 
-    public BigDecimal getAsk() {
-        return stock.getAsk();
+    public String getChange() {
+        // Set max decimal places to 8
+        DecimalFormat df = new DecimalFormat("#.########");
+        df.setRoundingMode(RoundingMode.HALF_EVEN);
+        BigDecimal n = stock.getChange();
+        Double d = n.doubleValue();
+        return df.format(d);
     }
 
-    public Long getVolume() {
-        return stock.getVolume();
-    }
-
-    public BigDecimal getChange() {
-        return stock.getChange();
-    }
-
-    public BigDecimal getPercentChange() {
-        return stock.getChangeInPercent();
+    public String getPercentChange() {
+        return stock.getChangeInPercent().setScale(2, RoundingMode.HALF_EVEN).toString();
     }
 }
