@@ -26,12 +26,18 @@ public class MegaBudgetStonks {
             // Create panels for each ticker
             Panel mainPanel = new Panel();
             Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
+            // table.setPreferredSize(new TerminalSize(40, 10));
 
             ArrayList<String> data = stockData.getData("trending-tickers");
-            for (int i = 0; i < 10; i++) {
-                api.setSymbol(data.get(i));
-                table.getTableModel().addRow(api.getSymbol(), api.getPrice().toString(), api.getChange().toString(),
-                        api.getPercentChange().toString());
+            int c = 10;
+            for (int i = 0; i < c; i++) {
+                try {
+                    api.setSymbol(data.get(i));
+                    table.getTableModel().addRow(api.getSymbol(), api.getPrice(), api.getChange(),
+                            api.getPercentChange() + "%");
+                } catch (Exception e) {
+                    c++;
+                }
             }
             mainPanel.addComponent(table);
 
