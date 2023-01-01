@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
@@ -15,6 +15,14 @@ import com.googlecode.lanterna.terminal.Terminal;
 public class MegaBudgetStonks {
     private API api = new API();
     private StockData stockData = new StockData();
+    private String dataSetting;
+
+    /**
+     * Data types: "most-active", "gainers", "losers", "crypto"
+     */
+    public void setDataSetting(String dataSetting) {
+        this.dataSetting = dataSetting;
+    }
 
     public void megabudgetstonks() {
         try {
@@ -25,11 +33,12 @@ public class MegaBudgetStonks {
 
             // Create panels for each ticker
             Panel mainPanel = new Panel();
+            mainPanel.setFillColorOverride(ANSI.WHITE);
             Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
             // table.setPreferredSize(new TerminalSize(40, 10));
 
-            ArrayList<String> data = stockData.getData("trending-tickers");
-            int c = 10;
+            ArrayList<String> data = stockData.getData(dataSetting);
+            int c = 50;
             for (int i = 0; i < c; i++) {
                 try {
                     api.setSymbol(data.get(i));
@@ -42,13 +51,14 @@ public class MegaBudgetStonks {
             mainPanel.addComponent(table);
 
             // Create window
-            BasicWindow window = new BasicWindow();
-            window.setHints(Arrays.asList(Window.Hint.CENTERED, Window.Hint.FULL_SCREEN, Window.Hint.NO_DECORATIONS));
-            window.setComponent(mainPanel);
+            BasicWindow window = new BasicWindow("MegaBudgetStonks");
+            window.setCloseWindowWithEscape(true);
+            window.setHints(Arrays.asList(Window.Hint.CENTERED, Window.Hint.CENTERED));
+            window.setComponent(mainPanel.withBorder(Borders.singleLine(dataSetting)));
 
             // Create gui and start gui
             MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(),
-                    new EmptySpace(TextColor.ANSI.BLUE));
+                    new EmptySpace(ANSI.BLACK));
             gui.addWindowAndWait(window);
         } catch (IOException e) {
             System.out.println(e);
