@@ -11,11 +11,11 @@ public class StockData {
     }
 
     /**
-     * Data types: "trending-tickers", "gainers", "losers", "crypto"
+     * Data types: "most-active", "gainers", "losers", "crypto"
      */
     public ArrayList<String> getData(String dataType) {
         // URL with data type to determine what data to scrape
-        String url = "https://finance.yahoo.com/" + dataType;
+        String url = "https://finance.yahoo.com/" + dataType + "?count=100&offset=0";
         try {
             // Parse site to HTML
             Document doc = Jsoup.connect(url).get();
