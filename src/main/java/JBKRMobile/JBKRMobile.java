@@ -1,4 +1,4 @@
-package megabudgetstonks;
+package JBKRMobile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
-public class MegaBudgetStonks {
+public class JBKRMobile {
     private API api = new API();
     private StockData stockData = new StockData();
     private String dataSetting;

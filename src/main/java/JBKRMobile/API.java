@@ -1,4 +1,4 @@
-package megabudgetstonks;
+package JBKRMobile;
 
 import java.io.IOException;
 import yahoofinance.quotes.stock.StockQuote;

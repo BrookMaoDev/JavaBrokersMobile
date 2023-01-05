@@ -1,4 +1,4 @@
-package megabudgetstonks;
+package JBKRMobile;
 
 /**
  * Last modified: ___ ___ __, 2022

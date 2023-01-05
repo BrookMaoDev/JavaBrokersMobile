@@ -1,4 +1,4 @@
-package megabudgetstonks;
+package JBKRMobile;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
