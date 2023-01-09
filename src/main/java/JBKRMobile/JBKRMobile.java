@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.menu.Menu;
+import com.googlecode.lanterna.gui2.menu.MenuBar;
+import com.googlecode.lanterna.gui2.menu.MenuItem;
 import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
@@ -14,8 +17,13 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 public class JBKRMobile {
     private API api = new API();
-    private StockData stockData = new StockData();
+    private static final StockData STOCK_DATA = new StockData();
     private String dataSetting;
+    private static final String DEFAULT_DATA_SETTING = "most-active";
+    private boolean loggedIn;
+
+    public JBKRMobile() {
+    }
 
     /**
      * Data types: "most-active", "gainers", "losers", "crypto"
@@ -24,7 +32,7 @@ public class JBKRMobile {
         this.dataSetting = dataSetting;
     }
 
-    public void megabudgetstonks() {
+    public void run() {
         try {
             // Setup terminal/console and screen layers
             Terminal terminal = new DefaultTerminalFactory().createTerminal();
@@ -37,7 +45,7 @@ public class JBKRMobile {
             Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
             // table.setPreferredSize(new TerminalSize(40, 10));
 
-            ArrayList<String> data = stockData.getData(dataSetting);
+            ArrayList<String> data = STOCK_DATA.getData(dataSetting);
             int c = 50;
             for (int i = 0; i < c; i++) {
                 try {
@@ -50,8 +58,19 @@ public class JBKRMobile {
             }
             mainPanel.addComponent(table);
 
+            // test menu
+            MenuBar menubar = new MenuBar();
+            Menu menu = new Menu("Login");
+            // add login here
+            MenuItem username = new MenuItem("Username: ");
+            MenuItem password = new MenuItem("Password; ");
+            menu.add(username);
+            menu.add(password);
+            menubar.add(menu);
+            mainPanel.addComponent(menubar);
+
             // Create window
-            BasicWindow window = new BasicWindow("MegaBudgetStonks");
+            BasicWindow window = new BasicWindow("JBKR Mobile");
             window.setCloseWindowWithEscape(true);
             window.setHints(Arrays.asList(Window.Hint.CENTERED, Window.Hint.CENTERED));
             window.setComponent(mainPanel.withBorder(Borders.singleLine(dataSetting)));
