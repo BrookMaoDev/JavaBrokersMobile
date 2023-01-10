@@ -7,6 +7,10 @@ public abstract class Transaction {
     private long quantity;
     private double price;
 
+    public static double getFee() {
+        return FEE;
+    }
+
     public String getDate() {
         return date;
     }
