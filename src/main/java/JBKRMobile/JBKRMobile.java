@@ -6,14 +6,9 @@ import java.util.Arrays;
 
 import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
-import com.googlecode.lanterna.gui2.menu.Menu;
-import com.googlecode.lanterna.gui2.menu.MenuBar;
-import com.googlecode.lanterna.gui2.menu.MenuItem;
 import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
 
 public class JBKRMobile {
     private API api = new API();
@@ -33,17 +28,31 @@ public class JBKRMobile {
     }
 
     public void run() {
+        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
+        Screen screen = null;
         try {
-            // Setup terminal/console and screen layers
-            Terminal terminal = new DefaultTerminalFactory().createTerminal();
-            Screen screen = new TerminalScreen(terminal);
+            screen = terminalFactory.createScreen();
             screen.startScreen();
 
-            // Create panels for each ticker
-            Panel mainPanel = new Panel();
-            mainPanel.setFillColorOverride(ANSI.WHITE);
+            final Window window = new BasicWindow("JBKR Mobile");
+
+            Panel tickerPanel = new Panel();
+
+            // GridLayout gridLayout = (GridLayout) tickerPanel.getLayoutManager();
+            // gridLayout.setHorizontalSpacing(3);
+
+            // Create panels for tickers
+            tickerPanel.setFillColorOverride(ANSI.WHITE);
             Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
-            // table.setPreferredSize(new TerminalSize(40, 10));
+            // table.setLayoutData(GridLayout.createLayoutData(
+            //         GridLayout.Alignment.BEGINNING, // Horizontal alignment in the grid cell if the cell is larger than
+            //                                         // the component's preferred size
+            //         GridLayout.Alignment.BEGINNING, // Vertical alignment in the grid cell if the cell is larger than
+            //                                         // the component's preferred size
+            //         true, // Give the component extra horizontal space if available
+            //         false, // Give the component extra vertical space if available
+            //         2, // Horizontal span
+            //         1));
 
             ArrayList<String> data = STOCK_DATA.getData(dataSetting);
             int c = 50;
@@ -56,24 +65,18 @@ public class JBKRMobile {
                     c++;
                 }
             }
-            mainPanel.addComponent(table);
+            tickerPanel.addComponent(table);
 
-            // test menu
-            MenuBar menubar = new MenuBar();
-            Menu menu = new Menu("Login");
-            // add login here
-            MenuItem username = new MenuItem("Username: ");
-            MenuItem password = new MenuItem("Password; ");
-            menu.add(username);
-            menu.add(password);
-            menubar.add(menu);
-            mainPanel.addComponent(menubar);
+            // tickerPanel.addComponent(new Label("Username: "));
+            // tickerPanel.addComponent(
+            //         new TextBox()
+            //                 .setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.BEGINNING,
+            //                         GridLayout.Alignment.CENTER)));
+            // tickerPanel.addComponent(tickerPanel);
 
             // Create window
-            BasicWindow window = new BasicWindow("JBKR Mobile");
-            window.setCloseWindowWithEscape(true);
-            window.setHints(Arrays.asList(Window.Hint.CENTERED, Window.Hint.CENTERED));
-            window.setComponent(mainPanel.withBorder(Borders.singleLine(dataSetting)));
+            window.setHints(Arrays.asList(Window.Hint.CENTERED, Window.Hint.FULL_SCREEN));
+            window.setComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
 
             // Create gui and start gui
             MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(),
