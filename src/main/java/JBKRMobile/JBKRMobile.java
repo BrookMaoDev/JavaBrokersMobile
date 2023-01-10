@@ -23,6 +23,7 @@ public class JBKRMobile {
     private boolean loggedIn;
 
     public JBKRMobile() {
+        dataSetting = DEFAULT_DATA_SETTING;
     }
 
     /**
