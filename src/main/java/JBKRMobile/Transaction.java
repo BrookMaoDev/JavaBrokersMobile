@@ -1,12 +1,14 @@
 package JBKRMobile;
 
 public abstract class Transaction {
-    private final static double FEE = 1.0;
-    private String date;
-    private String ticker;
-    private long quantity;
-    private double price;
+    //Fields
+    protected final static double FEE = 1.0;
+    protected String date;
+    protected String ticker;
+    protected long quantity;
+    protected double price;
 
+    // Constructor
     public Transaction(String date, String ticker, long quantity, double price) {
         this.date = date;
         this.ticker = ticker;
@@ -14,6 +16,7 @@ public abstract class Transaction {
         this.price = price;
     }
 
+    // Accessors 
     public static double getFee() {
         return FEE;
     }

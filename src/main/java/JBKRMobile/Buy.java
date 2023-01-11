@@ -5,8 +5,8 @@ public class Buy extends Transaction {
         super(date, ticker, quantity, price);
     }
 
-    // The profit gained from this transaction
-    // Profit is calculated by quantity * price - fee
+    // The money lost from this transaction
+    // Money lost is calculated by (-1 * quantity * price) - fee
     public double costOfTransaction() {
         return super.getQuantity() * super.getPrice() * -1 - Transaction.getFee();
     }
