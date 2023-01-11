@@ -36,7 +36,8 @@ public class JBKRMobile {
             screen.startScreen();
 
             Window window = new BasicWindow("JBKR Mobile");
-
+            Panel mainPanel = new Panel();
+            mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
 
             // Create panel for tickers
             Panel tickerPanel = new Panel();
@@ -56,8 +57,10 @@ public class JBKRMobile {
             }
             tickerPanel.addComponent(table);
 
+            mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
+
             window.setHints(Arrays.asList(Window.Hint.CENTERED));
-            window.setComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
+            window.setComponent(mainPanel);
 
             // Create gui and start gui
             MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(),
