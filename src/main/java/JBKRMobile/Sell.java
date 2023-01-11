@@ -10,4 +10,8 @@ public class Sell extends Transaction {
     public double costOfTransaction() {
         return super.getQuantity() * super.getPrice() - Transaction.getFee();
     }
+
+    public String toString() {
+        return "sell\n" + super.toString();
+    }
 }
