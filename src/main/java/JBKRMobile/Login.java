@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class Login {
     private static final int KEY = 5;
-    private static final String DB_PATH = "src/main/java/megabudgetstonks/logins.db";
+    private static final String DB_PATH = "src/main/java/JBKRMobile/logins.db";
 
     public Login() {
     }

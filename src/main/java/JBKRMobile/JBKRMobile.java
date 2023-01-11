@@ -15,7 +15,6 @@ public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
     private String dataSetting;
     private static final String DEFAULT_DATA_SETTING = "most-active";
-    private boolean loggedIn;
 
     public JBKRMobile() {
         dataSetting = DEFAULT_DATA_SETTING;
@@ -56,8 +55,10 @@ public class JBKRMobile {
                 }
             }
             tickerPanel.addComponent(table);
-
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
+
+            Panel sidePanel = new Panel();
+            mainPanel.addComponent(sidePanel);
 
             window.setHints(Arrays.asList(Window.Hint.CENTERED));
             window.setComponent(mainPanel);
