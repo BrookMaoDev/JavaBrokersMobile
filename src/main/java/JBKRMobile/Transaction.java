@@ -38,7 +38,7 @@ public abstract class Transaction {
     }
 
     public String toString() {
-        return date + "\n" + ticker + "\n" + quantity + "\n" + price;
+        return "Date: "+ date + "\nTicker: " + ticker + "\nQuantity: " + quantity + "\nPrice: " + price;
     }
 
     abstract double costOfTransaction();

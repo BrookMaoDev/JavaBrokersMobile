@@ -36,6 +36,6 @@ public class OwnedStock {
     }
 
     public String toString() {
-        return ticker + "\n" + quantity;
+        return ticker + ": " + quantity;
     }
 }
