@@ -7,7 +7,7 @@ import java.util.Arrays;
 import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
-import com.googlecode.lanterna.gui2.dialogs.TextInputDialog;
+import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -17,7 +17,6 @@ public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
     private String dataSetting;
     private static final String DEFAULT_DATA_SETTING = "most-active";
-    private boolean loggedIn;
 
     public JBKRMobile() {
         dataSetting = DEFAULT_DATA_SETTING;
@@ -37,10 +36,9 @@ public class JBKRMobile {
             screen = terminalFactory.createScreen();
             screen.startScreen();
             Window window = new BasicWindow("JBKR Mobile");
-            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
-
             Panel mainPanel = new Panel();
             mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
+            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
 
             // Create panel for tickers
             Panel tickerPanel = new Panel();
@@ -62,24 +60,42 @@ public class JBKRMobile {
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
 
             Panel sidePanel = new Panel();
-            Button loginButton = new Button("Login", new Runnable() {
+
+            Button login = new Button("Login", new Runnable() {
                 @Override
                 public void run() {
-                    String username = TextInputDialog.showDialog(textGUI, "Login", "Username: ", "");
-                    String password = TextInputDialog.showPasswordDialog(textGUI, "Login", "Password: ", "");
-                    Login login = new Login();
-                    loggedIn = login.login(username, password);
-                    if (loggedIn) {
-                        // display personal portfolio
+                    String username = new TextInputDialogBuilder().setTitle("Login").setDescription("Enter username:")
+                            .build().showDialog(textGUI);
+
+                    String password = new TextInputDialogBuilder().setTitle("Login").setDescription("Enter password:")
+                            .setPasswordInput(true).build().showDialog(textGUI);
+                    if (new Login().login(username, password)) {
+                        MessageDialog.showMessageDialog(textGUI, "Login", "Successfully logged in.");
                     } else {
-                        MessageDialog.showMessageDialog(textGUI, "Login", "Failed to login.");
+                        MessageDialog.showMessageDialog(textGUI, "Login", "User does not exist.");
                     }
                 }
             });
-            sidePanel.addComponent(loginButton);
+            sidePanel.addComponent(login);
+
+            Button signup = new Button("Sign Up", new Runnable() {
+                @Override
+                public void run() {
+                    String username = new TextInputDialogBuilder().setTitle("Sign Up").setDescription("Enter username:")
+                            .build().showDialog(textGUI);
+
+                    String password = new TextInputDialogBuilder().setTitle("Sign Up").setDescription("Enter password:")
+                            .setPasswordInput(true).build().showDialog(textGUI);
+                    if (new Login().createUser(username, password)) {
+                        MessageDialog.showMessageDialog(textGUI, "Sign Up", "Account created.");
+                    } else {
+                        MessageDialog.showMessageDialog(textGUI, "Sign Up", "Username unavailable.");
+                    }
+                }
+            });
+            sidePanel.addComponent(signup);
 
             mainPanel.addComponent(sidePanel);
-
             window.setHints(Arrays.asList(Window.Hint.CENTERED));
             window.setComponent(mainPanel);
 
