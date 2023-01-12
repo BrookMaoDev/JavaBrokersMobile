@@ -67,12 +67,34 @@ public class JBKRMobile {
                     String username = new TextInputDialogBuilder().setTitle("Login").setDescription("Enter username:")
                             .build().showDialog(textGUI);
 
-                    String password = new TextInputDialogBuilder().setTitle("Login").setDescription("Enter password:")
-                            .setPasswordInput(true).build().showDialog(textGUI);
-                    if (new Login().login(username, password)) {
-                        MessageDialog.showMessageDialog(textGUI, "Login", "Successfully logged in.");
-                    } else {
-                        MessageDialog.showMessageDialog(textGUI, "Login", "User does not exist.");
+                    if (username != null) {
+                        switch (username) {
+                            case "":
+                                MessageDialog.showMessageDialog(textGUI, "Login", "Invalid username.");
+                                break;
+
+                            default:
+                                String password = new TextInputDialogBuilder().setTitle("Login")
+                                        .setDescription("Enter password:")
+                                        .setPasswordInput(true).build().showDialog(textGUI);
+                                if (password != null) {
+                                    switch (password) {
+                                        case "":
+                                            MessageDialog.showMessageDialog(textGUI, "Login", "Invalid password.");
+                                            break;
+
+                                        default:
+                                            if (new Login().login(username, password)) {
+                                                MessageDialog.showMessageDialog(textGUI, "Login",
+                                                        "Successfully logged in.");
+                                                sidePanel.removeAllComponents();
+                                            } else {
+                                                MessageDialog.showMessageDialog(textGUI, "Login",
+                                                        "User does not exist.");
+                                            }
+                                    }
+                                }
+                        }
                     }
                 }
             });
@@ -84,12 +106,34 @@ public class JBKRMobile {
                     String username = new TextInputDialogBuilder().setTitle("Sign Up").setDescription("Enter username:")
                             .build().showDialog(textGUI);
 
-                    String password = new TextInputDialogBuilder().setTitle("Sign Up").setDescription("Enter password:")
-                            .setPasswordInput(true).build().showDialog(textGUI);
-                    if (new Login().createUser(username, password)) {
-                        MessageDialog.showMessageDialog(textGUI, "Sign Up", "Account created.");
-                    } else {
-                        MessageDialog.showMessageDialog(textGUI, "Sign Up", "Username unavailable.");
+                    if (username != null) {
+                        switch (username) {
+                            case "":
+                                MessageDialog.showMessageDialog(textGUI, "Sign Up", "Invalid username.");
+                                break;
+
+                            default:
+                                String password = new TextInputDialogBuilder().setTitle("Sign Up")
+                                        .setDescription("Enter password:")
+                                        .setPasswordInput(true).build().showDialog(textGUI);
+
+                                if (password != null) {
+                                    switch (password) {
+                                        case "":
+                                            MessageDialog.showMessageDialog(textGUI, "Sign Up", "Invalid password.");
+                                            break;
+
+                                        default:
+                                            if (new Login().createUser(username, password)) {
+                                                MessageDialog.showMessageDialog(textGUI, "Sign Up", "Account created.");
+                                                sidePanel.removeAllComponents();
+                                            } else {
+                                                MessageDialog.showMessageDialog(textGUI, "Sign Up",
+                                                        "Username unavailable.");
+                                            }
+                                    }
+                                }
+                        }
                     }
                 }
             });
