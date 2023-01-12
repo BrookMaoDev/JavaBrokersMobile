@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
+import com.googlecode.lanterna.gui2.dialogs.TextInputDialog;
 import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -34,8 +36,9 @@ public class JBKRMobile {
         try {
             screen = terminalFactory.createScreen();
             screen.startScreen();
-
             Window window = new BasicWindow("JBKR Mobile");
+            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
+
             Panel mainPanel = new Panel();
             mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
 
@@ -56,8 +59,26 @@ public class JBKRMobile {
                 }
             }
             tickerPanel.addComponent(table);
-
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
+
+            Panel sidePanel = new Panel();
+            Button loginButton = new Button("Login", new Runnable() {
+                @Override
+                public void run() {
+                    String username = TextInputDialog.showDialog(textGUI, "Login", "Username: ", "");
+                    String password = TextInputDialog.showPasswordDialog(textGUI, "Login", "Password: ", "");
+                    Login login = new Login();
+                    loggedIn = login.login(username, password);
+                    if (loggedIn) {
+                        // display personal portfolio
+                    } else {
+                        MessageDialog.showMessageDialog(textGUI, "Login", "Failed to login.");
+                    }
+                }
+            });
+            sidePanel.addComponent(loginButton);
+
+            mainPanel.addComponent(sidePanel);
 
             window.setHints(Arrays.asList(Window.Hint.CENTERED));
             window.setComponent(mainPanel);
