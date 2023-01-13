@@ -1,5 +1,6 @@
 package JBKRMobile;
 
+import java.awt.Font;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,14 +12,17 @@ import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 
 public class JBKRMobile {
-    private API api = new API();
     private static final StockData STOCK_DATA = new StockData();
-    private String dataSetting;
     private static final String DEFAULT_DATA_SETTING = "most-active";
+    private API api;
+    private String dataSetting;
+    private Button login, signup, logout;
 
     public JBKRMobile() {
+        api = new API();
         dataSetting = DEFAULT_DATA_SETTING;
     }
 
@@ -30,7 +34,8 @@ public class JBKRMobile {
     }
 
     public void run() {
-        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
+        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
+                new SwingTerminalFontConfiguration(true, null, new Font("Monospaced", Font.PLAIN, 14)));
         Screen screen = null;
         try {
             screen = terminalFactory.createScreen();
@@ -50,7 +55,7 @@ public class JBKRMobile {
             for (int i = 0; i < c; i++) {
                 try {
                     api.setSymbol(data.get(i));
-                    table.getTableModel().addRow(api.getSymbol(), api.getPrice(), api.getChange(),
+                    table.getTableModel().addRow(api.getSymbol() + "", api.getPrice() + "", api.getChange() + "",
                             api.getPercentChange() + "%");
                 } catch (Exception e) {
                     c++;
@@ -61,35 +66,47 @@ public class JBKRMobile {
 
             Panel sidePanel = new Panel();
 
-            Button login = new Button("Login", new Runnable() {
+            // Log out button
+            logout = new Button("Log out", new Runnable() {
                 @Override
                 public void run() {
-                    String username = new TextInputDialogBuilder().setTitle("Login").setDescription("Enter username:")
+                    sidePanel.removeAllComponents();
+                    sidePanel.addComponent(login);
+                    sidePanel.addComponent(signup);
+                }
+            });
+
+            // Log In button
+            login = new Button("Log in", new Runnable() {
+                @Override
+                public void run() {
+                    String username = new TextInputDialogBuilder().setTitle("Log in").setDescription("Enter username:")
                             .build().showDialog(textGUI);
 
                     if (username != null) {
                         switch (username) {
                             case "":
-                                MessageDialog.showMessageDialog(textGUI, "Login", "Invalid username.");
+                                MessageDialog.showMessageDialog(textGUI, "Log in", "Invalid username.");
                                 break;
 
                             default:
-                                String password = new TextInputDialogBuilder().setTitle("Login")
+                                String password = new TextInputDialogBuilder().setTitle("Log in")
                                         .setDescription("Enter password:")
                                         .setPasswordInput(true).build().showDialog(textGUI);
                                 if (password != null) {
                                     switch (password) {
                                         case "":
-                                            MessageDialog.showMessageDialog(textGUI, "Login", "Invalid password.");
+                                            MessageDialog.showMessageDialog(textGUI, "Log in", "Invalid password.");
                                             break;
 
                                         default:
                                             if (new Login().login(username, password)) {
-                                                MessageDialog.showMessageDialog(textGUI, "Login",
+                                                MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "Successfully logged in.");
                                                 sidePanel.removeAllComponents();
+                                                sidePanel.addComponent(logout);
                                             } else {
-                                                MessageDialog.showMessageDialog(textGUI, "Login",
+                                                MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "User does not exist.");
                                             }
                                     }
@@ -100,35 +117,36 @@ public class JBKRMobile {
             });
             sidePanel.addComponent(login);
 
-            Button signup = new Button("Sign Up", new Runnable() {
+            signup = new Button("Sign up", new Runnable() {
                 @Override
                 public void run() {
-                    String username = new TextInputDialogBuilder().setTitle("Sign Up").setDescription("Enter username:")
+                    String username = new TextInputDialogBuilder().setTitle("Sign up").setDescription("Enter username:")
                             .build().showDialog(textGUI);
 
                     if (username != null) {
                         switch (username) {
                             case "":
-                                MessageDialog.showMessageDialog(textGUI, "Sign Up", "Invalid username.");
+                                MessageDialog.showMessageDialog(textGUI, "Sign up", "Invalid username.");
                                 break;
 
                             default:
-                                String password = new TextInputDialogBuilder().setTitle("Sign Up")
+                                String password = new TextInputDialogBuilder().setTitle("Sign up")
                                         .setDescription("Enter password:")
                                         .setPasswordInput(true).build().showDialog(textGUI);
 
                                 if (password != null) {
                                     switch (password) {
                                         case "":
-                                            MessageDialog.showMessageDialog(textGUI, "Sign Up", "Invalid password.");
+                                            MessageDialog.showMessageDialog(textGUI, "Sign up", "Invalid password.");
                                             break;
 
                                         default:
                                             if (new Login().createUser(username, password)) {
-                                                MessageDialog.showMessageDialog(textGUI, "Sign Up", "Account created.");
+                                                MessageDialog.showMessageDialog(textGUI, "Sign up", "Account created.");
                                                 sidePanel.removeAllComponents();
+                                                sidePanel.addComponent(logout);
                                             } else {
-                                                MessageDialog.showMessageDialog(textGUI, "Sign Up",
+                                                MessageDialog.showMessageDialog(textGUI, "Sign up",
                                                         "Username unavailable.");
                                             }
                                     }
