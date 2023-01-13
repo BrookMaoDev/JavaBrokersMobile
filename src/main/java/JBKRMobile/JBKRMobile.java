@@ -21,7 +21,11 @@ public class JBKRMobile {
     private String dataSetting;
     private String username;
     private String password;
-    private Button home, search, login, signup, logout;
+    private Button home;
+    private Button search;
+    private Button login;
+    private Button signup;
+    private Button logout;
     private static int maxQuery = 50;
 
     public JBKRMobile() {
