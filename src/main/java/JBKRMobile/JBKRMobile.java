@@ -123,6 +123,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     sidePanel.removeAllComponents();
+                    sidePanel.addComponent(home);
                     sidePanel.addComponent(login);
                     sidePanel.addComponent(signup);
                 }
