@@ -1,9 +1,9 @@
 package JBKRMobile;
 
 import java.awt.Font;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.*;
 
 import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
@@ -17,13 +17,17 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
     private static final String DEFAULT_DATA_SETTING = "most-active";
+    private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
     private API api;
     private String dataSetting;
     private Button login, signup, logout;
+    private String username, password;
 
     public JBKRMobile() {
         api = new API();
         dataSetting = DEFAULT_DATA_SETTING;
+        username = "";
+        password = "";
     }
 
     /**
@@ -31,6 +35,23 @@ public class JBKRMobile {
      */
     public void setDataSetting(String dataSetting) {
         this.dataSetting = dataSetting;
+    }
+
+    /**
+     * Saves all information about an investor into a file
+     * First saves the investor's information, then everybody else's from the database file
+     * 
+     */
+    public void saveInformation() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(DB_PATH, false));
+            writer.write(username);
+            writer.newLine();
+            writer.write(password);
+            
+        } catch (IOException iox) {
+            System.out.println("Failed to write");
+        }
     }
 
     public void run() {
@@ -90,7 +111,7 @@ public class JBKRMobile {
                                 break;
 
                             default:
-                                String password = new TextInputDialogBuilder().setTitle("Log in")
+                                password = new TextInputDialogBuilder().setTitle("Log in")
                                         .setDescription("Enter password:")
                                         .setPasswordInput(true).build().showDialog(textGUI);
                                 if (password != null) {
@@ -120,7 +141,7 @@ public class JBKRMobile {
             signup = new Button("Sign up", new Runnable() {
                 @Override
                 public void run() {
-                    String username = new TextInputDialogBuilder().setTitle("Sign up").setDescription("Enter username:")
+                    username = new TextInputDialogBuilder().setTitle("Sign up").setDescription("Enter username:")
                             .build().showDialog(textGUI);
 
                     if (username != null) {
@@ -130,7 +151,7 @@ public class JBKRMobile {
                                 break;
 
                             default:
-                                String password = new TextInputDialogBuilder().setTitle("Sign up")
+                                password = new TextInputDialogBuilder().setTitle("Sign up")
                                         .setDescription("Enter password:")
                                         .setPasswordInput(true).build().showDialog(textGUI);
 
