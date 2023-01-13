@@ -37,6 +37,10 @@ public class OwnedStock {
         return true;
     }
 
+    public long compareQuantity(OwnedStock other) {
+        return quantity - other.getQuantity();
+    }
+
     public String toString() {
         return ticker + ": " + quantity;
     }

@@ -32,10 +32,10 @@ abstract class Investor {
     public abstract boolean buyStock(String ticker, int quantity);
 
     // Abstract method that takes in an array of tickers. Also takes in a double
-    // representing money the user wants to spend. The method will print out the
+    // representing money the user wants to spend. The method return the
     // combination of stocks, from the list, that will spend as much money as
     // possible without going over the limit.
-    public abstract boolean buyMax(ArrayList<String> tickers, double money);
+    public abstract String buyMax(ArrayList<String> tickers, double money);
 
     // Helper method for the buyMax method. Uses recursion.
     protected ArrayList<String> permute(ArrayList<String> tickers, double money, ArrayList<String> bought,
@@ -85,10 +85,17 @@ abstract class Investor {
     public boolean sellStock(String ticker, int quantity) {
         for (int i = 0; i < stocksInPortfolio; i++) {
             if (portfolio.get(i).getTicker().equals(ticker)) {
-                if (portfolio.get(i).getQuantity() >= quantity) {
+                if (portfolio.get(i).getQuantity() > quantity) {
                     api.setSymbol(ticker);
                     Sell sell = new Sell(date, ticker, quantity, api.getPrice());
                     portfolio.get(i).subtractQuantity(quantity);
+                    money = money + sell.costOfTransaction();
+                    transactions.add(sell);
+                    return true;
+                } else if (portfolio.get(i).getQuantity() == quantity) {
+                    api.setSymbol(ticker);
+                    Sell sell = new Sell(date, ticker, quantity, api.getPrice());
+                    portfolio.remove(i); // Removes ownership of stock from portfolio since they sold them all
                     money = money + sell.costOfTransaction();
                     transactions.add(sell);
                     return true;
@@ -97,6 +104,7 @@ abstract class Investor {
                 }
             }
         }
+    
         return false;
     }
 
@@ -152,6 +160,7 @@ abstract class Investor {
 
     // Prints out all the stocks and quantity owned of all stocks.
     public void viewPortfolio() {
+        sortPortfolio();
         if (stocksInPortfolio == 0) {
             System.out.println("You do not have any stocks in your portfolio.");
             return;
@@ -184,7 +193,24 @@ abstract class Investor {
         }
     }
 
-    // Sort portfolio by price
+    // Sorts portfolio by quantity owned. Most owned stocks will be at the front of
+    // the array after the sort. Uses insertion sort.
+    public boolean sortPortfolio() {
+        for (int i = 1; i < portfolio.size(); i++) {
+            int kickedIndex = i;
+            for (int j = i - 1; i >= 0; i--) {
+                if (portfolio.get(i).compareQuantity(portfolio.get(j)) > 0) {
+                    kickedIndex = j;
+                } else {
+                    break;
+                }
+            }
+            OwnedStock temp = portfolio.get(i);
+            portfolio.set(i, portfolio.get(kickedIndex));
+            portfolio.set(kickedIndex, temp);
+        }
+        return true;
+    }
 
     // Returns all information of the investor in a clean and organized manner
     public String toString() {
@@ -192,6 +218,7 @@ abstract class Investor {
         output += "Last Name: " + lastName + "\n";
         output += "Money: " + money + "\n";
         output += "Money Spent: " + spentMoney + "\n";
+        output += "Money Added: " + addedMoney + "\n";
         output += "Stocks In Portfolio: " + stocksInPortfolio + "\n";
         output += "Lifetime Profit: " + calculateProfit();
         return output;
