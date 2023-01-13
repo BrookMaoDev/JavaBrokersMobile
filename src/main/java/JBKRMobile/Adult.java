@@ -7,7 +7,7 @@ public class Adult extends Investor {
         super(firstName, lastName, username, password);
     }
 
-    public boolean buyMax(ArrayList<String> tickers, double money) {
+    public String buyMax(ArrayList<String> tickers, double money) {
         ArrayList<String> bought = new ArrayList<String>();
         double moneySpent = 0;
         ArrayList<String> bestCombo = permute(tickers, money, bought, moneySpent);
@@ -23,8 +23,20 @@ public class Adult extends Investor {
                 output.set(index + 1, newQuantity);
             }
         }
-        // change return value
-        return false;
+
+        String out = "";
+        
+        for (int i = 0; i < output.size(); i+=2) {
+            out += "Stock: " + output.get(i) + "\n";
+            out += "Quantity: " + output.get(i+1) + "\n";
+            api.setSymbol(output.get(i));
+            out += "Price of Individual Stock: " + api.getPrice() + "\n";
+            out += "Price of Purchase: " + (api.getPrice() * Integer.parseInt(output.get(i+1))) + "\n";
+            out += "\n";
+        }
+
+        out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
+        return out;
     }
 
     // Attempts to buy stock
