@@ -19,7 +19,8 @@ public class JBKRMobile {
     private static final String DEFAULT_DATA_SETTING = "most-active";
     private API api;
     private String dataSetting;
-    private Button login, signup, logout;
+    private Button home, search, login, signup, logout;
+    private static int maxQuery = 50;
 
     public JBKRMobile() {
         api = new API();
@@ -33,9 +34,26 @@ public class JBKRMobile {
         this.dataSetting = dataSetting;
     }
 
+    public Table<String> generateData() {
+        Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
+        ArrayList<String> data = STOCK_DATA.getData(dataSetting);
+        int c = maxQuery;
+        for (int i = 0; i < c; i++) {
+            try {
+                api.setSymbol(data.get(i));
+                table.getTableModel().addRow(api.getSymbol() + "", api.getPrice() + "",
+                        api.getChange() + "",
+                        api.getPercentChange() + "%");
+            } catch (Exception e) {
+                c++;
+            }
+        }
+        return table;
+    }
+
     public void run() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
-                new SwingTerminalFontConfiguration(true, null, new Font("Monospaced", Font.PLAIN, 14)));
+                new SwingTerminalFontConfiguration(true, null, new Font("Consolas", Font.PLAIN, 14)));
         Screen screen = null;
         try {
             screen = terminalFactory.createScreen();
@@ -49,22 +67,48 @@ public class JBKRMobile {
             Panel tickerPanel = new Panel();
             tickerPanel.setFillColorOverride(ANSI.WHITE);
 
-            Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
-            ArrayList<String> data = STOCK_DATA.getData(dataSetting);
-            int c = 50;
-            for (int i = 0; i < c; i++) {
-                try {
-                    api.setSymbol(data.get(i));
-                    table.getTableModel().addRow(api.getSymbol() + "", api.getPrice() + "", api.getChange() + "",
-                            api.getPercentChange() + "%");
-                } catch (Exception e) {
-                    c++;
-                }
-            }
-            tickerPanel.addComponent(table);
+            tickerPanel.addComponent(generateData());
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
 
             Panel sidePanel = new Panel();
+
+            home = new Button("Home", new Runnable() {
+                @Override
+                public void run() {
+                    tickerPanel.removeAllComponents();
+                    tickerPanel.addComponent(generateData());
+                }
+            });
+            sidePanel.addComponent(home);
+
+            search = new Button("Search", new Runnable() {
+
+                @Override
+                public void run() {
+                    String query = new TextInputDialogBuilder().setTitle("Search").setDescription("Enter ticker:")
+                            .build().showDialog(textGUI);
+                    if (query != null) {
+                        switch (query) {
+                            case "":
+                                MessageDialog.showMessageDialog(textGUI, "Search", "Empty query.");
+                                break;
+
+                            default:
+                                Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
+                                try {
+                                    api.setSymbol(query.toUpperCase());
+                                    table.getTableModel().addRow(api.getSymbol() + "", api.getPrice() + "",
+                                            api.getChange() + "",
+                                            api.getPercentChange() + "%");
+                                } catch (Exception e) {
+                                }
+                                tickerPanel.removeAllComponents();
+                                tickerPanel.addComponent(table);
+                        }
+                    }
+                }
+            });
+            sidePanel.addComponent(search);
 
             // Log out button
             logout = new Button("Log out", new Runnable() {
@@ -165,7 +209,9 @@ public class JBKRMobile {
             MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(),
                     new EmptySpace(ANSI.BLACK));
             gui.addWindowAndWait(window);
-        } catch (IOException e) {
+        } catch (
+
+        IOException e) {
             System.out.println(e);
         }
     }
