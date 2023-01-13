@@ -21,8 +21,12 @@ public class JBKRMobile {
     private String dataSetting;
     private String username;
     private String password;
+    private Button home;
+    private Button search;
+    private Button login;
+    private Button signup;
+    private Button logout;
     private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
-    private Button home, search, login, signup, logout;
     private static int maxQuery = 50;
 
     public JBKRMobile() {
@@ -62,7 +66,7 @@ public class JBKRMobile {
      */
     public void saveInvestor() {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter DB_PATH);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(DB_PATH));
         } catch (IOException e) {
 
         }
@@ -132,6 +136,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     sidePanel.removeAllComponents();
+                    sidePanel.addComponent(home);
                     sidePanel.addComponent(login);
                     sidePanel.addComponent(signup);
                 }
