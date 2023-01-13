@@ -223,4 +223,30 @@ abstract class Investor {
         output += "Lifetime Profit: " + calculateProfit();
         return output;
     }
+
+    /**
+     * Generates a string describing everything about the investor
+     * @return
+     */
+    public String fileString() {
+
+        String output; 
+        if (this instanceof Adult) {
+            output = "adult\n";
+        } else {
+            output = "child\n";
+        }
+        output += firstName + "\n";
+        output += lastName + "\n";
+        output += money + "\n";
+        output += spentMoney + "\n";
+        output += addedMoney + "\n";
+        output += numTransactions + "\n";
+        for (int i = 0; i < numTransactions; i++) {
+            output += transactions.get(i).fileString();
+        }
+
+        output += stocksInPortfolio + "\n";
+        return output;
+    }
 }
