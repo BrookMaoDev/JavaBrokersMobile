@@ -1,5 +1,6 @@
+package JBKRMobile;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 abstract class Investor {
     protected static String date;
@@ -19,7 +20,7 @@ abstract class Investor {
     public Investor(String firstName, String lastName, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         api = new API();
         date = java.time.LocalDate.now().toString();
@@ -28,13 +29,17 @@ abstract class Investor {
     // Abstract method that takes in ticker symbol of a stock and the quantity. The
     // method will add that quantity of stock to the investor's portfolio, and
     // remove the money spent. Creates a transaction object in the process.
-    public abstract boolean buyStock(String ticker, long quantity);
+    public abstract boolean buyStock(String ticker, int quantity);
 
-    // Abstract method that takes in an array of tickers. Also takes in a double representing money the user wants to spend. The method will print out the combination of stocks, from the list, that will spend as much money as possible without going over the limit.
+    // Abstract method that takes in an array of tickers. Also takes in a double
+    // representing money the user wants to spend. The method will print out the
+    // combination of stocks, from the list, that will spend as much money as
+    // possible without going over the limit.
     public abstract boolean buyMax(ArrayList<String> tickers, double money);
 
     // Helper method for the buyMax method. Uses recursion.
-    protected ArrayList<String> permute(ArrayList<String> tickers, double money, ArrayList<String> bought, double moneySpent) {
+    protected ArrayList<String> permute(ArrayList<String> tickers, double money, ArrayList<String> bought,
+            double moneySpent) {
         ArrayList<String> bestCombo = bought;
         for (int i = 0; i < tickers.size(); i++) {
             ArrayList<String> newArray = bought;
@@ -45,14 +50,15 @@ abstract class Investor {
                 if (calcValueOfArray(potentialBestCombo) > calcValueOfArray(bestCombo)) {
                     bestCombo = potentialBestCombo;
                 }
-            } else if (calcValueOfArray(newArray == money)) {
+            } else if (calcValueOfArray(newArray) == money) {
                 return newArray;
             }
         }
         return bestCombo;
     }
 
-    // Helper method for the buyMax method. Returns value of all stocks in a string array.
+    // Helper method for the buyMax method. Returns value of all stocks in a string
+    // array.
     protected double calcValueOfArray(ArrayList<String> array) {
         double value = 0;
         for (int i = 0; i < array.size(); i++) {
@@ -62,25 +68,26 @@ abstract class Investor {
         return value;
     }
 
-    // // Helper method for the buyMax method. Returns whether a string exists in the arraylist of strings.
+    // // Helper method for the buyMax method. Returns whether a string exists in
+    // the arraylist of strings.
     // protected boolean existsInArray(ArrayList<String> array, String string) {
-    //     for (int i = 0; i < array.size(); i++) {
-    //         if (array.get(i).equals(string)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
+    // for (int i = 0; i < array.size(); i++) {
+    // if (array.get(i).equals(string)) {
+    // return true;
+    // }
+    // }
+    // return false;
     // }
 
     // Method that takes in ticker symbol of a stock and the quantity. The
     // method will remove that quantity of stock from the investor's portfolio, and
     // add the money received. Creates a transaction object in the process.
-    public boolean sellStock(String ticker, long quantity) {
+    public boolean sellStock(String ticker, int quantity) {
         for (int i = 0; i < stocksInPortfolio; i++) {
             if (portfolio.get(i).getTicker().equals(ticker)) {
                 if (portfolio.get(i).getQuantity() >= quantity) {
                     api.setSymbol(ticker);
-                    Sell sell = new Sell(date, ticker, quantity, Double.parseDouble(api.getPrice()));
+                    Sell sell = new Sell(date, ticker, quantity, api.getPrice());
                     portfolio.get(i).subtractQuantity(quantity);
                     money = money + sell.costOfTransaction();
                     transactions.add(sell);
@@ -94,13 +101,13 @@ abstract class Investor {
     }
 
     // Gets the index of the specified ticker if it exists. Returns -1 otherwise
-    public int getTickerIndex (String ticker) {
-      for (int i = 0; i < stocksInPortfolio; i++) {
-        if (portfolio.get(i).getTicker().equals(ticker)) {
-          return i;
+    public int getTickerIndex(String ticker) {
+        for (int i = 0; i < stocksInPortfolio; i++) {
+            if (portfolio.get(i).getTicker().equals(ticker)) {
+                return i;
+            }
         }
-      }
-      return -1;
+        return -1;
     }
 
     // Prints transaction history
@@ -122,7 +129,7 @@ abstract class Investor {
 
         for (int i = 0; i < stocksInPortfolio; i++) {
             String ticker = portfolio.get(i).getTicker();
-            Long quantity = portfolio.get(i).getQuantity();
+            int quantity = portfolio.get(i).getQuantity();
             api.setSymbol(ticker);
             netWorth += quantity * api.getPrice();
         }
@@ -137,7 +144,7 @@ abstract class Investor {
     public boolean sellAll() {
         for (int i = 0; i < stocksInPortfolio; i++) {
             String ticker = portfolio.get(i).getTicker();
-            Long quantity = portfolio.get(i).getTicker();
+            int quantity = portfolio.get(i).getQuantity();
             sellStock(ticker, quantity);
         }
         return true;

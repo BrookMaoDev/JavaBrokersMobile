@@ -25,32 +25,32 @@ class API {
         return stock.getSymbol();
     }
 
-    public String getPrice() {
-        return stock.getPrice().setScale(2, RoundingMode.HALF_EVEN).toString();
+    public double getPrice() {
+        return Double.parseDouble(stock.getPrice().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 
-    public String getPreviousClose() {
-        return stock.getPreviousClose().setScale(2, RoundingMode.HALF_EVEN).toString();
+    public double getPreviousClose() {
+        return Double.parseDouble(stock.getPreviousClose().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 
-    public String getOpen() {
-        return stock.getOpen().setScale(2, RoundingMode.HALF_EVEN).toString();
+    public double getOpen() {
+        return Double.parseDouble(stock.getOpen().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 
-    public String getVolume() {
-        return stock.getVolume().toString();
+    public int getVolume() {
+        return (int) Math.round(stock.getVolume());
     }
 
-    public String getChange() {
+    public double getChange() {
         // Set max decimal places to 8
         DecimalFormat df = new DecimalFormat("#.########");
         df.setRoundingMode(RoundingMode.HALF_EVEN);
         BigDecimal n = stock.getChange();
         Double d = n.doubleValue();
-        return df.format(d);
+        return Double.parseDouble(df.format(d));
     }
 
-    public String getPercentChange() {
-        return stock.getChangeInPercent().setScale(2, RoundingMode.HALF_EVEN).toString();
+    public double getPercentChange() {
+        return Double.parseDouble(stock.getChangeInPercent().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 }
