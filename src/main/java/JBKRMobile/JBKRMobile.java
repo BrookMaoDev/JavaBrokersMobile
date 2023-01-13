@@ -21,6 +21,7 @@ public class JBKRMobile {
     private String dataSetting;
     private String username;
     private String password;
+    private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
     private Button home, search, login, signup, logout;
     private static int maxQuery = 50;
 
@@ -53,6 +54,18 @@ public class JBKRMobile {
             }
         }
         return table;
+    }
+
+    /**
+     * Writes all information about the investor in a file, then writes all other information about every other
+     * investor in the file, then saves it.
+     */
+    public void saveInvestor() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter DB_PATH);
+        } catch (IOException e) {
+
+        }
     }
 
     public void run() {
