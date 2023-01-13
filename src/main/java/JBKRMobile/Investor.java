@@ -216,10 +216,13 @@ abstract class Investor {
         output += addedMoney + "\n";
         output += numTransactions + "\n";
         for (int i = 0; i < numTransactions; i++) {
-            output += transactions.get(i).fileString();
+            output += transactions.get(i).fileString() + "\n";
+            
         }
-
         output += stocksInPortfolio + "\n";
+        for (int i = 0; i < stocksInPortfolio; i++) {
+            output += portfolio.get(i).fileString() + "\n";
+        }
         return output;
     }
 }

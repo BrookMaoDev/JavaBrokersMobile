@@ -128,7 +128,7 @@ public class JBKRMobile {
             login = new Button("Log in", new Runnable() {
                 @Override
                 public void run() {
-                    String username = new TextInputDialogBuilder().setTitle("Log in").setDescription("Enter username:")
+                    username = new TextInputDialogBuilder().setTitle("Log in").setDescription("Enter username:")
                             .build().showDialog(textGUI);
 
                     if (username != null) {
