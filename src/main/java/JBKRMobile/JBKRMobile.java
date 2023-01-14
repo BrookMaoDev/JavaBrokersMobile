@@ -13,6 +13,7 @@ import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
+import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 
 public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
@@ -74,7 +75,7 @@ public class JBKRMobile {
 
     public void run() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
-                new SwingTerminalFontConfiguration(true, null, new Font("Consolas", Font.PLAIN, 14)));
+                new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration.filterMonospaced(new Font("Consolas", Font.PLAIN, 14), new Font("Monaco", Font.PLAIN, 14))));
         Screen screen = null;
         try {
             screen = terminalFactory.createScreen();
