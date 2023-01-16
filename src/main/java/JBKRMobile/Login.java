@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Login {
     private static final int KEY = 5;
@@ -13,24 +14,49 @@ public class Login {
     public Login() {
     }
 
-    public boolean login(String username, String password) {
+    public Investor login(String username, String password) {
         try {
             // Searches for username & password combination
-            BufferedReader br = new BufferedReader(new FileReader(DB_PATH));
-            String line = "";
+            BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
+            String line, date, ticker = "";
+            double money, spentMoney, addedMoney, price;
+            int numTransactions, stocksInPortfolio, quantity;
+            int investorType, transactionType; // int to support additional types
+            ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+            ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
             String encryptedPassword = encryptPassword(password);
-            while ((line = br.readLine()) != null) {
-                if (line.equals(username) && br.readLine().equals(encryptedPassword)) {
-                    br.close();
-                    return true;
+            while ((line = reader.readLine()) != null) {
+                if (line.equals(username) && reader.readLine().equals(encryptedPassword)) {
+                    line = reader.readLine();
+                    if (line.equalsIgnoreCase("adult")) {
+                        investorType = 1;
+                    } else {
+                        investorType = 0; // Assume that it is either "adult" or "child"
+                    }
+                    money = Double.parseDouble(reader.readLine());
+                    spentMoney = Double.parseDouble(reader.readLine());
+                    addedMoney = Double.parseDouble(reader.readLine());
+                    numTransactions = Integer.parseInt(reader.readLine());
+                    
+                    for (int i = 0; i < numTransactions; i++) {
+                        if (reader.readLine().equalsIgnoreCase("buy")) {
+                            transactionType = 0; // buy is 0
+                        } else {
+                            transactionType = 1; // sell is 1
+                        }
+                        date = reader.readLine();
+                        ticker = reader.readLine();
+                        quantity = Integer.parseInt(reader.readLine());
+                    }
                 }
             }
-            br.close();
+            reader.close();
         } catch (IOException e) {
             System.out.println(e);
         }
-        return false;
+        return null;
     }
+
 
     public boolean createUser(String username, String password) {
         try {
