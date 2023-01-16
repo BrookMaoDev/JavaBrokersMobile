@@ -67,7 +67,11 @@ public class JBKRMobile {
      * Creates an investor object using that information 
      */
     private void readInfo() {
-        
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
+        } catch (IOException iox) {
+
+        } 
     }
 
     /**
