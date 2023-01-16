@@ -27,6 +27,7 @@ public class JBKRMobile {
     private Button login;
     private Button signup;
     private Button logout;
+    private Button portfolio;
     private Investor user;
     private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
     private static int maxQuery = 50;
@@ -67,7 +68,8 @@ public class JBKRMobile {
      */
 
     /**
-     * Writes all information about the investor in a file, then writes all other information about every other
+     * Writes all information about the investor in a file, then writes all other
+     * information about every other
      * investor in the file, then saves it.
      */
     public void saveInvestor() {
@@ -80,7 +82,8 @@ public class JBKRMobile {
 
     public void run() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
-                new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration.filterMonospaced(new Font("Consolas", Font.PLAIN, 14), new Font("Monaco", Font.PLAIN, 14))));
+                new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
+                        .filterMonospaced(new Font("Consolas", Font.PLAIN, 14), new Font("Monaco", Font.PLAIN, 14))));
         Screen screen = null;
         try {
             screen = terminalFactory.createScreen();
@@ -177,6 +180,7 @@ public class JBKRMobile {
                                                         "Successfully logged in.");
                                                 sidePanel.removeAllComponents();
                                                 sidePanel.addComponent(logout);
+                                                sidePanel.addComponent(portfolio);
                                             } else {
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "User does not exist.");
@@ -228,6 +232,25 @@ public class JBKRMobile {
                 }
             });
             sidePanel.addComponent(signup);
+
+            portfolio = new Button("Portfolio", new Runnable() {
+                @Override
+                public void run() {
+                    // Retrieve saved tickers
+                    ArrayList<String> data = retrieveTickers();
+                    Table<String> table = new Table<String>("QUANTITY", "TICKER", "PRICE", "CHANGE", "% CHANGE");
+                    try {
+                        for (int i = 0; i < data.size(); i++);
+                        api.setSymbol(data.get(i));
+                        table.getTableModel().addRow(user.getQuantity() + "", api.getSymbol() + "", api.getPrice() + "",
+                                api.getChange() + "",
+                                api.getPercentChange() + "%");
+                    } catch (Exception e) {
+                    }
+                    tickerPanel.removeAllComponents();
+                    tickerPanel.addComponent(table);
+                }
+            });
 
             mainPanel.addComponent(sidePanel);
             window.setHints(Arrays.asList(Window.Hint.CENTERED));
