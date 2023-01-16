@@ -6,8 +6,8 @@ public class Child extends Investor {
     // Spend limit for all child investors
     private final static double TRANSACTION_SPEND_LIMIT = 500;
 
-    public Child(String firstName, String lastName, String username, String password) {
-        super(firstName, lastName, username, password);
+    public Child(String username, String password) {
+        super(username, password);
     }
 
     public String buyMax(ArrayList<String> tickers, double money) {
