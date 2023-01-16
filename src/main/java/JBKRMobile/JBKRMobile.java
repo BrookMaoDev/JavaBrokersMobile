@@ -64,8 +64,11 @@ public class JBKRMobile {
     }
     /**
      * Reads the information about a specified username in a file.
-     * Creates an investor object using that information
+     * Creates an investor object using that information 
      */
+    private void readInfo() {
+        
+    }
 
     /**
      * Writes all information about the investor in a file, then writes all other
