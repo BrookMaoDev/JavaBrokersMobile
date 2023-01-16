@@ -27,6 +27,7 @@ public class JBKRMobile {
     private Button login;
     private Button signup;
     private Button logout;
+    private Investor user;
     private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
     private static int maxQuery = 50;
 
