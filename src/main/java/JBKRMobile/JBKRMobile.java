@@ -48,7 +48,7 @@ public class JBKRMobile {
         this.dataSetting = dataSetting;
     }
 
-    private Table<String> generateData() {
+    public Table<String> generateData() {
         Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
         ArrayList<String> data = STOCK_DATA.getData(dataSetting);
         int c = maxQuery;
@@ -64,7 +64,6 @@ public class JBKRMobile {
         }
         return table;
     }
-
     /**
      * Reads the information about a specified username in a file.
      * Creates an investor object using that information
@@ -72,6 +71,27 @@ public class JBKRMobile {
     private void readInfo() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
+            String line, date, ticker;
+            double money, spentMoney, addedMoney, price;
+            int numTransactions, stocksInPortfolio, quantity;
+            int investorType, transactionType; // int to support additional types
+            while ((line = reader.readLine()) != null) {
+                if (line.equals(username)) {
+                    reader.readLine(); //Password; discard line
+                    line = reader.readLine();
+                    if (line.equalsIgnoreCase("adult")) {
+                        investorType = 1;
+                    } else {
+                        investorType = 0; // Assume that it is either "adult" or "child"
+                    }
+                    money = Double.parseDouble(reader.readLine());
+                    spentMoney = Double.parseDouble(reader.readLine());
+                    addedMoney = Double.parseDouble(reader.readLine());
+                    
+                }
+            }
+            
+            reader.close();
         } catch (IOException iox) {
 
         }
@@ -82,7 +102,7 @@ public class JBKRMobile {
      * information about every other
      * investor in the file, then saves it.
      */
-    private void saveInvestor() {
+    public void saveInvestor() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(DB_PATH));
         } catch (IOException e) {
@@ -186,12 +206,11 @@ public class JBKRMobile {
 
                                         default:
                                             if (new Login().login(username, password)) {
-
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "Successfully logged in.");
                                                 sidePanel.removeAllComponents();
-                                                sidePanel.addComponent(portfolio);
                                                 sidePanel.addComponent(logout);
+                                                sidePanel.addComponent(portfolio);
                                             } else {
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "User does not exist.");
@@ -262,16 +281,14 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    ArrayList<OwnedStock> data = user.getPortfolio();
+                    ArrayList<String> data = retrieveTickers();
                     Table<String> table = new Table<String>("QUANTITY", "TICKER", "PRICE", "CHANGE", "% CHANGE");
                     try {
-                        for (int i = 0; i < data.size(); i++) {
-                            api.setSymbol(data.get(i).getTicker());
-                            table.getTableModel().addRow(data.get(i).getQuantity() + "", api.getSymbol() + "",
-                                    api.getPrice() + "",
-                                    api.getChange() + "",
-                                    api.getPercentChange() + "%");
-                        }
+                        for (int i = 0; i < data.size(); i++);
+                        api.setSymbol(data.get(i));
+                        table.getTableModel().addRow(user.getQuantity() + "", api.getSymbol() + "", api.getPrice() + "",
+                                api.getChange() + "",
+                                api.getPercentChange() + "%");
                     } catch (Exception e) {
                     }
                     tickerPanel.removeAllComponents();
