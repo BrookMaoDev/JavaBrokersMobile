@@ -26,6 +26,10 @@ abstract class Investor {
         return portfolio;
     }
 
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
     /**
      * Abstract method that takes in ticker symbol of a stock and the quantity. The
      * method will add that quantity of stock to the investor's portfolio, and
