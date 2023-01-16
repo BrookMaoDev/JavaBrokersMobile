@@ -28,6 +28,7 @@ public class JBKRMobile {
     private Button signup;
     private Button logout;
     private Button portfolio;
+    private Investor user;
     private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
     private static int maxQuery = 50;
 
@@ -61,6 +62,10 @@ public class JBKRMobile {
         }
         return table;
     }
+    /**
+     * Reads the information about a specified username in a file.
+     * Creates an investor object using that information
+     */
 
     /**
      * Writes all information about the investor in a file, then writes all other
