@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 abstract class Investor {
     protected static String date;
-    protected String firstName;
-    protected String lastName;
     protected String username;
     protected String password;
     protected double money;
@@ -17,9 +15,7 @@ abstract class Investor {
     protected ArrayList<OwnedStock> portfolio;
     protected API api;
 
-    public Investor(String firstName, String lastName, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Investor(String username, String password) {
         this.username = username;
         this.password = password;
         api = new API();
@@ -207,9 +203,7 @@ abstract class Investor {
 
     // Returns all information of the investor in a clean and organized manner
     public String toString() {
-        String output = "First Name: " + firstName + "\n";
-        output += "Last Name: " + lastName + "\n";
-        output += "Money: " + money + "\n";
+        String output = "Money: " + money + "\n";
         output += "Money Spent: " + spentMoney + "\n";
         output += "Money Added: " + addedMoney + "\n";
         output += "Stocks In Portfolio: " + stocksInPortfolio + "\n";
@@ -227,8 +221,6 @@ abstract class Investor {
         } else {
             output = "child\n";
         }
-        output += firstName + "\n";
-        output += lastName + "\n";
         output += money + "\n";
         output += spentMoney + "\n";
         output += addedMoney + "\n";

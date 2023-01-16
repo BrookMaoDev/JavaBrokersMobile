@@ -3,8 +3,8 @@ package JBKRMobile;
 import java.util.ArrayList;
 
 public class Adult extends Investor {
-    public Adult(String firstName, String lastName, String username, String password) {
-        super(firstName, lastName, username, password);
+    public Adult(String username, String password) {
+        super(username, password);
     }
 
     public String buyMax(ArrayList<String> tickers, double money) {
