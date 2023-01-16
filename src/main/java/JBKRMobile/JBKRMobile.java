@@ -7,6 +7,7 @@ import java.io.*;
 
 import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.gui2.table.Table;
@@ -22,6 +23,7 @@ public class JBKRMobile {
     private String dataSetting;
     private String username;
     private String password;
+    private String accountType;
     private Button home;
     private Button search;
     private Button login;
@@ -65,14 +67,14 @@ public class JBKRMobile {
 
     /**
      * Reads the information about a specified username in a file.
-     * Creates an investor object using that information 
+     * Creates an investor object using that information
      */
     private void readInfo() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
         } catch (IOException iox) {
 
-        } 
+        }
     }
 
     /**
@@ -226,7 +228,21 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            if (new Login().createUser(username, password)) {
+                                            ActionListDialogBuilder typeSelector = new ActionListDialogBuilder()
+                                                    .setTitle("Sign Up").setDescription("Select account type:")
+                                                    .addAction("Adult", new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            accountType = "adult";
+                                                        }
+                                                    })
+                                                    .addAction("Child", new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            accountType = "child";
+                                                        }
+                                                    });
+                                            if (new Login().createUser(username, password, accountType)) {
                                                 MessageDialog.showMessageDialog(textGUI, "Sign up", "Account created.");
                                                 sidePanel.removeAllComponents();
                                                 sidePanel.addComponent(logout);
