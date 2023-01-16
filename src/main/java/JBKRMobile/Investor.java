@@ -15,9 +15,32 @@ abstract class Investor {
     protected ArrayList<OwnedStock> portfolio;
     protected API api;
 
+    // Creates investor objects for when they sign up
     public Investor(String username, String password) {
         this.username = username;
         this.password = password;
+        this.money = 0;
+        this.spentMoney = 0;
+        this.addedMoney = 0;
+        this.numTransactions = 0;
+        this.stocksInPortfolio = 0;
+        this.transactions = new ArrayList<Transaction>();
+        this.portfolio = new ArrayList<OwnedStock>();
+        api = new API();
+        date = java.time.LocalDate.now().toString();
+    }
+
+    // Creates investor objects for existing investors with previous data
+    public Investor(String username, String password, double money, double spentMoney, double addedMoney, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
+        this.username = username;
+        this.password = password;
+        this.money = money;
+        this.spentMoney = spentMoney;
+        this.addedMoney = addedMoney;
+        this.numTransactions = numTransactions;
+        this.stocksInPortfolio = stocksInPortfolio;
+        this.transactions = transactions;
+        this.portfolio = portfolio;
         api = new API();
         date = java.time.LocalDate.now().toString();
     }
