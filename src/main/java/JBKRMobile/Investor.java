@@ -157,19 +157,6 @@ abstract class Investor {
         return true;
     }
 
-    // Prints out all the stocks and quantity owned of all stocks.
-    public void viewPortfolio() {
-        sortPortfolio();
-        if (stocksInPortfolio == 0) {
-            System.out.println("You do not have any stocks in your portfolio.");
-            return;
-        }
-        for (int i = 0; i < stocksInPortfolio; i++) {
-            System.out.println(portfolio.get(i));
-            System.out.println();
-        }
-    }
-
     // Adds money to the investor's account
     public boolean addMoney(double money) {
         this.money += money;
@@ -188,6 +175,7 @@ abstract class Investor {
             return false;
         } else {
             this.money -= money;
+            addedMoney -= money;
             return true;
         }
     }
