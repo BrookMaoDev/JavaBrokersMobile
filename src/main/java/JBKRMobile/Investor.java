@@ -45,6 +45,26 @@ abstract class Investor {
         date = java.time.LocalDate.now().toString();
     }
 
+    public double getMoney() {
+        return money;
+    }
+
+    public double getSpentMoney() {
+        return spentMoney;
+    }
+
+    public double getAddedMoney() {
+        return addedMoney;
+    }
+
+    public int getNumTransactions() {
+        return numTransactions;
+    }
+
+    public int getStocksInPortfolio() {
+        return stocksInPortfolio;
+    }
+    
     public ArrayList<OwnedStock> getPortfolio() {
         return portfolio;
     }
