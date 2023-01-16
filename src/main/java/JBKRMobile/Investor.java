@@ -26,15 +26,19 @@ abstract class Investor {
         date = java.time.LocalDate.now().toString();
     }
 
-    // Abstract method that takes in ticker symbol of a stock and the quantity. The
-    // method will add that quantity of stock to the investor's portfolio, and
-    // remove the money spent. Creates a transaction object in the process.
+    /**
+     * Abstract method that takes in ticker symbol of a stock and the quantity. The
+     * method will add that quantity of stock to the investor's portfolio, and
+     * remove the money spent. Creates a transaction object in the process.
+     */
     public abstract boolean buyStock(String ticker, int quantity);
 
-    // Abstract method that takes in an array of tickers. Also takes in a double
-    // representing money the user wants to spend. The method return the
-    // combination of stocks, from the list, that will spend as much money as
-    // possible without going over the limit.
+    /**
+     * Abstract method that takes in an array of tickers. Also takes in a double
+     * representing money the user wants to spend. The method return the
+     * combination of stocks, from the list, that will spend as much money as
+     * possible without going over the limit.
+     */
     public abstract String buyMax(ArrayList<String> tickers, double money);
 
     // Helper method for the buyMax method. Uses recursion.
@@ -57,8 +61,7 @@ abstract class Investor {
         return bestCombo;
     }
 
-    // Helper method for the buyMax method. Returns value of all stocks in a string
-    // array.
+    // Helper method for the buyMax method. Returns value of all stocks in a string array.
     protected double calcValueOfArray(ArrayList<String> array) {
         double value = 0;
         for (int i = 0; i < array.size(); i++) {
@@ -68,20 +71,11 @@ abstract class Investor {
         return value;
     }
 
-    // // Helper method for the buyMax method. Returns whether a string exists in
-    // the arraylist of strings.
-    // protected boolean existsInArray(ArrayList<String> array, String string) {
-    // for (int i = 0; i < array.size(); i++) {
-    // if (array.get(i).equals(string)) {
-    // return true;
-    // }
-    // }
-    // return false;
-    // }
-
-    // Method that takes in ticker symbol of a stock and the quantity. The
-    // method will remove that quantity of stock from the investor's portfolio, and
-    // add the money received. Creates a transaction object in the process.
+    /**
+     * Method that takes in ticker symbol of a stock and the quantity. The
+     * method will remove that quantity of stock from the investor's portfolio, and
+     * add the money received. Creates a transaction object in the process.
+     */
     public boolean sellStock(String ticker, int quantity) {
         for (int i = 0; i < stocksInPortfolio; i++) {
             if (portfolio.get(i).getTicker().equals(ticker)) {
@@ -130,8 +124,10 @@ abstract class Investor {
         }
     }
 
-    // Returns a double which represents the net worth of the investor. Is
-    // calculated by finding value of all stocks and adding money onto that.
+    /**
+     * Returns a double which represents the net worth of the investor. Is
+     * calculated by finding value of all stocks and adding money onto that.
+     */
     public double getNetWorth() {
         double netWorth = 0;
 
@@ -147,8 +143,7 @@ abstract class Investor {
         return netWorth;
     }
 
-    // Sells every stock the user owns. Credits the money to the account
-    // accordingly.
+    // Sells every stock the user owns. Credits the money to the account accordingly.
     public boolean sellAll() {
         for (int i = 0; i < stocksInPortfolio; i++) {
             String ticker = portfolio.get(i).getTicker();
@@ -193,8 +188,10 @@ abstract class Investor {
         }
     }
 
-    // Sorts portfolio by quantity owned. Most owned stocks will be at the front of
-    // the array after the sort. Uses insertion sort.
+    /**
+     * Sorts portfolio by quantity owned. Most owned stocks will be at the front of
+     * the array after the sort. Uses insertion sort.
+     */
     public boolean sortPortfolio() {
         for (int i = 1; i < portfolio.size(); i++) {
             int kickedIndex = i;
@@ -225,11 +222,9 @@ abstract class Investor {
     }
 
     /**
-     * Generates a string describing everything about the investor
-     * @return
+     * Generates and returns a string describing everything about the investor
      */
     public String fileString() {
-
         String output; 
         if (this instanceof Adult) {
             output = "adult\n";
