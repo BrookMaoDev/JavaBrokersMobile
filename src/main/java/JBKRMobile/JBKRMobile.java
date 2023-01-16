@@ -62,38 +62,6 @@ public class JBKRMobile {
         }
         return table;
     }
-    /**
-     * Reads the information about a specified username in a file.
-     * Creates an investor object using that information 
-     */
-    private void readInfo() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
-            String line, date, ticker;
-            double money, spentMoney, addedMoney, price;
-            int numTransactions, stocksInPortfolio, quantity;
-            int investorType, transactionType; // int to support additional types
-            while ((line = reader.readLine()) != null) {
-                if (line.equals(username)) {
-                    reader.readLine(); //Password; discard line
-                    line = reader.readLine();
-                    if (line.equalsIgnoreCase("adult")) {
-                        investorType = 1;
-                    } else {
-                        investorType = 0; // Assume that it is either "adult" or "child"
-                    }
-                    money = Double.parseDouble(reader.readLine());
-                    spentMoney = Double.parseDouble(reader.readLine());
-                    addedMoney = Double.parseDouble(reader.readLine());
-                    
-                }
-            }
-            
-            reader.close();
-        } catch (IOException iox) {
-
-        } 
-    }
 
     /**
      * Writes all information about the investor in a file, then writes all other
