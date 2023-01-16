@@ -62,7 +62,8 @@ public class JBKRMobile {
         return table;
     }
     /**
-     * Reads the information about a specified investor in a file, then creates an investor object
+     * Reads the information about a specified username in a file.
+     * Creates an investor object using that information
      */
 
     /**
