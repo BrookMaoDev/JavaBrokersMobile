@@ -64,7 +64,7 @@ public class JBKRMobile {
     }
     /**
      * Reads the information about a specified username in a file.
-     * Creates an investor object using that information
+     * Creates an investor object using that information 
      */
 
     /**
