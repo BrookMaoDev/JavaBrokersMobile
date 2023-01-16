@@ -281,7 +281,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    ArrayList<String> data = retrieveTickers();
+                    ArrayList<String> data = readInfo();
                     Table<String> table = new Table<String>("QUANTITY", "TICKER", "PRICE", "CHANGE", "% CHANGE");
                     try {
                         for (int i = 0; i < data.size(); i++);
