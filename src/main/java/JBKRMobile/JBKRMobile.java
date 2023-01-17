@@ -250,14 +250,16 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    ArrayList<String> data = readInfo();
                     Table<String> table = new Table<String>("QUANTITY", "TICKER", "PRICE", "CHANGE", "% CHANGE");
+                    ArrayList<OwnedStock> data = user.getPortfolio();
                     try {
-                        for (int i = 0; i < data.size(); i++);
-                        api.setSymbol(data.get(i));
-                        table.getTableModel().addRow(user.getQuantity() + "", api.getSymbol() + "", api.getPrice() + "",
-                                api.getChange() + "",
-                                api.getPercentChange() + "%");
+                        for (int i = 0; i < data.size(); i++) {
+                            api.setSymbol(data.get(i).getTicker());
+                            table.getTableModel().addRow(data.get(i).getQuantity() + "", api.getSymbol() + "",
+                                    api.getPrice() + "",
+                                    api.getChange() + "",
+                                    api.getPercentChange() + "%");
+                        }
                     } catch (Exception e) {
                     }
                     tickerPanel.removeAllComponents();
