@@ -31,7 +31,6 @@ public class JBKRMobile {
     private Button logout;
     private Button portfolio;
     private Investor user;
-    private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
     private static int maxQuery = 50;
 
     public JBKRMobile() {
@@ -64,19 +63,6 @@ public class JBKRMobile {
             }
         }
         return table;
-    }
-
-    /**
-     * Writes all information about the investor in a file, then writes all other
-     * information about every other
-     * investor in the file, then saves it.
-     */
-    public void saveInvestor() {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(DB_PATH));
-        } catch (IOException e) {
-
-        }
     }
 
     public void run() {
@@ -145,6 +131,7 @@ public class JBKRMobile {
                 public void run() {
                     sidePanel.removeAllComponents();
                     sidePanel.addComponent(home);
+                    sidePanel.addComponent(search);
                     sidePanel.addComponent(login);
                     sidePanel.addComponent(signup);
                 }
@@ -217,7 +204,7 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            ActionListDialogBuilder typeSelector = new ActionListDialogBuilder()
+                                            new ActionListDialogBuilder()
                                                     .setTitle("Sign Up").setDescription("Select account type:")
                                                     .addAction("Adult", new Runnable() {
                                                         @Override
@@ -230,8 +217,8 @@ public class JBKRMobile {
                                                         public void run() {
                                                             accountType = "child";
                                                         }
-                                                    });
-                                            if (new Login().createUser(username, password, accountType)) {
+                                                    }).build().showDialog(textGUI);
+                                            if (accountType != null && new Login().createUser(username, password, accountType)) {
                                                 MessageDialog.showMessageDialog(textGUI, "Sign up", "Account created.");
                                                 sidePanel.removeAllComponents();
                                                 sidePanel.addComponent(logout);
