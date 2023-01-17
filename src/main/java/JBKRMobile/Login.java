@@ -31,7 +31,7 @@ public class Login {
 
             if (br.readLine().equals(encryptedPassword)) {
                 if (br.readLine().equalsIgnoreCase("adult")) {
-                    investorType = 1;
+                    investorType = 1; // Adult is 1
                 } else {
                     investorType = 0; // Assume that it is either "adult" or "child"
                 }
@@ -43,6 +43,7 @@ public class Login {
                 // get transactions
                 for (int i = 0; i < numTransactions; i++) {
                     if (br.readLine().equalsIgnoreCase("buy")) {
+                        //date, ticker, quantity, price
                         transactions.add(new Buy(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
                                 Double.parseDouble(br.readLine())));
                     } else {
@@ -54,9 +55,11 @@ public class Login {
                 // get owned stocks
                 stocksInPortfolio = Integer.parseInt(br.readLine());
                 for (int i = 0; i < stocksInPortfolio; i++) {
+                    // ticker, quantity
                     portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
                 }
 
+                // Adult: 1. Child: anything else
                 if (investorType == 1) {
                     user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
@@ -69,7 +72,7 @@ public class Login {
         } catch (IOException e) {
             System.out.println(e);
         } catch (Exception e) {
-
+            System.out.println("Failed to read information");
         }
         return user;
     }
