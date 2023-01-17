@@ -73,7 +73,7 @@ public class Login {
         } catch (IOException e) {
             return user;
         }
-        return null;
+        return user;
     }
 
     public boolean createUser(String username, String password) {
