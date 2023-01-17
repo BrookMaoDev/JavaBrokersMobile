@@ -2,6 +2,7 @@ package JBKRMobile;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,12 +10,13 @@ import java.util.ArrayList;
 
 public class Login {
     private static final int KEY = 5;
+    private static final String DB_PATH = "src/main/java/JBKRMobile/Database/";
 
     public static Investor login(String username, String password) {
         Investor user = null;
         try {
             // Searches for username & password combination
-            BufferedReader br = new BufferedReader(new FileReader(username + ".db"));
+            BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
             String encryptedPassword = encryptPassword(password);
             int investorType;
             double money;
@@ -77,15 +79,22 @@ public class Login {
         Investor user = null;
         try {
             // Write username and encrypted password to file
-            BufferedWriter bw = new BufferedWriter(new FileWriter(username + ".txt", true));
-            bw.write(username + "\n");
-            bw.write(encryptPassword(password) + "\n");
-            bw.write(accountType + "\n");
-            bw.close();
-            if (accountType == "adult") {
-                user = new Adult(username, password);
-            } else {
-                user = new Child(username, password);
+            BufferedReader checkUsername = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
+            checkUsername.close();
+        } catch (FileNotFoundException e) {
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db", true));
+                bw.write(username + "\n");
+                bw.write(encryptPassword(password) + "\n");
+                bw.write(accountType + "\n");
+                bw.close();
+                if (accountType.equals("adult")) {
+                    user = new Adult(username, password);
+                } else {
+                    user = new Child(username, password);
+                }
+            } catch (IOException i) {
+                return user;
             }
         } catch (IOException e) {
             return user;

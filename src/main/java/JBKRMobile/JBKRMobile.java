@@ -202,6 +202,7 @@ public class JBKRMobile {
                                             break;
 
                                         default:
+                                            accountType = null;
                                             new ActionListDialogBuilder()
                                                     .setTitle("Sign Up").setDescription("Select account type:")
                                                     .addAction("Adult", new Runnable() {
@@ -216,13 +217,18 @@ public class JBKRMobile {
                                                             accountType = "child";
                                                         }
                                                     }).build().showDialog(textGUI);
-                                            if (accountType != null && Login.createUser(username, password, accountType) != null) {
-                                                MessageDialog.showMessageDialog(textGUI, "Sign up", "Account created.");
-                                                sidePanel.removeAllComponents();
-                                                sidePanel.addComponent(logout);
-                                            } else {
-                                                MessageDialog.showMessageDialog(textGUI, "Sign up",
-                                                        "Username unavailable.");
+                                            if (accountType != null) {
+                                                user = Login.createUser(username, password, accountType);
+                                                if (user != null) {
+                                                    MessageDialog.showMessageDialog(textGUI, "Sign up",
+                                                            "Account created.");
+                                                    sidePanel.removeAllComponents();
+                                                    sidePanel.addComponent(search);
+                                                    sidePanel.addComponent(logout);
+                                                } else {
+                                                    MessageDialog.showMessageDialog(textGUI, "Sign up",
+                                                            "Username unavailable.");
+                                                }
                                             }
                                     }
                                 }
@@ -233,6 +239,7 @@ public class JBKRMobile {
             sidePanel.addComponent(signup);
 
             portfolio = new Button("Portfolio", new Runnable() {
+
                 @Override
                 public void run() {
                     // Retrieve saved tickers
