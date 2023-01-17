@@ -67,10 +67,13 @@ public class Login {
             }
             br.close();
         } catch (IOException e) {
-            return user;
+            System.out.println(e);
+        } catch (Exception e) {
+
         }
         return user;
     }
+
 
     public boolean createUser(String username, String password) {
         try {
