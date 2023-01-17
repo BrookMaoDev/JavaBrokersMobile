@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class Login {
     private static final int KEY = 5;
-    private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
 
     public static Investor login(String username, String password) {
         Investor user = null;
@@ -40,7 +39,7 @@ public class Login {
                 // get transactions
                 for (int i = 0; i < numTransactions; i++) {
                     if (br.readLine().equalsIgnoreCase("buy")) {
-                        //date, ticker, quantity, price
+                        // date, ticker, quantity, price
                         transactions.add(new Buy(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
                                 Double.parseDouble(br.readLine())));
                     } else {
@@ -74,32 +73,24 @@ public class Login {
         return user;
     }
 
-
-    public static boolean createUser(String username, String password, String accountType) {
+    public static Investor createUser(String username, String password, String accountType) {
+        Investor user = null;
         try {
-            // Determine if username is unique
-            BufferedReader br = new BufferedReader(new FileReader(DB_PATH));
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                if (line.equals(username)) {
-                    br.close();
-                    return false;
-                }
-                br.readLine();
-            }
-            br.close();
-
             // Write username and encrypted password to file
-            BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH, true));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(username + ".txt", true));
             bw.write(username + "\n");
             bw.write(encryptPassword(password) + "\n");
             bw.write(accountType + "\n");
             bw.close();
-            return true;
+            if (accountType == "adult") {
+                user = new Adult(username, password);
+            } else {
+                user = new Child(username, password);
+            }
         } catch (IOException e) {
-            System.out.println(e);
+            return user;
         }
-        return false;
+        return user;
     }
 
     private static String encryptPassword(String password) {

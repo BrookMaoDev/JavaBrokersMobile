@@ -218,7 +218,7 @@ public class JBKRMobile {
                                                             accountType = "child";
                                                         }
                                                     }).build().showDialog(textGUI);
-                                            if (accountType != null && Login.createUser(username, password, accountType)) {
+                                            if (accountType != null && Login.createUser(username, password, accountType) != null) {
                                                 MessageDialog.showMessageDialog(textGUI, "Sign up", "Account created.");
                                                 sidePanel.removeAllComponents();
                                                 sidePanel.addComponent(logout);
