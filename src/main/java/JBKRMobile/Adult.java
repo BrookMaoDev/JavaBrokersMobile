@@ -7,6 +7,10 @@ public class Adult extends Investor {
         super(username, password);
     }
 
+    public Adult(String username, String password, double money, double spentMoney, double addedMoney, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
+        super(username, password, money, spentMoney, addedMoney, numTransactions, transactions, stocksInPortfolio, portfolio);
+    }
+
     public String buyMax(ArrayList<String> tickers, double money) {
         ArrayList<String> bought = new ArrayList<String>();
         double moneySpent = 0;

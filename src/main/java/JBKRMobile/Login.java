@@ -15,9 +15,11 @@ public class Login {
     }
 
     public Investor login(String username, String password) {
+        Investor user;
         try {
             // Searches for username & password combination
             BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
+            boolean foundUser = false;
             String line, date, ticker = "";
             double money, spentMoney, addedMoney, price;
             int numTransactions, stocksInPortfolio, quantity;
@@ -25,7 +27,7 @@ public class Login {
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
             String encryptedPassword = encryptPassword(password);
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null && !foundUser) {
                 if (line.equals(username) && reader.readLine().equals(encryptedPassword)) {
                     line = reader.readLine();
                     if (line.equalsIgnoreCase("adult")) {
@@ -38,6 +40,7 @@ public class Login {
                     addedMoney = Double.parseDouble(reader.readLine());
                     numTransactions = Integer.parseInt(reader.readLine());
                     
+                    //Add all transactions to the transactions list
                     for (int i = 0; i < numTransactions; i++) {
                         if (reader.readLine().equalsIgnoreCase("buy")) {
                             transactionType = 0; // buy is 0
@@ -55,7 +58,21 @@ public class Login {
                             //Sell
                             default: transactions.add(new Sell(date, ticker, quantity, price));
                         }
+                    }
 
+                    stocksInPortfolio = Integer.parseInt(reader.readLine());
+
+                    for (int i = 0; i < stocksInPortfolio; i++) {
+                        ticker = reader.readLine();
+                        quantity = Integer.parseInt(reader.readLine());
+
+                        portfolio.add(new OwnedStock(ticker, quantity));
+                    }
+                    foundUser = true;
+
+                    switch (investorType) {
+                        //Child
+                        case 0: user = new Child()
                     }
                 }
             }
@@ -65,7 +82,7 @@ public class Login {
         } catch (Exception e) {
 
         }
-        return null;
+        return user;
     }
 
 
