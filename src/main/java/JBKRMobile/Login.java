@@ -11,10 +11,7 @@ public class Login {
     private static final int KEY = 5;
     private static final String DB_PATH = "src/main/java/JBKRMobile/database.db";
 
-    public Login() {
-    }
-
-    public Investor login(String username, String password) {
+    public static Investor login(String username, String password) {
         Investor user = null;
         try {
             // Searches for username & password combination
@@ -78,7 +75,7 @@ public class Login {
     }
 
 
-    public boolean createUser(String username, String password, String accountType) {
+    public static boolean createUser(String username, String password, String accountType) {
         try {
             // Determine if username is unique
             BufferedReader br = new BufferedReader(new FileReader(DB_PATH));
@@ -105,7 +102,7 @@ public class Login {
         return false;
     }
 
-    private String encryptPassword(String password) {
+    private static String encryptPassword(String password) {
         char[] chars = password.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             chars[i] += KEY;

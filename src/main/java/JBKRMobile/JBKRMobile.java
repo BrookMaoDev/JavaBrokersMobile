@@ -161,7 +161,7 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            user = new Login().login(username, password);
+                                            user = Login.login(username, password);
                                             if (user != null) {
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "Successfully logged in.");
@@ -218,7 +218,7 @@ public class JBKRMobile {
                                                             accountType = "child";
                                                         }
                                                     }).build().showDialog(textGUI);
-                                            if (accountType != null && new Login().createUser(username, password, accountType)) {
+                                            if (accountType != null && Login.createUser(username, password, accountType)) {
                                                 MessageDialog.showMessageDialog(textGUI, "Sign up", "Account created.");
                                                 sidePanel.removeAllComponents();
                                                 sidePanel.addComponent(logout);
