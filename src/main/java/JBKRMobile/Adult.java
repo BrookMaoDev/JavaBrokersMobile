@@ -13,8 +13,7 @@ public class Adult extends Investor {
 
     public String buyMax(ArrayList<String> tickers, double money) {
         ArrayList<String> bought = new ArrayList<String>();
-        double moneySpent = 0;
-        ArrayList<String> bestCombo = permute(tickers, money, bought, moneySpent);
+        ArrayList<String> bestCombo = permute(tickers, money, bought);
         ArrayList<String> output = new ArrayList<String>();
         for (int i = 0; i < bestCombo.size(); i++) {
             int index = output.indexOf(bestCombo.get(i));
