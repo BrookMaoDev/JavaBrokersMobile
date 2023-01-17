@@ -62,7 +62,7 @@ public class Login {
                     }
 
                     // get owned stocks
-                    stocksInPortfolio = Integer.parseInt(br.readLine());
+                    stocksInPortfolio = Integer.parseInt(reader.readLine());
                     for (int i = 0; i < stocksInPortfolio; i++) {
                         ticker = reader.readLine();
                         quantity = Integer.parseInt(reader.readLine());
