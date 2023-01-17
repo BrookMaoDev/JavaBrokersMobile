@@ -258,7 +258,8 @@ abstract class Investor {
      * Generates and returns a string describing everything about the investor
      */
     public String fileString() {
-        String output; 
+        String output = "";
+        output += password + "\n";
         if (this instanceof Adult) {
             output = "adult\n";
         } else {
@@ -270,7 +271,7 @@ abstract class Investor {
         output += numTransactions + "\n";
         for (int i = 0; i < numTransactions; i++) {
             output += transactions.get(i).fileString() + "\n";
-            
+
         }
         output += stocksInPortfolio + "\n";
         for (int i = 0; i < stocksInPortfolio; i++) {
