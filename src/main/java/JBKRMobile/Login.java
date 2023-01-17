@@ -47,12 +47,23 @@ public class Login {
                         date = reader.readLine();
                         ticker = reader.readLine();
                         quantity = Integer.parseInt(reader.readLine());
+                        price = Double.parseDouble(reader.readLine());
+
+                        switch (transactionType) {
+                            //Buy
+                            case 0: transactions.add(new Buy(date, ticker, quantity, price));
+                            //Sell
+                            default: transactions.add(new Sell(date, ticker, quantity, price));
+                        }
+
                     }
                 }
             }
             reader.close();
         } catch (IOException e) {
             System.out.println(e);
+        } catch (Exception e) {
+
         }
         return null;
     }
