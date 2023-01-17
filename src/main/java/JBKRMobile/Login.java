@@ -18,48 +18,38 @@ public class Login {
         Investor user = null;
         try {
             // Searches for username & password combination
-            BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
-            boolean foundUser = false;
-            String line, date, ticker = "";
-            double money, spentMoney, addedMoney, price;
-            int numTransactions, stocksInPortfolio, quantity;
-            int investorType, transactionType; // int to support additional types
+            BufferedReader br = new BufferedReader(new FileReader(username + ".db"));
+            String encryptedPassword = encryptPassword(password);
+            int investorType;
+            double money;
+            double spentMoney;
+            double addedMoney;
+            int numTransactions;
+            int stocksInPortfolio;
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
-            String encryptedPassword = encryptPassword(password);
-            while ((line = reader.readLine()) != null && !foundUser) {
-                if (line.equals(username) && reader.readLine().equals(encryptedPassword)) {
-                    line = reader.readLine();
-                    if (line.equalsIgnoreCase("adult")) {
-                        investorType = 1;
-                    } else {
-                        investorType = 0; // Assume that it is either "adult" or "child"
-                    }
-                    money = Double.parseDouble(reader.readLine());
-                    spentMoney = Double.parseDouble(reader.readLine());
-                    addedMoney = Double.parseDouble(reader.readLine());
-                    numTransactions = Integer.parseInt(reader.readLine());
-                    
-                    //Add all transactions to the transactions list
-                    for (int i = 0; i < numTransactions; i++) {
-                        if (reader.readLine().equalsIgnoreCase("buy")) {
-                            transactionType = 0; // buy is 0
-                        } else {
-                            transactionType = 1; // sell is 1
-                        }
-                        date = reader.readLine();
-                        ticker = reader.readLine();
-                        quantity = Integer.parseInt(reader.readLine());
-                        price = Double.parseDouble(reader.readLine());
 
-                        switch (transactionType) {
-                            //Buy
-                            case 0: transactions.add(new Buy(date, ticker, quantity, price));
-                            break;
-                            //Sell
-                            default: transactions.add(new Sell(date, ticker, quantity, price));
-                        }
+            if (br.readLine().equals(encryptedPassword)) {
+                if (br.readLine().equalsIgnoreCase("adult")) {
+                    investorType = 1;
+                } else {
+                    investorType = 0; // Assume that it is either "adult" or "child"
+                }
+                money = Double.parseDouble(br.readLine());
+                spentMoney = Double.parseDouble(br.readLine());
+                addedMoney = Double.parseDouble(br.readLine());
+                numTransactions = Integer.parseInt(br.readLine());
+
+                // get transactions
+                for (int i = 0; i < numTransactions; i++) {
+                    if (br.readLine().equalsIgnoreCase("buy")) {
+                        transactions.add(new Buy(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
+                                Double.parseDouble(br.readLine())));
+                    } else {
+                        transactions.add(new Sell(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
+                                Double.parseDouble(br.readLine())));
                     }
+                }
 
                     // get owned stocks
                     stocksInPortfolio = Integer.parseInt(reader.readLine());
@@ -71,16 +61,15 @@ public class Login {
                     }
                     foundUser = true;
 
-                    switch (investorType) {
-                        //Child
-                        case 0: user = new Child(username, password, money, spentMoney, addedMoney, numTransactions, transactions, stocksInPortfolio, portfolio);
-                        break;
-                        //Adult
-                        default: user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions, transactions, stocksInPortfolio, portfolio);
-                    }
+                if (investorType == 1) {
+                    user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
+                            transactions, stocksInPortfolio, portfolio);
+                } else {
+                    user = new Child(username, password, money, spentMoney, addedMoney, numTransactions,
+                            transactions, stocksInPortfolio, portfolio);
                 }
             }
-            reader.close();
+            br.close();
         } catch (IOException e) {
             System.out.println(e);
         } catch (Exception e) {
