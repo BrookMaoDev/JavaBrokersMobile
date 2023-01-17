@@ -1,7 +1,7 @@
 package JBKRMobile;
 
 public class Sell extends Transaction {
-    public Sell(String date, String ticker, long quantity, double price) {
+    public Sell(String date, String ticker, int quantity, double price) {
         super(date, ticker, quantity, price);
     }
 

@@ -15,48 +15,66 @@ public class Login {
     }
 
     public Investor login(String username, String password) {
+        Investor user = null;
         try {
             // Searches for username & password combination
-            BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
-            String line, date, ticker = "";
-            double money, spentMoney, addedMoney, price;
-            int numTransactions, stocksInPortfolio, quantity;
-            int investorType, transactionType; // int to support additional types
+            BufferedReader br = new BufferedReader(new FileReader(username + ".db"));
+            String encryptedPassword = encryptPassword(password);
+            String line;
+            int investorType;
+            double money;
+            double spentMoney;
+            double addedMoney;
+            int numTransactions;
+            int stocksInPortfolio;
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
-            String encryptedPassword = encryptPassword(password);
-            while ((line = reader.readLine()) != null) {
-                if (line.equals(username) && reader.readLine().equals(encryptedPassword)) {
-                    line = reader.readLine();
+
+            while ((line = br.readLine()) != null) {
+                if (line.equals(encryptedPassword)) {
+                    line = br.readLine();
                     if (line.equalsIgnoreCase("adult")) {
                         investorType = 1;
                     } else {
                         investorType = 0; // Assume that it is either "adult" or "child"
                     }
-                    money = Double.parseDouble(reader.readLine());
-                    spentMoney = Double.parseDouble(reader.readLine());
-                    addedMoney = Double.parseDouble(reader.readLine());
-                    numTransactions = Integer.parseInt(reader.readLine());
-                    
+                    money = Double.parseDouble(br.readLine());
+                    spentMoney = Double.parseDouble(br.readLine());
+                    addedMoney = Double.parseDouble(br.readLine());
+                    numTransactions = Integer.parseInt(br.readLine());
+
+                    // get transactions
                     for (int i = 0; i < numTransactions; i++) {
-                        if (reader.readLine().equalsIgnoreCase("buy")) {
-                            transactionType = 0; // buy is 0
+                        if (br.readLine().equalsIgnoreCase("buy")) {
+                            transactions.add(new Buy(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
+                                    Double.parseDouble(br.readLine())));
                         } else {
-                            transactionType = 1; // sell is 1
+                            transactions.add(new Sell(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
+                                    Double.parseDouble(br.readLine())));
                         }
-                        date = reader.readLine();
-                        ticker = reader.readLine();
-                        quantity = Integer.parseInt(reader.readLine());
+                    }
+
+                    // get owned stocks
+                    stocksInPortfolio = Integer.parseInt(br.readLine());
+                    for (int i = 0; i < stocksInPortfolio; i++) {
+                        portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
+                    }
+
+                    if (investorType == 1) {
+                        user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
+                                transactions, stocksInPortfolio, portfolio);
+                    } else {
+                        user = new Child(username, password, money, spentMoney, addedMoney, numTransactions,
+                                transactions, stocksInPortfolio, portfolio);
                     }
                 }
             }
-            reader.close();
+            br.close();
         } catch (IOException e) {
-            System.out.println(e);
+            return user;
         }
         return null;
     }
-
 
     public boolean createUser(String username, String password) {
         try {
