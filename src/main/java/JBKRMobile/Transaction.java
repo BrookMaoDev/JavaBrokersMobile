@@ -5,11 +5,11 @@ public abstract class Transaction {
     protected final static double FEE = 1.0;
     protected String date;
     protected String ticker;
-    protected long quantity;
+    protected int quantity;
     protected double price;
 
     // Constructor
-    public Transaction(String date, String ticker, long quantity, double price) {
+    public Transaction(String date, String ticker, int quantity, double price) {
         this.date = date;
         this.ticker = ticker;
         this.quantity = quantity;
