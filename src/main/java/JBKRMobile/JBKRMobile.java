@@ -48,6 +48,7 @@ public class JBKRMobile {
         this.dataSetting = dataSetting;
     }
 
+    // scrape data from site
     public Table<String> generateData() {
         Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
         ArrayList<String> data = STOCK_DATA.getData(dataSetting);
