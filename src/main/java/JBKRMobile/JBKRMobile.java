@@ -19,7 +19,6 @@ import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
     private static final String DEFAULT_DATA_SETTING = "most-active";
-    private API api;
     private String dataSetting;
     private String username;
     private String password;
@@ -34,7 +33,6 @@ public class JBKRMobile {
     private static int maxQuery = 50;
 
     public JBKRMobile() {
-        api = new API();
         dataSetting = DEFAULT_DATA_SETTING;
         username = "";
         password = "";
@@ -54,10 +52,10 @@ public class JBKRMobile {
         int c = maxQuery;
         for (int i = 0; i < c; i++) {
             try {
-                api.setSymbol(data.get(i));
-                table.getTableModel().addRow(api.getSymbol() + "", api.getPrice() + "",
-                        api.getChange() + "",
-                        api.getPercentChange() + "%");
+                API.setSymbol(data.get(i));
+                table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                        API.getChange() + "",
+                        API.getPercentChange() + "%");
             } catch (Exception e) {
                 c++;
             }
@@ -111,10 +109,10 @@ public class JBKRMobile {
                             default:
                                 Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
                                 try {
-                                    api.setSymbol(query.toUpperCase());
-                                    table.getTableModel().addRow(api.getSymbol() + "", api.getPrice() + "",
-                                            api.getChange() + "",
-                                            api.getPercentChange() + "%");
+                                    API.setSymbol(query.toUpperCase());
+                                    table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                                            API.getChange() + "",
+                                            API.getPercentChange() + "%");
                                 } catch (Exception e) {
                                 }
                                 tickerPanel.removeAllComponents();
@@ -242,11 +240,11 @@ public class JBKRMobile {
                     ArrayList<OwnedStock> data = user.getPortfolio();
                     try {
                         for (int i = 0; i < data.size(); i++) {
-                            api.setSymbol(data.get(i).getTicker());
-                            table.getTableModel().addRow(data.get(i).getQuantity() + "", api.getSymbol() + "",
-                                    api.getPrice() + "",
-                                    api.getChange() + "",
-                                    api.getPercentChange() + "%");
+                            API.setSymbol(data.get(i).getTicker());
+                            table.getTableModel().addRow(data.get(i).getQuantity() + "", API.getSymbol() + "",
+                                    API.getPrice() + "",
+                                    API.getChange() + "",
+                                    API.getPercentChange() + "%");
                         }
                     } catch (Exception e) {
                     }

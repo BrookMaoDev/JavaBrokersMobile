@@ -40,9 +40,9 @@ public class Child extends Investor {
         for (int i = 0; i < output.size(); i+=2) {
             out += "Stock: " + output.get(i) + "\n";
             out += "Quantity: " + output.get(i+1) + "\n";
-            api.setSymbol(output.get(i));
-            out += "Price of Individual Stock: " + api.getPrice() + "\n";
-            out += "Price of Purchase: " + (api.getPrice() * Integer.parseInt(output.get(i+1))) + "\n";
+            API.setSymbol(output.get(i));
+            out += "Price of Individual Stock: " + API.getPrice() + "\n";
+            out += "Price of Purchase: " + (API.getPrice() * Integer.parseInt(output.get(i+1))) + "\n";
             out += "\n";
         }
 
@@ -52,8 +52,8 @@ public class Child extends Investor {
 
     // Attempts to buy stock
     public boolean buyStock(String ticker, int quantity) {
-        api.setSymbol(ticker);
-        double price = api.getPrice();
+        API.setSymbol(ticker);
+        double price = API.getPrice();
 
         // Check if the transaction exceeds the spending limit
         if (price * quantity > TRANSACTION_SPEND_LIMIT) {

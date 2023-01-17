@@ -13,7 +13,6 @@ abstract class Investor {
     protected int stocksInPortfolio;
     protected ArrayList<Transaction> transactions;
     protected ArrayList<OwnedStock> portfolio;
-    protected API api;
 
     // Creates investor objects for when they sign up
     public Investor(String username, String password) {
@@ -26,7 +25,6 @@ abstract class Investor {
         this.stocksInPortfolio = 0;
         this.transactions = new ArrayList<Transaction>();
         this.portfolio = new ArrayList<OwnedStock>();
-        api = new API();
         date = java.time.LocalDate.now().toString();
     }
 
@@ -41,7 +39,6 @@ abstract class Investor {
         this.stocksInPortfolio = stocksInPortfolio;
         this.transactions = transactions;
         this.portfolio = portfolio;
-        api = new API();
         date = java.time.LocalDate.now().toString();
     }
 
@@ -96,8 +93,8 @@ abstract class Investor {
             ArrayList<String> newArray = bought;
             newArray.add(tickers.get(i));
             if (calcValueOfArray(newArray) < money) {
-                api.setSymbol(tickers.get(i));
-                ArrayList<String> potentialBestCombo = permute(tickers, money, newArray, moneySpent + api.getPrice());
+                API.setSymbol(tickers.get(i));
+                ArrayList<String> potentialBestCombo = permute(tickers, money, newArray, moneySpent + API.getPrice());
                 if (calcValueOfArray(potentialBestCombo) > calcValueOfArray(bestCombo)) {
                     bestCombo = potentialBestCombo;
                 }
@@ -112,8 +109,8 @@ abstract class Investor {
     protected double calcValueOfArray(ArrayList<String> array) {
         double value = 0;
         for (int i = 0; i < array.size(); i++) {
-            api.setSymbol(array.get(i));
-            value += api.getPrice();
+            API.setSymbol(array.get(i));
+            value += API.getPrice();
         }
         return value;
     }
@@ -127,15 +124,15 @@ abstract class Investor {
         for (int i = 0; i < stocksInPortfolio; i++) {
             if (portfolio.get(i).getTicker().equals(ticker)) {
                 if (portfolio.get(i).getQuantity() > quantity) {
-                    api.setSymbol(ticker);
-                    Sell sell = new Sell(date, ticker, quantity, api.getPrice());
+                    API.setSymbol(ticker);
+                    Sell sell = new Sell(date, ticker, quantity, API.getPrice());
                     portfolio.get(i).subtractQuantity(quantity);
                     money = money + sell.costOfTransaction();
                     transactions.add(sell);
                     return true;
                 } else if (portfolio.get(i).getQuantity() == quantity) {
-                    api.setSymbol(ticker);
-                    Sell sell = new Sell(date, ticker, quantity, api.getPrice());
+                    API.setSymbol(ticker);
+                    Sell sell = new Sell(date, ticker, quantity, API.getPrice());
                     portfolio.remove(i); // Removes ownership of stock from portfolio since they sold them all
                     money = money + sell.costOfTransaction();
                     transactions.add(sell);
@@ -181,8 +178,8 @@ abstract class Investor {
         for (int i = 0; i < stocksInPortfolio; i++) {
             String ticker = portfolio.get(i).getTicker();
             int quantity = portfolio.get(i).getQuantity();
-            api.setSymbol(ticker);
-            netWorth += quantity * api.getPrice();
+            API.setSymbol(ticker);
+            netWorth += quantity * API.getPrice();
         }
 
         netWorth += money;

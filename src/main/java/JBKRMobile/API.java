@@ -8,12 +8,9 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 class API {
-    private StockQuote stock;
+    private static StockQuote stock;
 
-    public API() {
-    }
-
-    public void setSymbol(String symbol) {
+    public static void setSymbol(String symbol) {
         try {
             stock = YahooFinance.get(symbol.toUpperCase()).getQuote();
         } catch (IOException e) {
@@ -21,27 +18,27 @@ class API {
         }
     }
 
-    public String getSymbol() {
+    public static String getSymbol() {
         return stock.getSymbol();
     }
 
-    public double getPrice() {
+    public static double getPrice() {
         return Double.parseDouble(stock.getPrice().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 
-    public double getPreviousClose() {
+    public static double getPreviousClose() {
         return Double.parseDouble(stock.getPreviousClose().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 
-    public double getOpen() {
+    public static double getOpen() {
         return Double.parseDouble(stock.getOpen().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 
-    public int getVolume() {
+    public static int getVolume() {
         return (int) Math.round(stock.getVolume());
     }
 
-    public double getChange() {
+    public static double getChange() {
         // Set max decimal places to 8
         DecimalFormat df = new DecimalFormat("#.########");
         df.setRoundingMode(RoundingMode.HALF_EVEN);
@@ -50,7 +47,7 @@ class API {
         return Double.parseDouble(df.format(d));
     }
 
-    public double getPercentChange() {
+    public static double getPercentChange() {
         return Double.parseDouble(stock.getChangeInPercent().setScale(2, RoundingMode.HALF_EVEN).toString());
     }
 }
