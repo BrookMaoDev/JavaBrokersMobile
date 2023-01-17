@@ -15,7 +15,7 @@ public class Login {
     }
 
     public Investor login(String username, String password) {
-        Investor user;
+        Investor user = null;
         try {
             // Searches for username & password combination
             BufferedReader reader = new BufferedReader(new FileReader(DB_PATH));
@@ -55,6 +55,7 @@ public class Login {
                         switch (transactionType) {
                             //Buy
                             case 0: transactions.add(new Buy(date, ticker, quantity, price));
+                            break;
                             //Sell
                             default: transactions.add(new Sell(date, ticker, quantity, price));
                         }
@@ -72,7 +73,10 @@ public class Login {
 
                     switch (investorType) {
                         //Child
-                        case 0: user = new Child()
+                        case 0: user = new Child(username, password, money, spentMoney, addedMoney, numTransactions, transactions, stocksInPortfolio, portfolio);
+                        break;
+                        //Adult
+                        default: user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions, transactions, stocksInPortfolio, portfolio);
                     }
                 }
             }
