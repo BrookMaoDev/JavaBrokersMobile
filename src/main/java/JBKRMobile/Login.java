@@ -20,7 +20,6 @@ public class Login {
             // Searches for username & password combination
             BufferedReader br = new BufferedReader(new FileReader(username + ".db"));
             String encryptedPassword = encryptPassword(password);
-            String line;
             int investorType;
             double money;
             double spentMoney;
@@ -30,43 +29,40 @@ public class Login {
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
 
-            while ((line = br.readLine()) != null) {
-                if (line.equals(encryptedPassword)) {
-                    line = br.readLine();
-                    if (line.equalsIgnoreCase("adult")) {
-                        investorType = 1;
+            if (br.readLine().equals(encryptedPassword)) {
+                if (br.readLine().equalsIgnoreCase("adult")) {
+                    investorType = 1;
+                } else {
+                    investorType = 0; // Assume that it is either "adult" or "child"
+                }
+                money = Double.parseDouble(br.readLine());
+                spentMoney = Double.parseDouble(br.readLine());
+                addedMoney = Double.parseDouble(br.readLine());
+                numTransactions = Integer.parseInt(br.readLine());
+
+                // get transactions
+                for (int i = 0; i < numTransactions; i++) {
+                    if (br.readLine().equalsIgnoreCase("buy")) {
+                        transactions.add(new Buy(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
+                                Double.parseDouble(br.readLine())));
                     } else {
-                        investorType = 0; // Assume that it is either "adult" or "child"
+                        transactions.add(new Sell(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
+                                Double.parseDouble(br.readLine())));
                     }
-                    money = Double.parseDouble(br.readLine());
-                    spentMoney = Double.parseDouble(br.readLine());
-                    addedMoney = Double.parseDouble(br.readLine());
-                    numTransactions = Integer.parseInt(br.readLine());
+                }
 
-                    // get transactions
-                    for (int i = 0; i < numTransactions; i++) {
-                        if (br.readLine().equalsIgnoreCase("buy")) {
-                            transactions.add(new Buy(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
-                                    Double.parseDouble(br.readLine())));
-                        } else {
-                            transactions.add(new Sell(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
-                                    Double.parseDouble(br.readLine())));
-                        }
-                    }
+                // get owned stocks
+                stocksInPortfolio = Integer.parseInt(br.readLine());
+                for (int i = 0; i < stocksInPortfolio; i++) {
+                    portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
+                }
 
-                    // get owned stocks
-                    stocksInPortfolio = Integer.parseInt(br.readLine());
-                    for (int i = 0; i < stocksInPortfolio; i++) {
-                        portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
-                    }
-
-                    if (investorType == 1) {
-                        user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
-                                transactions, stocksInPortfolio, portfolio);
-                    } else {
-                        user = new Child(username, password, money, spentMoney, addedMoney, numTransactions,
-                                transactions, stocksInPortfolio, portfolio);
-                    }
+                if (investorType == 1) {
+                    user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
+                            transactions, stocksInPortfolio, portfolio);
+                } else {
+                    user = new Child(username, password, money, spentMoney, addedMoney, numTransactions,
+                            transactions, stocksInPortfolio, portfolio);
                 }
             }
             br.close();
