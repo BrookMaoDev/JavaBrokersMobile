@@ -75,7 +75,7 @@ public class Login {
     }
 
 
-    public boolean createUser(String username, String password) {
+    public boolean createUser(String username, String password, String accountType) {
         try {
             // Determine if username is unique
             BufferedReader br = new BufferedReader(new FileReader(DB_PATH));
@@ -93,6 +93,7 @@ public class Login {
             BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH, true));
             bw.write(username + "\n");
             bw.write(encryptPassword(password) + "\n");
+            bw.write(accountType + "\n");
             bw.close();
             return true;
         } catch (IOException e) {

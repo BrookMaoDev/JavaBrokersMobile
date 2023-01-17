@@ -173,7 +173,8 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            if (new Login().login(username, password) != null) {
+                                            user = new Login().login(username, password);
+                                            if (user != null) {
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "Successfully logged in.");
                                                 sidePanel.removeAllComponents();
