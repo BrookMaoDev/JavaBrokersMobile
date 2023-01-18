@@ -71,7 +71,6 @@ public class Child extends Investor {
 
         transactions.add(purchase);
         numTransactions++;
-        stocksInPortfolio++;
 
         int tickerIndex = getTickerIndex(ticker);
 
@@ -79,6 +78,7 @@ public class Child extends Investor {
         if (tickerIndex < 0) {
             OwnedStock boughtStock = new OwnedStock(ticker, quantity);
             portfolio.add(boughtStock);
+            stocksInPortfolio++;
         } else {
             // The user owns this stock
             portfolio.get(tickerIndex).addQuantity(quantity);
