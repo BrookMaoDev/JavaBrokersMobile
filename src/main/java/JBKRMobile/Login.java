@@ -56,8 +56,7 @@ public class Login {
                 }
             }
             br.close();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
         }
         return null;
     }
@@ -96,8 +95,7 @@ public class Login {
             BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
             br.close();
             return false;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return true;
         }
     }

@@ -90,7 +90,9 @@ public class JBKRMobile {
                                     "Insufficient funds.");
                         }
                     } catch (NumberFormatException e) {
-                        MessageDialog.showMessageDialog(textGUI, "Sell stock", "Invalid entry.");
+                        MessageDialog.showMessageDialog(textGUI, "Buy stock", "Invalid entry.");
+                    } catch (Exception e) {
+                        MessageDialog.showMessageDialog(textGUI, "Buy stock", e + "");
                     }
             }
         }
@@ -119,7 +121,7 @@ public class JBKRMobile {
                             MessageDialog.showMessageDialog(textGUI, "Sell stock",
                                     "Entered value exceeds owned volume.");
                         }
-                    } catch (NumberFormatException e) {
+                    } catch (Exception e) {
                         MessageDialog.showMessageDialog(textGUI, "Sell stock", "Invalid entry.");
                     }
             }
