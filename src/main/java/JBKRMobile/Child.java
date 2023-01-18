@@ -52,23 +52,8 @@ public class Child extends Investor {
 
         out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
         return out;
-    
-
-        String out = "";
-        
-        for (int i = 0; i < output.size(); i+=2) {
-            out += "Stock: " + output.get(i) + "\n";
-            out += "Quantity: " + output.get(i+1) + "\n";
-            API.setSymbol(output.get(i));
-            out += "Price of Individual Stock: " + API.getPrice() + "\n";
-            out += "Price of Purchase: " + (API.getPrice() * Integer.parseInt(output.get(i+1))) + "\n";
-            out += "\n";
-        }
-
-        out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
-        return out;
     }
-
+    
     // Attempts to buy stock
     public boolean buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
