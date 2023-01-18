@@ -29,7 +29,7 @@ public class Adult extends Investor {
 
         for (int i = 0; i < output.size(); i+=2) {
             API.setSymbol(output.get(i));
-            Buy buy = new Buy(date, output.get(i), output.get(i+1), API.getPrice());
+            buyStock(output.get(i), Integer.parseInt(output.get(i+1)));
         }
 
         String out = "";
