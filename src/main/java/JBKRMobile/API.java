@@ -1,6 +1,5 @@
 package JBKRMobile;
 
-import java.io.IOException;
 import yahoofinance.quotes.stock.StockQuote;
 import yahoofinance.YahooFinance;
 import java.math.BigDecimal;
@@ -13,8 +12,7 @@ class API {
     public static void setSymbol(String symbol) {
         try {
             stock = YahooFinance.get(symbol.toUpperCase()).getQuote();
-        } catch (IOException e) {
-            System.out.println(e);
+        } catch (Exception e) {
         }
     }
 

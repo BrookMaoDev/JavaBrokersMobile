@@ -3,7 +3,6 @@ package JBKRMobile;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class StockData {
@@ -14,9 +13,9 @@ public class StockData {
      * Data types: "most-active", "gainers", "losers", "crypto"
      */
     public ArrayList<String> getData(String dataType) {
-        // URL with data type to determine what data to scrape
-        String url = "https://finance.yahoo.com/" + dataType + "?count=100&offset=0";
         try {
+            // URL with data type to determine what data to scrape
+            String url = "https://finance.yahoo.com/" + dataType + "?count=100&offset=0";
             // Parse site to HTML
             Document doc = Jsoup.connect(url).get();
             // Retrieve elements from table
@@ -26,8 +25,7 @@ public class StockData {
                 data.add(row.select("td").first().text());
             }
             return data;
-        } catch (IOException e) {
-            System.out.println(e);
+        } catch (Exception e) {
         }
         return null;
     }
