@@ -128,6 +128,7 @@ abstract class Investor {
                     portfolio.get(i).subtractQuantity(quantity);
                     money = money + sell.costOfTransaction();
                     transactions.add(sell);
+                    stocksInPortfolio--;
                     return true;
                 } else if (portfolio.get(i).getQuantity() == quantity) {
                     API.setSymbol(ticker);
@@ -193,6 +194,7 @@ abstract class Investor {
             int quantity = portfolio.get(i).getQuantity();
             sellStock(ticker, quantity);
         }
+        stocksInPortfolio = 0;
         return true;
     }
 
