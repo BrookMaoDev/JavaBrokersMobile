@@ -11,6 +11,7 @@ public class Adult extends Investor {
         super(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
     }
 
+    // Spends as much money as possible given an array of tickers without going over the given balance
     public String buyMax(ArrayList<String> tickers, double wallet) {
         ArrayList<String> bought = new ArrayList<String>();
         ArrayList<String> bestCombo = permute(tickers, wallet, bought);
