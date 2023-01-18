@@ -10,7 +10,7 @@ abstract class Investor {
     protected static String date;
     protected String username;
     protected String password;
-    protected double wallet;
+    protected double balance;
     protected double totalAmountSpent;
     protected double totalAmountAdded;
     protected int numTransactions;
@@ -22,7 +22,7 @@ abstract class Investor {
     public Investor(String username, String password) {
         this.username = username;
         this.password = password;
-        this.wallet = 0;
+        this.balance = 0;
         this.totalAmountSpent = 0;
         this.totalAmountAdded = 0;
         this.numTransactions = 0;
@@ -33,12 +33,12 @@ abstract class Investor {
     }
 
     // Creates investor objects for existing investors with previous data
-    public Investor(String username, String password, double wallet, double totalAmountSpent, double totalAmountAdded,
+    public Investor(String username, String password, double balance, double totalAmountSpent, double totalAmountAdded,
             int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
             ArrayList<OwnedStock> portfolio) {
         this.username = username;
         this.password = password;
-        this.wallet = wallet;
+        this.balance = balance;
         this.totalAmountSpent = totalAmountSpent;
         this.totalAmountAdded = totalAmountAdded;
         this.numTransactions = numTransactions;
@@ -48,15 +48,15 @@ abstract class Investor {
         date = java.time.LocalDate.now().toString();
     }
 
-    public double getMoney() {
-        return wallet;
+    public double getFunds() {
+        return balance;
     }
 
-    public double getSpentMoney() {
+    public double getSpentFunds() {
         return totalAmountSpent;
     }
 
-    public double getAddedMoney() {
+    public double getAddedFunds() {
         return totalAmountAdded;
     }
 
@@ -89,21 +89,21 @@ abstract class Investor {
      * combination of stocks, from the list, that will spend as much money as
      * possible without going over the limit.
      */
-    public abstract String buyMax(ArrayList<String> tickers, double wallet);
+    public abstract String buyMax(ArrayList<String> tickers, double balance);
 
     // Helper method for the buyMax method. Uses recursion.
-    protected ArrayList<String> permute(ArrayList<String> tickers, double wallet, ArrayList<String> bought) {
+    protected ArrayList<String> permute(ArrayList<String> tickers, double balance, ArrayList<String> bought) {
         ArrayList<String> bestCombo = bought;
         for (int i = 0; i < tickers.size(); i++) {
             ArrayList<String> newArray = bought;
             newArray.add(tickers.get(i));
-            if (calcValueOfArray(newArray) < wallet) {
+            if (calcValueOfArray(newArray) < balance) {
                 API.setSymbol(tickers.get(i));
-                ArrayList<String> potentialBestCombo = permute(tickers, wallet, newArray);
+                ArrayList<String> potentialBestCombo = permute(tickers, balance, newArray);
                 if (calcValueOfArray(potentialBestCombo) > calcValueOfArray(bestCombo)) {
                     bestCombo = potentialBestCombo;
                 }
-            } else if (calcValueOfArray(newArray) == wallet) {
+            } else if (calcValueOfArray(newArray) == balance) {
                 return newArray;
             }
         }
@@ -124,7 +124,7 @@ abstract class Investor {
     /**
      * Method that takes in ticker symbol of a stock and the quantity. The
      * method will remove that quantity of stock from the investor's portfolio, and
-     * add the wallet received. Creates a transaction object in the process.
+     * add the balance received. Creates a transaction object in the process.
      */
     public boolean sellStock(String ticker, int quantity) {
         for (int i = 0; i < stocksInPortfolio; i++) {
@@ -133,7 +133,7 @@ abstract class Investor {
                     API.setSymbol(ticker);
                     Sell sell = new Sell(date, ticker, quantity, API.getPrice());
                     portfolio.get(i).subtractQuantity(quantity);
-                    wallet = wallet + sell.costOfTransaction();
+                    balance = balance + sell.costOfTransaction();
                     transactions.add(sell);
                     numTransactions++;
                     return true;
@@ -142,7 +142,7 @@ abstract class Investor {
                     Sell sell = new Sell(date, ticker, quantity, API.getPrice());
                     portfolio.remove(i); // Removes ownership of stock from portfolio since they sold them all
                     stocksInPortfolio--;
-                    wallet = wallet + sell.costOfTransaction();
+                    balance = balance + sell.costOfTransaction();
                     transactions.add(sell);
                     numTransactions++;
                     return true;
@@ -178,7 +178,7 @@ abstract class Investor {
 
     /**
      * Returns a double which represents the net worth of the investor. Is
-     * calculated by finding value of all stocks and adding wallet onto that.
+     * calculated by finding value of all stocks and adding balance onto that.
      */
     public double getNetWorth() {
         double netWorth = 0;
@@ -190,12 +190,12 @@ abstract class Investor {
             netWorth += quantity * API.getPrice();
         }
 
-        netWorth += wallet;
+        netWorth += balance;
 
         return netWorth;
     }
 
-    // Sells every stock the user owns. Credits the wallet to the account
+    // Sells every stock the user owns. Credits the balance to the account
     // accordingly.
     public boolean sellAll() {
         for (int i = 0; i < stocksInPortfolio; i++) {
@@ -207,10 +207,10 @@ abstract class Investor {
         return true;
     }
 
-    // Adds wallet to the investor's account
-    public boolean addMoney(double wallet) {
-        this.wallet += wallet;
-        totalAmountAdded += wallet;
+    // Adds balance to the investor's account
+    public boolean deposit(double balance) {
+        this.balance += balance;
+        totalAmountAdded += balance;
         return true;
     }
 
@@ -219,13 +219,13 @@ abstract class Investor {
         return getNetWorth() - totalAmountAdded;
     }
 
-    // Subtracts wallet from the user
-    public boolean withdrawMoney(double wallet) {
-        if (wallet > this.wallet) {
+    // Subtracts balance from the user
+    public boolean withdraw(double balance) {
+        if (balance > this.balance) {
             return false;
         } else {
-            this.wallet -= wallet;
-            totalAmountAdded -= wallet;
+            this.balance -= balance;
+            totalAmountAdded -= balance;
             return true;
         }
     }
@@ -253,9 +253,9 @@ abstract class Investor {
 
     // Returns all information of the investor in a clean and organized manner
     public String toString() {
-        String output = "wallet: " + wallet + "\n";
-        output += "wallet Spent: " + totalAmountSpent + "\n";
-        output += "wallet Added: " + totalAmountAdded + "\n";
+        String output = "balance: " + balance + "\n";
+        output += "balance Spent: " + totalAmountSpent + "\n";
+        output += "balance Added: " + totalAmountAdded + "\n";
         output += "Stocks In Portfolio: " + stocksInPortfolio + "\n";
         output += "Lifetime Profit: " + calculateProfit();
         return output;
@@ -273,7 +273,7 @@ abstract class Investor {
             } else {
                 bw.write("child\n");
             }
-            bw.write(wallet + "\n");
+            bw.write(balance + "\n");
             bw.write(totalAmountSpent + "\n");
             bw.write(totalAmountAdded + "\n");
             bw.write(numTransactions + "\n");

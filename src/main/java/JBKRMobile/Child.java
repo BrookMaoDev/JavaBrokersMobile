@@ -10,17 +10,17 @@ public class Child extends Investor {
         super(username, password);
     }
 
-    public Child(String username, String password, double wallet, double totalAmountSpent, double totalAmountAdded, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
-        super(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
+    public Child(String username, String password, double balance, double totalAmountSpent, double totalAmountAdded, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
+        super(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
     }
 
-    public String buyMax(ArrayList<String> tickers, double wallet) {
-        if (wallet > TRANSACTION_SPEND_LIMIT) {
+    public String buyMax(ArrayList<String> tickers, double balance) {
+        if (balance > TRANSACTION_SPEND_LIMIT) {
             return "You cannot spend more than the transaction spend limit of " + TRANSACTION_SPEND_LIMIT;
         }
         
         ArrayList<String> bought = new ArrayList<String>();
-        ArrayList<String> bestCombo = permute(tickers, wallet, bought);
+        ArrayList<String> bestCombo = permute(tickers, balance, bought);
         ArrayList<String> output = new ArrayList<String>();
         for (int i = 0; i < bestCombo.size(); i++) {
             int index = output.indexOf(bestCombo.get(i));
@@ -61,13 +61,13 @@ public class Child extends Investor {
             return false;
         }
 
-        // Check if the user has enough wallet
+        // Check if the user has enough balance
         Buy purchase = new Buy(date, ticker, quantity, price);
 
-        if (wallet < purchase.costOfTransaction()) {
+        if (balance < purchase.costOfTransaction()) {
             return false;
         }
-        wallet -= purchase.costOfTransaction();
+        balance -= purchase.costOfTransaction();
 
         transactions.add(purchase);
         numTransactions++;

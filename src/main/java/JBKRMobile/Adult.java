@@ -7,13 +7,13 @@ public class Adult extends Investor {
         super(username, password);
     }
 
-    public Adult(String username, String password, double wallet, double totalAmountSpent, double totalAmountAdded, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
-        super(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
+    public Adult(String username, String password, double balance, double totalAmountSpent, double totalAmountAdded, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
+        super(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
     }
 
-    public String buyMax(ArrayList<String> tickers, double wallet) {
+    public String buyMax(ArrayList<String> tickers, double balance) {
         ArrayList<String> bought = new ArrayList<String>();
-        ArrayList<String> bestCombo = permute(tickers, wallet, bought);
+        ArrayList<String> bestCombo = permute(tickers, balance, bought);
         ArrayList<String> output = new ArrayList<String>();
         for (int i = 0; i < bestCombo.size(); i++) {
             int index = output.indexOf(bestCombo.get(i));
@@ -51,11 +51,11 @@ public class Adult extends Investor {
 
         // Check if the user has enough money
         Buy purchase = new Buy(date, ticker, quantity, price);
-        if (wallet < purchase.costOfTransaction()) {
+        if (balance < purchase.costOfTransaction()) {
             return false;
         }
 
-        wallet -= purchase.costOfTransaction();
+        balance -= purchase.costOfTransaction();
         transactions.add(purchase);
         numTransactions++;
 

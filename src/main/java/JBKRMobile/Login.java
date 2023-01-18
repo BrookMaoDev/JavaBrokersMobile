@@ -21,7 +21,7 @@ public class Login {
 
             if (br.readLine().equals(encryptPassword(password))) {
                 String investorType = br.readLine();
-                double wallet = Double.parseDouble(br.readLine());
+                double balance = Double.parseDouble(br.readLine());
                 double totalAmountSpent = Double.parseDouble(br.readLine());
                 double totalAmountAdded = Double.parseDouble(br.readLine());
                 int numTransactions = Integer.parseInt(br.readLine());
@@ -48,10 +48,10 @@ public class Login {
 
                 // Adult: 1. Child: anything else
                 if (investorType == "adult") {
-                    return new Adult(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions,
+                    return new Adult(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 } else {
-                    return new Child(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions,
+                    return new Child(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 }
             }
@@ -71,7 +71,7 @@ public class Login {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db", true));
                 bw.write(encryptPassword(password) + "\n");
                 bw.write(accountType + "\n");
-                bw.write("0.0\n"); // wallet
+                bw.write("0.0\n"); // balance
                 bw.write("0.0\n"); // amount added
                 bw.write("0.0\n"); // amount spent
                 bw.write("0\n"); // num transactions

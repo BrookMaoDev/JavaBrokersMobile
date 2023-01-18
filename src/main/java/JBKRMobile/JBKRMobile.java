@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.*;
+import java.text.NumberFormat;
 
 import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
@@ -29,6 +30,7 @@ public class JBKRMobile {
     private String username;
     private String password;
     private String accountType;
+    private Label balance;
     private Button home;
     private Button search;
     private Button login;
@@ -37,6 +39,8 @@ public class JBKRMobile {
     private Button portfolio;
     private Investor user;
     private Button deposit;
+    private Button withdraw;
+    private Button buyMax;
     private static int maxQuery = 50;
 
     public JBKRMobile() {
@@ -69,6 +73,19 @@ public class JBKRMobile {
         return table;
     }
 
+    private void updateSidebar() {
+        sidePanel.removeAllComponents();
+        balance = new Label(
+                NumberFormat.getCurrencyInstance().format(user.getFunds()));
+        sidePanel.addComponent(balance);
+        sidePanel.addComponent(home);
+        sidePanel.addComponent(search);
+        sidePanel.addComponent(portfolio);
+        sidePanel.addComponent(deposit);
+        sidePanel.addComponent(withdraw);
+        sidePanel.addComponent(logout);
+    }
+
     private boolean buyStockWindow(Table<String> table) {
         String ticker = table.getTableModel()
                 .getRow(table.getSelectedRow()).get(0);
@@ -88,6 +105,7 @@ public class JBKRMobile {
                     try {
                         if (user.buyStock(ticker, Integer.parseInt(quantity))) {
                             user.save();
+                            updateSidebar();
                             return true;
                         } else {
                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
@@ -122,6 +140,7 @@ public class JBKRMobile {
                     try {
                         if (user.sellStock(ticker, Integer.parseInt(quantity))) {
                             user.save();
+                            updateSidebar();
                             return true;
                         } else {
                             MessageDialog.showMessageDialog(textGUI, "Sell stock",
@@ -299,12 +318,7 @@ public class JBKRMobile {
                                             user = Login.login(username, password);
                                             if (user != null) {
                                                 loggedIn = true;
-                                                sidePanel.removeAllComponents();
-                                                sidePanel.addComponent(home);
-                                                sidePanel.addComponent(search);
-                                                sidePanel.addComponent(portfolio);
-                                                sidePanel.addComponent(deposit);
-                                                sidePanel.addComponent(logout);
+                                                updateSidebar();
                                             } else {
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "User does not exist.");
@@ -363,12 +377,7 @@ public class JBKRMobile {
                                                         loggedIn = true;
                                                         MessageDialog.showMessageDialog(textGUI, "Sign up",
                                                                 "Account created.");
-                                                        sidePanel.removeAllComponents();
-                                                        sidePanel.addComponent(home);
-                                                        sidePanel.addComponent(search);
-                                                        sidePanel.addComponent(portfolio);
-                                                        sidePanel.addComponent(deposit);
-                                                        sidePanel.addComponent(logout);
+                                                        updateSidebar();
                                                     }
                                                 }
                                             } else {
@@ -388,6 +397,7 @@ public class JBKRMobile {
                 public void run() {
                     // Retrieve saved tickers
                     portfolioTable();
+                    sidePanel.addComponent(buyMax);
                 }
             });
 
@@ -405,15 +415,73 @@ public class JBKRMobile {
 
                             default:
                                 try {
-                                    user.addMoney(Double.parseDouble(depositAmount));
+                                    user.deposit(Double.parseDouble(depositAmount));
                                     user.save();
+                                    updateSidebar();
                                     MessageDialog.showMessageDialog(textGUI, "Deposit",
-                                            String.format("$%.2f added to wallet.", Double.parseDouble(depositAmount)));
+                                            String.format("$%.2f added to balance.",
+                                                    Double.parseDouble(depositAmount)));
                                 } catch (NumberFormatException e) {
                                     MessageDialog.showMessageDialog(textGUI, "Deposit", "Invalid entry");
                                 }
                         }
                     }
+                }
+            });
+
+            withdraw = new Button("Withdraw", new Runnable() {
+                @Override
+                public void run() {
+                    String withdrawAmount = new TextInputDialogBuilder().setTitle("Withdraw")
+                            .setDescription("Enter withdraw amount:")
+                            .build().showDialog(textGUI);
+                    if (withdrawAmount != null) {
+                        switch (withdrawAmount) {
+                            case "":
+                                MessageDialog.showMessageDialog(textGUI, "Withdraw", "Invalid entry.");
+                                break;
+
+                            default:
+                                try {
+                                    if (user.withdraw(Double.parseDouble(withdrawAmount))) {
+                                        user.save();
+                                        updateSidebar();
+                                        MessageDialog.showMessageDialog(textGUI, "Withdraw",
+                                                String.format("$%.2f added to balance.",
+                                                        Double.parseDouble(withdrawAmount)));
+                                    } else {
+                                        MessageDialog.showMessageDialog(textGUI, "Withdraw",
+                                                "Withdraw amount exceeds balance");
+                                    }
+                                } catch (NumberFormatException e) {
+                                    MessageDialog.showMessageDialog(textGUI, "Withdraw", "Invalid entry");
+                                }
+                        }
+                    }
+                }
+            });
+
+            buyMax = new Button("Buy max", new Runnable() {
+                @Override
+                public void run() {
+                    new ActionListDialogBuilder()
+                            .setTitle("Buy max")
+                            .setDescription(
+                                    "This will spend as much money as possible on the stocks in your portfolio. Proceed?")
+                            .addAction("Yes", new Runnable() {
+                                @Override
+                                public void run() {
+                                    user.buyMax(user.getTickersOfPortfolio(), balance);
+                                    portfolioTable();
+                                }
+                            })
+                            .addAction("No", new Runnable() {
+                                @Override
+                                public void run() {
+                                    sellStockWindow(table);
+                                    portfolioTable();
+                                }
+                            }).build().showDialog(textGUI);
                 }
             });
 
