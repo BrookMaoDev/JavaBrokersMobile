@@ -108,7 +108,7 @@ public class Login {
         }
     }
 
-    private static String encryptPassword(String password) {
+    public static String encryptPassword(String password) {
         char[] chars = password.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             chars[i] += KEY;
