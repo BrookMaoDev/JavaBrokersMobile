@@ -136,6 +136,14 @@ public class JBKRMobile {
             tickerPanel.setFillColorOverride(ANSI.WHITE);
 
             table = generateData();
+            table.setSelectAction(new Runnable() {
+                @Override
+                public void run() {
+                    if (loggedIn) {
+                        buyStockWindow(table);
+                    }
+                }
+            });
             tickerPanel.addComponent(table);
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
 
@@ -144,20 +152,17 @@ public class JBKRMobile {
             home = new Button("Home", new Runnable() {
                 @Override
                 public void run() {
-                    if (loggedIn) {
-                        tickerPanel.removeAllComponents();
-                        Table<String> table = generateData();
-                        table.setSelectAction(new Runnable() {
-                            @Override
-                            public void run() {
+                    tickerPanel.removeAllComponents();
+                    table = generateData();
+                    table.setSelectAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loggedIn) {
                                 buyStockWindow(table);
                             }
-                        });
-                        tickerPanel.addComponent(table);
-                    } else {
-                        tickerPanel.removeAllComponents();
-                        tickerPanel.addComponent(generateData());
-                    }
+                        }
+                    });
+                    tickerPanel.addComponent(table);
                 }
             });
             sidePanel.addComponent(home);
@@ -174,7 +179,7 @@ public class JBKRMobile {
                                 break;
 
                             default:
-                                Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
+                                table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
                                 try {
                                     API.setSymbol(query.toUpperCase());
                                     table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
@@ -186,7 +191,9 @@ public class JBKRMobile {
                                 table.setSelectAction(new Runnable() {
                                     @Override
                                     public void run() {
-                                        buyStockWindow(table);
+                                        if (loggedIn) {
+                                            buyStockWindow(table);
+                                        }
                                     }
                                 });
                                 tickerPanel.addComponent(table);
@@ -201,8 +208,6 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     loggedIn = false;
-                    tickerPanel.removeAllComponents();
-                    tickerPanel.addComponent(generateData());
                     sidePanel.removeAllComponents();
                     sidePanel.addComponent(home);
                     sidePanel.addComponent(search);
@@ -238,15 +243,6 @@ public class JBKRMobile {
                                             user = Login.login(username, password);
                                             if (user != null) {
                                                 loggedIn = true;
-                                                tickerPanel.removeAllComponents();
-                                                Table<String> table = generateData();
-                                                table.setSelectAction(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        buyStockWindow(table);
-                                                    }
-                                                });
-                                                tickerPanel.addComponent(table);
                                                 sidePanel.removeAllComponents();
                                                 sidePanel.addComponent(home);
                                                 sidePanel.addComponent(search);
@@ -311,15 +307,6 @@ public class JBKRMobile {
                                                         loggedIn = true;
                                                         MessageDialog.showMessageDialog(textGUI, "Sign up",
                                                                 "Account created.");
-                                                        tickerPanel.removeAllComponents();
-                                                        Table<String> table = generateData();
-                                                        table.setSelectAction(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                buyStockWindow(table);
-                                                            }
-                                                        });
-                                                        tickerPanel.addComponent(table);
                                                         sidePanel.removeAllComponents();
                                                         sidePanel.addComponent(home);
                                                         sidePanel.addComponent(search);
@@ -344,7 +331,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE", "QUANTITY");
+                    table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE", "QUANTITY");
                     ArrayList<OwnedStock> data = user.getPortfolio();
                     try {
                         for (int i = 0; i < data.size(); i++) {
