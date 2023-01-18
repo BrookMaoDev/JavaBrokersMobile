@@ -42,12 +42,9 @@ public class Child extends Investor {
         String out = "";
         
         for (int i = 0; i < output.size(); i+=2) {
-            out += "Stock: " + output.get(i) + "\n";
-            out += "Quantity: " + output.get(i+1) + "\n";
-            API.setSymbol(output.get(i));
-            out += "Price of Individual Stock: " + API.getPrice() + "\n";
-            out += "Price of Purchase: " + (API.getPrice() * Integer.parseInt(output.get(i+1))) + "\n";
-            out += "\n";
+            String ticker = output.get(i);
+            int quantity = Integer.parseInt(output.get(i+1));
+            buyStock(ticker, quantity);
         }
 
         out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
