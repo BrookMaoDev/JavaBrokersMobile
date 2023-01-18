@@ -82,11 +82,15 @@ public class JBKRMobile {
                     break;
 
                 default:
-                    if (user.buyStock(ticker, Integer.parseInt(quantity))) {
-                        user.save();
-                    } else {
-                        MessageDialog.showMessageDialog(textGUI, "Buy stock",
-                                "Insufficient funds.");
+                    try {
+                        if (user.buyStock(ticker, Integer.parseInt(quantity))) {
+                            user.save();
+                        } else {
+                            MessageDialog.showMessageDialog(textGUI, "Buy stock",
+                                    "Insufficient funds.");
+                        }
+                    } catch (NumberFormatException e) {
+                        MessageDialog.showMessageDialog(textGUI, "Sell stock", "Invalid entry.");
                     }
             }
         }
@@ -108,11 +112,15 @@ public class JBKRMobile {
                     break;
 
                 default:
-                    if (user.sellStock(ticker, Integer.parseInt(quantity))) {
-                        user.save();
-                    } else {
-                        MessageDialog.showMessageDialog(textGUI, "Sell stock",
-                                "Entered value exceeds owned volume.");
+                    try {
+                        if (user.sellStock(ticker, Integer.parseInt(quantity))) {
+                            user.save();
+                        } else {
+                            MessageDialog.showMessageDialog(textGUI, "Sell stock",
+                                    "Entered value exceeds owned volume.");
+                        }
+                    } catch (NumberFormatException e) {
+                        MessageDialog.showMessageDialog(textGUI, "Sell stock", "Invalid entry.");
                     }
             }
         }
