@@ -43,7 +43,7 @@ public abstract class Transaction {
 
     // String that contains information about the transaction to write to a file
     public String fileString() {
-        String output;
+        String output = "";
         if (this instanceof Buy) {
             output = "buy\n";
         } else {
