@@ -56,6 +56,7 @@ public class Adult extends Investor {
         money -= purchase.costOfTransaction();
 
         transactions.add(purchase);
+        numTransactions++;
 
         int tickerIndex = getTickerIndex(ticker);
 
