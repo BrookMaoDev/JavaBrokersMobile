@@ -135,6 +135,7 @@ abstract class Investor {
                     portfolio.get(i).subtractQuantity(quantity);
                     wallet = wallet + sell.costOfTransaction();
                     transactions.add(sell);
+                    numTransactions++;
                     stocksInPortfolio--;
                     return true;
                 } else if (portfolio.get(i).getQuantity() == quantity) {
@@ -143,6 +144,7 @@ abstract class Investor {
                     portfolio.remove(i); // Removes ownership of stock from portfolio since they sold them all
                     wallet = wallet + sell.costOfTransaction();
                     transactions.add(sell);
+                    numTransactions++;
                     return true;
                 } else {
                     return false;
