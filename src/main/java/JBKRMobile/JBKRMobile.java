@@ -19,7 +19,6 @@ import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
     private static final String DEFAULT_DATA_SETTING = "most-active";
-    private static final String DB_PATH = "src/main/java/JBKRMobile/Database/";
     private boolean loggedIn;
     private String dataSetting;
     private String username;
@@ -64,17 +63,6 @@ public class JBKRMobile {
         return table;
     }
 
-    public boolean saveInvestor() {
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
-            bw.write(user.fileString());
-            bw.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
     public void run() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
                 new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
@@ -116,7 +104,7 @@ public class JBKRMobile {
                                                                 + ticker + ":")
                                                 .build().showDialog(textGUI));
                                 if (user.buyStock(ticker, quantity)) {
-                                    saveInvestor();
+                                    user.save();
                                 } else {
                                     MessageDialog.showMessageDialog(textGUI, "Buy stock", "Insufficient funds.");
                                 }
@@ -165,7 +153,7 @@ public class JBKRMobile {
                                                                         + ticker + ":")
                                                         .build().showDialog(textGUI));
                                         if (user.buyStock(ticker, quantity)) {
-                                            saveInvestor();
+                                            user.save();
                                         } else {
                                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
                                                     "Insufficient funds.");
@@ -236,7 +224,7 @@ public class JBKRMobile {
                                                                                         + ticker + ":")
                                                                         .build().showDialog(textGUI));
                                                         if (user.buyStock(ticker, quantity)) {
-                                                            saveInvestor();
+                                                            user.save();
                                                         } else {
                                                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
                                                                     "Insufficient funds.");
@@ -322,7 +310,7 @@ public class JBKRMobile {
                                                                                                 + ticker + ":")
                                                                                 .build().showDialog(textGUI));
                                                                 if (user.buyStock(ticker, quantity)) {
-                                                                    saveInvestor();
+                                                                    user.save();
                                                                 } else {
                                                                     MessageDialog.showMessageDialog(textGUI,
                                                                             "Buy stock", "Insufficient funds.");
@@ -379,7 +367,7 @@ public class JBKRMobile {
                                                             + ticker + ":")
                                             .build().showDialog(textGUI));
                             if (user.buyStock(ticker, quantity)) {
-                                saveInvestor();
+                                user.save();
                             } else {
                                 MessageDialog.showMessageDialog(textGUI, "Buy stock", "Insufficient funds.");
                             }

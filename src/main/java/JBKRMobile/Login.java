@@ -16,21 +16,15 @@ public class Login {
         try {
             // Searches for username & password combination
             BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
-            String investorType;
-            double money;
-            double spentMoney;
-            double addedMoney;
-            int numTransactions;
-            int stocksInPortfolio;
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
 
             if (br.readLine().equals(encryptPassword(password))) {
-                investorType = br.readLine();
-                money = Double.parseDouble(br.readLine());
-                spentMoney = Double.parseDouble(br.readLine());
-                addedMoney = Double.parseDouble(br.readLine());
-                numTransactions = Integer.parseInt(br.readLine());
+                String investorType = br.readLine();
+                double wallet = Double.parseDouble(br.readLine());
+                double totalAmountSpent = Double.parseDouble(br.readLine());
+                double totalAmountAdded = Double.parseDouble(br.readLine());
+                int numTransactions = Integer.parseInt(br.readLine());
 
                 // get transactions
                 for (int i = 0; i < numTransactions; i++) {
@@ -45,7 +39,7 @@ public class Login {
                 }
 
                 // get owned stocks
-                stocksInPortfolio = Integer.parseInt(br.readLine());
+                int stocksInPortfolio = Integer.parseInt(br.readLine());
                 for (int i = 0; i < stocksInPortfolio; i++) {
                     // ticker, quantity
                     portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
@@ -54,10 +48,10 @@ public class Login {
 
                 // Adult: 1. Child: anything else
                 if (investorType == "adult") {
-                    return new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
+                    return new Adult(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 } else {
-                    return new Child(username, password, money, spentMoney, addedMoney, numTransactions,
+                    return new Child(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 }
             }
@@ -78,11 +72,11 @@ public class Login {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db", true));
                 bw.write(encryptPassword(password) + "\n");
                 bw.write(accountType + "\n");
-                bw.write("0\n");
-                bw.write("0\n");
-                bw.write("0\n");
-                bw.write("0\n");
-                bw.write("0\n");
+                bw.write("0.0\n"); // wallet
+                bw.write("0.0\n"); // amount added
+                bw.write("0.0\n"); // amount spent
+                bw.write("0\n"); // num transactions
+                bw.write("0\n"); // num stocks owned
                 bw.close();
                 if (accountType.equals("adult")) {
                     return new Adult(username, password);

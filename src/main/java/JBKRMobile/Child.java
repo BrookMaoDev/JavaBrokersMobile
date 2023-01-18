@@ -10,17 +10,17 @@ public class Child extends Investor {
         super(username, password);
     }
 
-    public Child(String username, String password, double money, double spentMoney, double addedMoney, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
-        super(username, password, money, spentMoney, addedMoney, numTransactions, transactions, stocksInPortfolio, portfolio);
+    public Child(String username, String password, double wallet, double totalAmountSpent, double totalAmountAdded, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
+        super(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
     }
 
-    public String buyMax(ArrayList<String> tickers, double money) {
-        if (money > TRANSACTION_SPEND_LIMIT) {
+    public String buyMax(ArrayList<String> tickers, double wallet) {
+        if (wallet > TRANSACTION_SPEND_LIMIT) {
             return "You cannot spend more than the transaction spend limit of " + TRANSACTION_SPEND_LIMIT;
         }
         
         ArrayList<String> bought = new ArrayList<String>();
-        ArrayList<String> bestCombo = permute(tickers, money, bought);
+        ArrayList<String> bestCombo = permute(tickers, wallet, bought);
         ArrayList<String> output = new ArrayList<String>();
         for (int i = 0; i < bestCombo.size(); i++) {
             int index = output.indexOf(bestCombo.get(i));
@@ -59,13 +59,13 @@ public class Child extends Investor {
             return false;
         }
 
-        // Check if the user has enough money
+        // Check if the user has enough wallet
         Buy purchase = new Buy(date, ticker, quantity, price);
 
-        if (money < purchase.costOfTransaction()) {
+        if (wallet < purchase.costOfTransaction()) {
             return false;
         }
-        money -= purchase.costOfTransaction();
+        wallet -= purchase.costOfTransaction();
 
         transactions.add(purchase);
         numTransactions++;

@@ -7,13 +7,13 @@ public class Adult extends Investor {
         super(username, password);
     }
 
-    public Adult(String username, String password, double money, double spentMoney, double addedMoney, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
-        super(username, password, money, spentMoney, addedMoney, numTransactions, transactions, stocksInPortfolio, portfolio);
+    public Adult(String username, String password, double wallet, double totalAmountSpent, double totalAmountAdded, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
+        super(username, password, wallet, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
     }
 
-    public String buyMax(ArrayList<String> tickers, double money) {
+    public String buyMax(ArrayList<String> tickers, double wallet) {
         ArrayList<String> bought = new ArrayList<String>();
-        ArrayList<String> bestCombo = permute(tickers, money, bought);
+        ArrayList<String> bestCombo = permute(tickers, wallet, bought);
         ArrayList<String> output = new ArrayList<String>();
         for (int i = 0; i < bestCombo.size(); i++) {
             int index = output.indexOf(bestCombo.get(i));
@@ -49,18 +49,16 @@ public class Adult extends Investor {
 
         // Check if the user has enough money
         Buy purchase = new Buy(date, ticker, quantity, price);
-
-        if (money < purchase.costOfTransaction()) {
+        if (wallet < purchase.costOfTransaction()) {
             return false;
         }
-        money -= purchase.costOfTransaction();
 
+        wallet -= purchase.costOfTransaction();
         transactions.add(purchase);
         numTransactions++;
         stocksInPortfolio++;
 
         int tickerIndex = getTickerIndex(ticker);
-
         // The user does not own this stock yet
         if (tickerIndex < 0) {
             OwnedStock boughtStock = new OwnedStock(ticker, quantity);
