@@ -254,8 +254,7 @@ abstract class Investor {
      * Generates and returns a string describing everything about the investor
      */
     public String fileString() {
-        String output = "";
-        output += password + "\n";
+        String output = Login.encryptPassword(password) + "\n";
         if (this instanceof Adult) {
             output = "adult\n";
         } else {
