@@ -37,7 +37,7 @@ public class OwnedStock {
         return true;
     }
 
-    public long compareQuantity(OwnedStock other) {
+    public int compareQuantity(OwnedStock other) {
         return quantity - other.getQuantity();
     }
 
