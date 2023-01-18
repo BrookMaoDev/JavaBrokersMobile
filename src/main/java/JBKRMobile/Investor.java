@@ -122,6 +122,17 @@ abstract class Investor {
     }
 
     /**
+     * Method that returns an ArrayList<String> of the portfolio's tickers
+     */
+    public ArrayList<String> getTickersOfPortfolio() {
+        ArrayList<String> tickers = new ArrayList<String>();
+        for (int i = 0; i < stocksInPortfolio; i++) {
+            tickers.add(portfolio.get(i).getTicker());
+        }
+        return tickers;
+    }
+    
+    /**
      * Method that takes in ticker symbol of a stock and the quantity. The
      * method will remove that quantity of stock from the investor's portfolio, and
      * add the balance received. Creates a transaction object in the process.
