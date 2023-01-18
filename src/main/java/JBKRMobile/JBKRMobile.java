@@ -20,6 +20,9 @@ public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
     private static final String DEFAULT_DATA_SETTING = "most-active";
     WindowBasedTextGUI textGUI;
+    Panel mainPanel;
+    Panel tickerPanel;
+    Panel sidePanel;
     private boolean loggedIn;
     private Table<String> table;
     private String dataSetting;
@@ -66,7 +69,7 @@ public class JBKRMobile {
         return table;
     }
 
-    private void buyStockWindow(Table<String> table) {
+    private boolean buyStockWindow(Table<String> table) {
         String ticker = table.getTableModel()
                 .getRow(table.getSelectedRow()).get(0);
         String quantity = new TextInputDialogBuilder()
@@ -85,6 +88,7 @@ public class JBKRMobile {
                     try {
                         if (user.buyStock(ticker, Integer.parseInt(quantity))) {
                             user.save();
+                            return true;
                         } else {
                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
                                     "Insufficient funds.");
@@ -96,9 +100,10 @@ public class JBKRMobile {
                     }
             }
         }
+        return false;
     }
 
-    private void sellStockWindow(Table<String> table) {
+    private boolean sellStockWindow(Table<String> table) {
         String ticker = table.getTableModel()
                 .getRow(table.getSelectedRow()).get(0);
         String quantity = new TextInputDialogBuilder()
@@ -117,6 +122,7 @@ public class JBKRMobile {
                     try {
                         if (user.sellStock(ticker, Integer.parseInt(quantity))) {
                             user.save();
+                            return true;
                         } else {
                             MessageDialog.showMessageDialog(textGUI, "Sell stock",
                                     "Entered value exceeds owned volume.");
@@ -126,6 +132,43 @@ public class JBKRMobile {
                     }
             }
         }
+        return false;
+    }
+
+    private void portfolioTable() {
+        table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE", "QUANTITY");
+        ArrayList<OwnedStock> data = user.getPortfolio();
+        try {
+            for (int i = 0; i < data.size(); i++) {
+                API.setSymbol(data.get(i).getTicker());
+                table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                        API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
+            }
+        } catch (Exception e) {
+        }
+        table.setSelectAction(new Runnable() {
+            @Override
+            public void run() {
+                new ActionListDialogBuilder()
+                        .setTitle("Portfolio").setDescription("Select action:")
+                        .addAction("Buy", new Runnable() {
+                            @Override
+                            public void run() {
+                                buyStockWindow(table);
+                                portfolioTable();
+                            }
+                        })
+                        .addAction("Sell", new Runnable() {
+                            @Override
+                            public void run() {
+                                sellStockWindow(table);
+                                portfolioTable();
+                            }
+                        }).build().showDialog(textGUI);
+            }
+        });
+        tickerPanel.removeAllComponents();
+        tickerPanel.addComponent(table);
     }
 
     public void run() {
@@ -137,12 +180,12 @@ public class JBKRMobile {
             screen = terminalFactory.createScreen();
             screen.startScreen();
             Window window = new BasicWindow("JBKR Mobile");
-            Panel mainPanel = new Panel();
+            mainPanel = new Panel();
             mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
             textGUI = new MultiWindowTextGUI(screen);
 
             // Create panel for tickers
-            Panel tickerPanel = new Panel();
+            tickerPanel = new Panel();
             tickerPanel.setFillColorOverride(ANSI.WHITE);
 
             table = generateData();
@@ -157,7 +200,7 @@ public class JBKRMobile {
             tickerPanel.addComponent(table);
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
 
-            Panel sidePanel = new Panel();
+            sidePanel = new Panel();
 
             home = new Button("Home", new Runnable() {
                 @Override
@@ -218,6 +261,9 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     loggedIn = false;
+                    tickerPanel.removeAllComponents();
+                    table = generateData();
+                    tickerPanel.addComponent(table);
                     sidePanel.removeAllComponents();
                     sidePanel.addComponent(home);
                     sidePanel.addComponent(search);
@@ -341,37 +387,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE", "QUANTITY");
-                    ArrayList<OwnedStock> data = user.getPortfolio();
-                    try {
-                        for (int i = 0; i < data.size(); i++) {
-                            API.setSymbol(data.get(i).getTicker());
-                            table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
-                                    API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
-                        }
-                    } catch (Exception e) {
-                    }
-                    tickerPanel.removeAllComponents();
-                    table.setSelectAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            new ActionListDialogBuilder()
-                                    .setTitle("Portfolio").setDescription("Select action:")
-                                    .addAction("Buy", new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            buyStockWindow(table);
-                                        }
-                                    })
-                                    .addAction("Sell", new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            sellStockWindow(table);
-                                        }
-                                    }).build().showDialog(textGUI);
-                        }
-                    });
-                    tickerPanel.addComponent(table);
+                    portfolioTable();
                 }
             });
 
