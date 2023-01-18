@@ -1,12 +1,8 @@
 package JBKRMobile;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 abstract class Investor {
-    private final static String DB_PATH = "src/main/java/JBKRMobile/Database/";
     protected static String date;
     protected String username;
     protected String password;
@@ -17,6 +13,7 @@ abstract class Investor {
     protected int stocksInPortfolio;
     protected ArrayList<Transaction> transactions;
     protected ArrayList<OwnedStock> portfolio;
+    protected final static String DB_PATH = "src/main/java/JBKRMobile/Database/";
 
     // Creates investor objects for when they sign up
     public Investor(String username, String password) {
@@ -131,7 +128,7 @@ abstract class Investor {
         }
         return tickers;
     }
-    
+
     /**
      * Method that takes in ticker symbol of a stock and the quantity. The
      * method will remove that quantity of stock from the investor's portfolio, and
@@ -157,7 +154,7 @@ abstract class Investor {
                     transactions.add(sell);
                     numTransactions++;
                     return true;
-                } 
+                }
                 return false;
             }
         }

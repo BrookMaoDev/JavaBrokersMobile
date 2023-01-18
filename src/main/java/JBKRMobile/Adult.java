@@ -1,5 +1,8 @@
 package JBKRMobile;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Adult extends Investor {
@@ -7,8 +10,11 @@ public class Adult extends Investor {
         super(username, password);
     }
 
-    public Adult(String username, String password, double balance, double totalAmountSpent, double totalAmountAdded, int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio, ArrayList<OwnedStock> portfolio) {
-        super(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions, transactions, stocksInPortfolio, portfolio);
+    public Adult(String username, String password, double balance, double totalAmountSpent, double totalAmountAdded,
+            int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
+            ArrayList<OwnedStock> portfolio) {
+        super(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions, transactions,
+                stocksInPortfolio, portfolio);
     }
 
     public String buyMax(ArrayList<String> tickers, double balance) {
@@ -27,23 +33,23 @@ public class Adult extends Investor {
             }
         }
 
-        for (int i = 0; i < output.size(); i+=2) {
+        for (int i = 0; i < output.size(); i += 2) {
             API.setSymbol(output.get(i));
-            buyStock(output.get(i), Integer.parseInt(output.get(i+1)));
+            buyStock(output.get(i), Integer.parseInt(output.get(i + 1)));
         }
 
         String out = "";
-        
-        for (int i = 0; i < output.size(); i+=2) {
+
+        for (int i = 0; i < output.size(); i += 2) {
             String ticker = output.get(i);
-            int quantity = Integer.parseInt(output.get(i+1));
+            int quantity = Integer.parseInt(output.get(i + 1));
             buyStock(ticker, quantity);
         }
 
         out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
         return out;
     }
-    
+
     // Attempts to buy stock
     public boolean buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
@@ -73,13 +79,13 @@ public class Adult extends Investor {
         sortPortfolio();
         return true;
     }
-    
+
     public void save() {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
             bw.write(Login.encryptPassword(password) + "\n");
             bw.write("adult\n");
-            bw.write(wallet + "\n");
+            bw.write(balance + "\n");
             bw.write(totalAmountSpent + "\n");
             bw.write(totalAmountAdded + "\n");
             bw.write(numTransactions + "\n");

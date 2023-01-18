@@ -41,6 +41,8 @@ public class JBKRMobile {
     private Button deposit;
     private Button withdraw;
     private Button buyMax;
+    private Button additionalInfo;
+    private Button transactionHistory;
     private static int maxQuery = 50;
 
     public JBKRMobile() {
@@ -82,6 +84,8 @@ public class JBKRMobile {
         sidePanel.addComponent(search);
         sidePanel.addComponent(portfolio);
         sidePanel.addComponent(buyMax);
+        sidePanel.addComponent(additionalInfo);
+        sidePanel.addComponent(transactionHistory);
         sidePanel.addComponent(deposit);
         sidePanel.addComponent(withdraw);
         sidePanel.addComponent(logout);
@@ -478,6 +482,26 @@ public class JBKRMobile {
                                 }
                             })
                             .build().showDialog(textGUI);
+                }
+            });
+
+            additionalInfo = new Button("Additional info", new Runnable() {
+                @Override
+                public void run() {
+                    MessageDialog.showMessageDialog(textGUI, "Additional info",
+                            String.format(
+                                    "Total funds spent: %s\nTotal funds added: %s\nNet worth: %s\nTotal profit: %s",
+                                    NumberFormat.getCurrencyInstance().format(user.getSpentFunds()),
+                                    NumberFormat.getCurrencyInstance().format(user.getAddedFunds()),
+                                    NumberFormat.getCurrencyInstance().format(user.getNetWorth()),
+                                    NumberFormat.getCurrencyInstance().format(user.calculateProfit())));
+                }
+            });
+
+            transactionHistory = new Button("Transaction history", new Runnable() {
+                @Override
+                public void run() {
+                    MessageDialog.showMessageDialog(textGUI, "Transaction history", user.getTransactionHistory());
                 }
             });
 
