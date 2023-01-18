@@ -161,11 +161,11 @@ public class JBKRMobile {
                                         default:
                                             user = Login.login(username, password);
                                             if (user != null) {
-                                                MessageDialog.showMessageDialog(textGUI, "Log in",
-                                                        "Successfully logged in.");
                                                 sidePanel.removeAllComponents();
-                                                sidePanel.addComponent(logout);
+                                                sidePanel.addComponent(home);
+                                                sidePanel.addComponent(search);
                                                 sidePanel.addComponent(portfolio);
+                                                sidePanel.addComponent(logout);
                                             } else {
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
                                                         "User does not exist.");
@@ -202,33 +202,37 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            accountType = null;
-                                            new ActionListDialogBuilder()
-                                                    .setTitle("Sign Up").setDescription("Select account type:")
-                                                    .addAction("Adult", new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            accountType = "adult";
-                                                        }
-                                                    })
-                                                    .addAction("Child", new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            accountType = "child";
-                                                        }
-                                                    }).build().showDialog(textGUI);
-                                            if (accountType != null) {
-                                                user = Login.createUser(username, password, accountType);
-                                                if (user != null) {
-                                                    MessageDialog.showMessageDialog(textGUI, "Sign up",
-                                                            "Account created.");
-                                                    sidePanel.removeAllComponents();
-                                                    sidePanel.addComponent(search);
-                                                    sidePanel.addComponent(logout);
-                                                } else {
-                                                    MessageDialog.showMessageDialog(textGUI, "Sign up",
-                                                            "Username unavailable.");
+                                            if (Login.checkUsername(username)) {
+                                                accountType = null;
+                                                new ActionListDialogBuilder()
+                                                        .setTitle("Sign up").setDescription("Select account type:")
+                                                        .addAction("Adult", new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                accountType = "adult";
+                                                            }
+                                                        })
+                                                        .addAction("Child", new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                accountType = "child";
+                                                            }
+                                                        }).build().showDialog(textGUI);
+                                                if (accountType != null) {
+                                                    user = Login.createUser(username, password, accountType);
+                                                    if (user != null) {
+                                                        MessageDialog.showMessageDialog(textGUI, "Sign up",
+                                                                "Account created.");
+                                                        sidePanel.removeAllComponents();
+                                                        sidePanel.addComponent(home);
+                                                        sidePanel.addComponent(search);
+                                                        sidePanel.addComponent(portfolio);
+                                                        sidePanel.addComponent(logout);
+                                                    }
                                                 }
+                                            } else {
+                                                MessageDialog.showMessageDialog(textGUI, "Sign up",
+                                                        "Username unavailable.");
                                             }
                                     }
                                 }
@@ -268,10 +272,8 @@ public class JBKRMobile {
             MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(),
                     new EmptySpace(ANSI.BLACK));
             gui.addWindowAndWait(window);
-        } catch (
-
-        IOException e) {
-            System.out.println(e);
+        } catch (IOException e) {
+            System.exit(0);
         }
     }
 }

@@ -13,12 +13,10 @@ public class Login {
     private static final String DB_PATH = "src/main/java/JBKRMobile/Database/";
 
     public static Investor login(String username, String password) {
-        Investor user = null;
         try {
             // Searches for username & password combination
             BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
-            String encryptedPassword = encryptPassword(password);
-            int investorType;
+            String investorType;
             double money;
             double spentMoney;
             double addedMoney;
@@ -27,12 +25,8 @@ public class Login {
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
 
-            if (br.readLine().equals(encryptedPassword)) {
-                if (br.readLine().equalsIgnoreCase("adult")) {
-                    investorType = 1; // Adult is 1
-                } else {
-                    investorType = 0; // Assume that it is either "adult" or "child"
-                }
+            if (br.readLine().equals(encryptPassword(password))) {
+                investorType = br.readLine();
                 money = Double.parseDouble(br.readLine());
                 spentMoney = Double.parseDouble(br.readLine());
                 addedMoney = Double.parseDouble(br.readLine());
@@ -56,27 +50,25 @@ public class Login {
                     // ticker, quantity
                     portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
                 }
+                br.close();
 
                 // Adult: 1. Child: anything else
-                if (investorType == 1) {
-                    user = new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
+                if (investorType == "adult") {
+                    return new Adult(username, password, money, spentMoney, addedMoney, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 } else {
-                    user = new Child(username, password, money, spentMoney, addedMoney, numTransactions,
+                    return new Child(username, password, money, spentMoney, addedMoney, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 }
             }
             br.close();
+        } catch (FileNotFoundException e) {
         } catch (IOException e) {
-            System.out.println(e);
-        } catch (Exception e) {
-            System.out.println("Failed to read information");
         }
-        return user;
+        return null;
     }
 
     public static Investor createUser(String username, String password, String accountType) {
-        Investor user = null;
         try {
             // Write username and encrypted password to file
             BufferedReader checkUsername = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
@@ -84,22 +76,36 @@ public class Login {
         } catch (FileNotFoundException e) {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db", true));
-                bw.write(username + "\n");
                 bw.write(encryptPassword(password) + "\n");
                 bw.write(accountType + "\n");
+                bw.write("0\n");
+                bw.write("0\n");
+                bw.write("0\n");
+                bw.write("0\n");
+                bw.write("0\n");
                 bw.close();
                 if (accountType.equals("adult")) {
-                    user = new Adult(username, password);
+                    return new Adult(username, password);
                 } else {
-                    user = new Child(username, password);
+                    return new Child(username, password);
                 }
             } catch (IOException i) {
-                return user;
             }
         } catch (IOException e) {
-            return user;
         }
-        return user;
+        return null;
+    }
+
+    // returns true if username taken, false otherwise
+    public static boolean checkUsername(String username) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
+            br.close();
+            return false;
+        }
+        catch (IOException e) {
+            return true;
+        }
     }
 
     private static String encryptPassword(String password) {
