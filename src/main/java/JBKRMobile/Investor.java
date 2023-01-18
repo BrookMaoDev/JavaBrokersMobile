@@ -275,28 +275,5 @@ abstract class Investor {
     /**
      * Generates and returns a string describing everything about the investor
      */
-    public void save() {
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
-            bw.write(Login.encryptPassword(password) + "\n");
-            if (this instanceof Adult) {
-                bw.write("adult\n");
-            } else {
-                bw.write("child\n");
-            }
-            bw.write(balance + "\n");
-            bw.write(totalAmountSpent + "\n");
-            bw.write(totalAmountAdded + "\n");
-            bw.write(numTransactions + "\n");
-            for (int i = 0; i < numTransactions; i++) {
-                bw.write(transactions.get(i).fileString() + "\n");
-            }
-            bw.write(stocksInPortfolio + "\n");
-            for (int i = 0; i < stocksInPortfolio; i++) {
-                bw.write(portfolio.get(i).fileString() + "\n");
-            }
-            bw.close();
-        } catch (IOException e) {
-        }
-    }
+    public abstract void save();
 }
