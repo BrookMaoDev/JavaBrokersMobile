@@ -33,7 +33,7 @@ public class OwnedStock {
         if (quantity - amount < 0) {
             return false;
         }
-        quantity -= quantity;
+        quantity -= amount;
         return true;
     }
 
