@@ -69,7 +69,9 @@ public class Adult extends Investor {
             // The user owns this stock
             portfolio.get(tickerIndex).addQuantity(quantity);
         }
-        
+        stocksInPortfolio++;
+
+        sortPortfolio();
         return true;
     }
 }
