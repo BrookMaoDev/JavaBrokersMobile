@@ -257,9 +257,9 @@ abstract class Investor {
         String output = "";
         output += password + "\n";
         if (this instanceof Adult) {
-            output = "adult\n";
+            output += "adult\n";
         } else {
-            output = "child\n";
+            output += "child\n";
         }
         output += money + "\n";
         output += spentMoney + "\n";
