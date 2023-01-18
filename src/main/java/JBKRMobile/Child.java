@@ -68,6 +68,8 @@ public class Child extends Investor {
         money -= purchase.costOfTransaction();
 
         transactions.add(purchase);
+        numTransactions++;
+        stocksInPortfolio++;
 
         int tickerIndex = getTickerIndex(ticker);
 
