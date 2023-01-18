@@ -396,8 +396,9 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    portfolioTable();
+                    updateSidebar();
                     sidePanel.addComponent(buyMax);
+                    portfolioTable();
                 }
             });
 
@@ -451,7 +452,7 @@ public class JBKRMobile {
                                                         Double.parseDouble(withdrawAmount)));
                                     } else {
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
-                                                "Withdraw amount exceeds balance");
+                                                "Withdraw amount exceeds balance.");
                                     }
                                 } catch (NumberFormatException e) {
                                     MessageDialog.showMessageDialog(textGUI, "Withdraw", "Invalid entry");
@@ -467,21 +468,16 @@ public class JBKRMobile {
                     new ActionListDialogBuilder()
                             .setTitle("Buy max")
                             .setDescription(
-                                    "This will spend as much money as possible on the stocks in your portfolio. Proceed?")
+                                    "This will spend as much money as possible on the stocks in your portfolio.\n\nProceed?")
                             .addAction("Yes", new Runnable() {
                                 @Override
                                 public void run() {
-                                    user.buyMax(user.getTickersOfPortfolio(), balance);
+                                    MessageDialog.showMessageDialog(textGUI, "Buy max",
+                                            user.buyMax(user.getTickersOfPortfolio(), user.getFunds()));
                                     portfolioTable();
                                 }
                             })
-                            .addAction("No", new Runnable() {
-                                @Override
-                                public void run() {
-                                    sellStockWindow(table);
-                                    portfolioTable();
-                                }
-                            }).build().showDialog(textGUI);
+                            .build().showDialog(textGUI);
                 }
             });
 
