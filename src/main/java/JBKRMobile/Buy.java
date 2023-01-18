@@ -7,7 +7,7 @@ public class Buy extends Transaction {
 
     // Cost of transaction
     public double costOfTransaction() {
-        return super.getQuantity() * super.getPrice();
+        return quantity * price;
     }
 
     public String toString() {
