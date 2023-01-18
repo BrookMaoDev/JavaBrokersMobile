@@ -136,19 +136,18 @@ abstract class Investor {
                     wallet = wallet + sell.costOfTransaction();
                     transactions.add(sell);
                     numTransactions++;
-                    stocksInPortfolio--;
                     return true;
                 } else if (portfolio.get(i).getQuantity() == quantity) {
                     API.setSymbol(ticker);
                     Sell sell = new Sell(date, ticker, quantity, API.getPrice());
                     portfolio.remove(i); // Removes ownership of stock from portfolio since they sold them all
+                    stocksInPortfolio--;
                     wallet = wallet + sell.costOfTransaction();
                     transactions.add(sell);
                     numTransactions++;
                     return true;
-                } else {
-                    return false;
-                }
+                } 
+                return false;
             }
         }
 
