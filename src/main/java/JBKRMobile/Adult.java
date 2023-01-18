@@ -27,6 +27,11 @@ public class Adult extends Investor {
             }
         }
 
+        for (int i = 0; i < output.size(); i+=2) {
+            API.setSymbol(output.get(i));
+            Buy buy = new Buy(date, output.get(i), output.get(i+1), API.getPrice());
+        }
+
         String out = "";
         
         for (int i = 0; i < output.size(); i+=2) {
@@ -41,7 +46,7 @@ public class Adult extends Investor {
         out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
         return out;
     }
-
+    
     // Attempts to buy stock
     public boolean buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
