@@ -19,6 +19,8 @@ import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 public class JBKRMobile {
     private static final StockData STOCK_DATA = new StockData();
     private static final String DEFAULT_DATA_SETTING = "most-active";
+    private static final String DB_PATH = "src/main/java/JBKRMobile/Database/";
+    private boolean loggedIn;
     private String dataSetting;
     private String username;
     private String password;
@@ -34,8 +36,7 @@ public class JBKRMobile {
 
     public JBKRMobile() {
         dataSetting = DEFAULT_DATA_SETTING;
-        username = "";
-        password = "";
+        loggedIn = false;
     }
 
     /**
@@ -63,6 +64,17 @@ public class JBKRMobile {
         return table;
     }
 
+    public boolean saveInvestor() {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
+            bw.write(user.fileString());
+            bw.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     public void run() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
                 new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
@@ -88,14 +100,38 @@ public class JBKRMobile {
             home = new Button("Home", new Runnable() {
                 @Override
                 public void run() {
-                    tickerPanel.removeAllComponents();
-                    tickerPanel.addComponent(generateData());
+                    if (loggedIn) {
+                        tickerPanel.removeAllComponents();
+                        Table<String> table = generateData();
+                        table.setSelectAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                String ticker = table.getTableModel()
+                                        .getRow(table.getSelectedRow()).get(0);
+                                int quantity = Integer
+                                        .parseInt(new TextInputDialogBuilder()
+                                                .setTitle("Buy stock")
+                                                .setDescription(
+                                                        "Enter desired quantity of "
+                                                                + ticker + ":")
+                                                .build().showDialog(textGUI));
+                                if (user.buyStock(ticker, quantity)) {
+                                    saveInvestor();
+                                } else {
+                                    MessageDialog.showMessageDialog(textGUI, "Buy stock", "Insufficient funds.");
+                                }
+                            }
+                        });
+                        tickerPanel.addComponent(table);
+                    } else {
+                        tickerPanel.removeAllComponents();
+                        tickerPanel.addComponent(generateData());
+                    }
                 }
             });
             sidePanel.addComponent(home);
 
             search = new Button("Search", new Runnable() {
-
                 @Override
                 public void run() {
                     String query = new TextInputDialogBuilder().setTitle("Search").setDescription("Enter ticker:")
@@ -116,6 +152,26 @@ public class JBKRMobile {
                                 } catch (Exception e) {
                                 }
                                 tickerPanel.removeAllComponents();
+                                table.setSelectAction(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        String ticker = table.getTableModel()
+                                                .getRow(table.getSelectedRow()).get(0);
+                                        int quantity = Integer
+                                                .parseInt(new TextInputDialogBuilder()
+                                                        .setTitle("Buy stock")
+                                                        .setDescription(
+                                                                "Enter desired quantity of "
+                                                                        + ticker + ":")
+                                                        .build().showDialog(textGUI));
+                                        if (user.buyStock(ticker, quantity)) {
+                                            saveInvestor();
+                                        } else {
+                                            MessageDialog.showMessageDialog(textGUI, "Buy stock",
+                                                    "Insufficient funds.");
+                                        }
+                                    }
+                                });
                                 tickerPanel.addComponent(table);
                         }
                     }
@@ -127,6 +183,9 @@ public class JBKRMobile {
             logout = new Button("Log out", new Runnable() {
                 @Override
                 public void run() {
+                    loggedIn = false;
+                    tickerPanel.removeAllComponents();
+                    tickerPanel.addComponent(generateData());
                     sidePanel.removeAllComponents();
                     sidePanel.addComponent(home);
                     sidePanel.addComponent(search);
@@ -161,6 +220,30 @@ public class JBKRMobile {
                                         default:
                                             user = Login.login(username, password);
                                             if (user != null) {
+                                                loggedIn = true;
+                                                tickerPanel.removeAllComponents();
+                                                Table<String> table = generateData();
+                                                table.setSelectAction(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        String ticker = table.getTableModel()
+                                                                .getRow(table.getSelectedRow()).get(0);
+                                                        int quantity = Integer
+                                                                .parseInt(new TextInputDialogBuilder()
+                                                                        .setTitle("Buy stock")
+                                                                        .setDescription(
+                                                                                "Enter desired quantity of "
+                                                                                        + ticker + ":")
+                                                                        .build().showDialog(textGUI));
+                                                        if (user.buyStock(ticker, quantity)) {
+                                                            saveInvestor();
+                                                        } else {
+                                                            MessageDialog.showMessageDialog(textGUI, "Buy stock",
+                                                                    "Insufficient funds.");
+                                                        }
+                                                    }
+                                                });
+                                                tickerPanel.addComponent(table);
                                                 sidePanel.removeAllComponents();
                                                 sidePanel.addComponent(home);
                                                 sidePanel.addComponent(search);
@@ -221,8 +304,32 @@ public class JBKRMobile {
                                                 if (accountType != null) {
                                                     user = Login.createUser(username, password, accountType);
                                                     if (user != null) {
+                                                        loggedIn = true;
                                                         MessageDialog.showMessageDialog(textGUI, "Sign up",
                                                                 "Account created.");
+                                                        tickerPanel.removeAllComponents();
+                                                        Table<String> table = generateData();
+                                                        table.setSelectAction(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                String ticker = table.getTableModel()
+                                                                        .getRow(table.getSelectedRow()).get(0);
+                                                                int quantity = Integer
+                                                                        .parseInt(new TextInputDialogBuilder()
+                                                                                .setTitle("Buy stock")
+                                                                                .setDescription(
+                                                                                        "Enter desired quantity of "
+                                                                                                + ticker + ":")
+                                                                                .build().showDialog(textGUI));
+                                                                if (user.buyStock(ticker, quantity)) {
+                                                                    saveInvestor();
+                                                                } else {
+                                                                    MessageDialog.showMessageDialog(textGUI,
+                                                                            "Buy stock", "Insufficient funds.");
+                                                                }
+                                                            }
+                                                        });
+                                                        tickerPanel.addComponent(table);
                                                         sidePanel.removeAllComponents();
                                                         sidePanel.addComponent(home);
                                                         sidePanel.addComponent(search);
@@ -243,7 +350,6 @@ public class JBKRMobile {
             sidePanel.addComponent(signup);
 
             portfolio = new Button("Portfolio", new Runnable() {
-
                 @Override
                 public void run() {
                     // Retrieve saved tickers
@@ -260,6 +366,25 @@ public class JBKRMobile {
                     } catch (Exception e) {
                     }
                     tickerPanel.removeAllComponents();
+                    table.setSelectAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            String ticker = table.getTableModel()
+                                    .getRow(table.getSelectedRow()).get(1);
+                            int quantity = Integer
+                                    .parseInt(new TextInputDialogBuilder()
+                                            .setTitle("Buy stock")
+                                            .setDescription(
+                                                    "Enter desired quantity of "
+                                                            + ticker + ":")
+                                            .build().showDialog(textGUI));
+                            if (user.buyStock(ticker, quantity)) {
+                                saveInvestor();
+                            } else {
+                                MessageDialog.showMessageDialog(textGUI, "Buy stock", "Insufficient funds.");
+                            }
+                        }
+                    });
                     tickerPanel.addComponent(table);
                 }
             });
