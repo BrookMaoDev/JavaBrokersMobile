@@ -31,6 +31,7 @@ public class JBKRMobile {
     private Button logout;
     private Button portfolio;
     private Investor user;
+    private Button deposit;
     private static int maxQuery = 50;
 
     public JBKRMobile() {
@@ -74,7 +75,7 @@ public class JBKRMobile {
             Window window = new BasicWindow("JBKR Mobile");
             Panel mainPanel = new Panel();
             mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
-            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
+            WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
 
             // Create panel for tickers
             Panel tickerPanel = new Panel();
@@ -236,6 +237,7 @@ public class JBKRMobile {
                                                 sidePanel.addComponent(home);
                                                 sidePanel.addComponent(search);
                                                 sidePanel.addComponent(portfolio);
+                                                sidePanel.addComponent(deposit);
                                                 sidePanel.addComponent(logout);
                                             } else {
                                                 MessageDialog.showMessageDialog(textGUI, "Log in",
@@ -322,6 +324,7 @@ public class JBKRMobile {
                                                         sidePanel.addComponent(home);
                                                         sidePanel.addComponent(search);
                                                         sidePanel.addComponent(portfolio);
+                                                        sidePanel.addComponent(deposit);
                                                         sidePanel.addComponent(logout);
                                                     }
                                                 }
@@ -374,6 +377,32 @@ public class JBKRMobile {
                         }
                     });
                     tickerPanel.addComponent(table);
+                }
+            });
+
+            deposit = new Button("Deposit", new Runnable() {
+                @Override
+                public void run() {
+                    String depositAmount = new TextInputDialogBuilder().setTitle("Deposit")
+                            .setDescription("Enter deposit amount:")
+                            .build().showDialog(textGUI);
+                    if (depositAmount != null) {
+                        switch (depositAmount) {
+                            case "":
+                                MessageDialog.showMessageDialog(textGUI, "Deposit", "Invalid entry.");
+                                break;
+
+                            default:
+                                try {
+                                    user.addMoney(Double.parseDouble(depositAmount));
+                                    user.save();
+                                    MessageDialog.showMessageDialog(textGUI, "Deposit",
+                                            String.format("$%.2f added to wallet.", Double.parseDouble(depositAmount)));
+                                } catch (NumberFormatException e) {
+                                    MessageDialog.showMessageDialog(textGUI, "Deposit", "Invalid entry");
+                                }
+                        }
+                    }
                 }
             });
 

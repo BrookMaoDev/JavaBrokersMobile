@@ -2,7 +2,6 @@ package JBKRMobile;
 
 public abstract class Transaction {
     //Fields
-    protected final static double FEE = 1.0;
     protected String date;
     protected String ticker;
     protected int quantity;
@@ -17,10 +16,6 @@ public abstract class Transaction {
     }
 
     // Accessors 
-    public static double getFee() {
-        return FEE;
-    }
-
     public String getDate() {
         return date;
     }
@@ -43,7 +38,7 @@ public abstract class Transaction {
 
     // String that contains information about the transaction to write to a file
     public String fileString() {
-        String output = "";
+        String output;
         if (this instanceof Buy) {
             output = "buy\n";
         } else {

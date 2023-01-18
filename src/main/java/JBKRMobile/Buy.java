@@ -11,6 +11,6 @@ public class Buy extends Transaction {
     }
 
     public String toString() {
-        return "buy\n" + super.toString();
+        return "buy\n" + super.fileString();
     }
 }

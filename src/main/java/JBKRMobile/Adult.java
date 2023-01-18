@@ -56,7 +56,6 @@ public class Adult extends Investor {
         wallet -= purchase.costOfTransaction();
         transactions.add(purchase);
         numTransactions++;
-        stocksInPortfolio++;
 
         int tickerIndex = getTickerIndex(ticker);
         // The user does not own this stock yet
@@ -67,6 +66,7 @@ public class Adult extends Investor {
             // The user owns this stock
             portfolio.get(tickerIndex).addQuantity(quantity);
         }
+        stocksInPortfolio++;
         return true;
     }
 }
