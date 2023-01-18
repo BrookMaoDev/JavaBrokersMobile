@@ -172,16 +172,16 @@ abstract class Investor {
         return -1;
     }
 
-    // Prints transaction history
-    public void printTransactionHistory() {
+    // Gets transaction history
+    public String getTransactionHistory() {
         if (numTransactions == 0) {
-            System.out.println("You have not made any transactions.");
-            return;
+            return "You have not made any transactions.";
         }
+        String output = "";
         for (int i = 0; i < numTransactions; i++) {
-            System.out.println(transactions.get(i));
-            System.out.println();
+            output += transactions.get(i).fileString();
         }
+        return output;
     }
 
     /**
