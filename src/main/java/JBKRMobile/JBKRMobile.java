@@ -81,6 +81,7 @@ public class JBKRMobile {
         sidePanel.addComponent(home);
         sidePanel.addComponent(search);
         sidePanel.addComponent(portfolio);
+        sidePanel.addComponent(buyMax);
         sidePanel.addComponent(deposit);
         sidePanel.addComponent(withdraw);
         sidePanel.addComponent(logout);
@@ -397,7 +398,6 @@ public class JBKRMobile {
                 public void run() {
                     // Retrieve saved tickers
                     updateSidebar();
-                    sidePanel.addComponent(buyMax);
                     portfolioTable();
                 }
             });
@@ -448,7 +448,7 @@ public class JBKRMobile {
                                         user.save();
                                         updateSidebar();
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
-                                                String.format("$%.2f added to balance.",
+                                                String.format("$%.2f withdrew from balance.",
                                                         Double.parseDouble(withdrawAmount)));
                                     } else {
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
