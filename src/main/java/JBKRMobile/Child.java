@@ -61,19 +61,20 @@ public class Child extends Investor {
     public boolean buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
         double price = API.getPrice();
+        
+        Buy purchase = new Buy(date, ticker, quantity, price);
+        double cost = purchase.costOfTransaction();
 
         // Check if the transaction exceeds the spending limit
-        if (price * quantity > TRANSACTION_SPEND_LIMIT) {
+        if (cost > TRANSACTION_SPEND_LIMIT) {
             return false;
         }
 
         // Check if the user has enough balance
-        Buy purchase = new Buy(date, ticker, quantity, price);
-
-        if (balance < purchase.costOfTransaction()) {
+        if (balance < cost) {
             return false;
         }
-        balance -= purchase.costOfTransaction();
+        balance -= cost;
 
         transactions.add(purchase);
         numTransactions++;

@@ -8,7 +8,7 @@ public class Sell extends Transaction {
     // The profit gained from this transaction
     // Profit is calculated by quantity * price;
     public double costOfTransaction() {
-        return super.getQuantity() * super.getPrice();
+        return quantity * price;
     }
 
     public String toString() {
