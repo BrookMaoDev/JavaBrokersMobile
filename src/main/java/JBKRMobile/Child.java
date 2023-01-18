@@ -83,6 +83,8 @@ public class Child extends Investor {
             // The user owns this stock
             portfolio.get(tickerIndex).addQuantity(quantity);
         }
+
+        sortPortfolio();
         return true;
     }
 }
