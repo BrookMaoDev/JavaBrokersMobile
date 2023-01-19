@@ -44,6 +44,4 @@ public abstract class Transaction {
 
     // String that contains information about the transaction to write to a file
     public abstract String fileString();
-
-    abstract double costOfTransaction();
 }
