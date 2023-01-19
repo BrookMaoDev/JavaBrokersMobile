@@ -5,11 +5,6 @@ public class Buy extends Transaction {
         super(date, ticker, quantity, price);
     }
 
-    // Cost of transaction
-    public double costOfTransaction() {
-        return quantity * price;
-    }
-    
     public String fileString() {
         return "buy\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
     }

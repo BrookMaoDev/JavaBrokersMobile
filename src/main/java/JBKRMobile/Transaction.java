@@ -24,12 +24,18 @@ public abstract class Transaction {
         return ticker;
     }
 
-    public long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
     public double getPrice() {
         return price;
+    }
+    
+    // The profit gained from this transaction
+    // Profit is calculated by quantity * price;
+    public double costOfTransaction() {
+        return quantity * price;
     }
 
     public String toString() {
