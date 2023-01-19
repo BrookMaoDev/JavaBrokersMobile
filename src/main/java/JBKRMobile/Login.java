@@ -19,32 +19,32 @@ public class Login {
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
 
-            if (br.readLine().trim().equals(encryptPassword(password))) {
-                String investorType = br.readLine().trim();
-                double balance = Double.parseDouble(br.readLine().trim());
-                double totalFundsSpent = Double.parseDouble(br.readLine().trim());
-                double totalFundsAdded = Double.parseDouble(br.readLine().trim());
+            if (br.readLine().equals(encryptPassword(password))) {
+                String investorType = br.readLine();
+                double balance = Double.parseDouble(br.readLine());
+                double totalFundsSpent = Double.parseDouble(br.readLine());
+                double totalFundsAdded = Double.parseDouble(br.readLine());
 
                 // get transactions
-                int numTransactions = Integer.parseInt(br.readLine().trim());
+                int numTransactions = Integer.parseInt(br.readLine());
                 for (int i = 0; i < numTransactions; i++) {
-                    if (br.readLine().trim().equalsIgnoreCase("buy")) {
+                    if (br.readLine().equalsIgnoreCase("buy")) {
                         // date, ticker, quantity, price
-                        transactions.add(new Buy(br.readLine().trim(), br.readLine().trim(),
-                                Integer.parseInt(br.readLine().trim()),
-                                Double.parseDouble(br.readLine().trim())));
+                        transactions.add(new Buy(br.readLine(), br.readLine(),
+                                Integer.parseInt(br.readLine()),
+                                Double.parseDouble(br.readLine())));
                     } else {
-                        transactions.add(new Sell(br.readLine().trim(), br.readLine().trim(),
-                                Integer.parseInt(br.readLine().trim()),
-                                Double.parseDouble(br.readLine().trim())));
+                        transactions.add(new Sell(br.readLine(), br.readLine(),
+                                Integer.parseInt(br.readLine()),
+                                Double.parseDouble(br.readLine())));
                     }
                 }
 
                 // get owned stocks
-                int stocksInPortfolio = Integer.parseInt(br.readLine().trim());
+                int stocksInPortfolio = Integer.parseInt(br.readLine());
                 for (int i = 0; i < stocksInPortfolio; i++) {
                     // ticker, quantity
-                    portfolio.add(new OwnedStock(br.readLine().trim(), Integer.parseInt(br.readLine().trim())));
+                    portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
                 }
 
                 br.close();

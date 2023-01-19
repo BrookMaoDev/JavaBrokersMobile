@@ -89,13 +89,13 @@ public class JBKRMobile {
 
     private boolean buyStockWindow(Table<String> table) {
         String ticker = table.getTableModel()
-                .getRow(table.getSelectedRow()).get(0).trim();
+                .getRow(table.getSelectedRow()).get(0);
         String quantity = new TextInputDialogBuilder()
                 .setTitle("Buy stock")
                 .setDescription(
                         "Enter desired quantity of "
                                 + ticker + ":")
-                .build().showDialog(textGUI).trim();
+                .build().showDialog(textGUI);
         if (quantity != null) {
             switch (quantity) {
                 case "":
@@ -247,7 +247,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     String query = new TextInputDialogBuilder().setTitle("Search").setDescription("Enter ticker:")
-                            .build().showDialog(textGUI).trim();
+                            .build().showDialog(textGUI);
                     if (query != null) {
                         switch (query) {
                             case "":
@@ -287,7 +287,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     username = new TextInputDialogBuilder().setTitle("Log in").setDescription("Enter username:")
-                            .build().showDialog(textGUI).trim();
+                            .build().showDialog(textGUI);
 
                     if (username != null) {
                         switch (username) {
@@ -298,7 +298,7 @@ public class JBKRMobile {
                             default:
                                 password = new TextInputDialogBuilder().setTitle("Log in")
                                         .setDescription("Enter password:")
-                                        .setPasswordInput(true).build().showDialog(textGUI).trim();
+                                        .setPasswordInput(true).build().showDialog(textGUI);
                                 if (password != null) {
                                     switch (password) {
                                         case "":
@@ -306,7 +306,7 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            user = Login.login(username.trim(), password.trim());
+                                            user = Login.login(username, password);
                                             if (user != null) {
                                                 loggedIn = true;
                                                 updateSidebar();
@@ -325,12 +325,8 @@ public class JBKRMobile {
             signup = new Button("Sign up", new Runnable() {
                 @Override
                 public void run() {
-                    boolean usernameAvailable = false;
-                    do {
-                        username = new TextInputDialogBuilder().setTitle("Sign up").setDescription("Enter username:")
-                                .build().showDialog(textGUI).trim();
-                        usernameAvailable = Login.checkUsername(username);
-                    } while (!usernameAvailable);
+                    username = new TextInputDialogBuilder().setTitle("Sign up").setDescription("Enter username:")
+                            .build().showDialog(textGUI);
 
                     if (username != null) {
                         switch (username) {
@@ -339,42 +335,47 @@ public class JBKRMobile {
                                 break;
 
                             default:
-                                password = new TextInputDialogBuilder().setTitle("Sign up")
-                                        .setDescription("Enter password:")
-                                        .setPasswordInput(true).build().showDialog(textGUI);
+                                if (Login.checkUsername(username)) {
+                                    password = new TextInputDialogBuilder().setTitle("Sign up")
+                                            .setDescription("Enter password:")
+                                            .setPasswordInput(true).build().showDialog(textGUI);
 
-                                if (password != null) {
-                                    switch (password) {
-                                        case "":
-                                            MessageDialog.showMessageDialog(textGUI, "Sign up", "Invalid password.");
-                                            break;
+                                    if (password != null) {
+                                        switch (password) {
+                                            case "":
+                                                MessageDialog.showMessageDialog(textGUI, "Sign up",
+                                                        "Invalid password.");
+                                                break;
 
-                                        default:
-                                            accountType = null;
-                                            new ActionListDialogBuilder()
-                                                    .setTitle("Sign up").setDescription("Select account type:")
-                                                    .addAction("Adult", new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            accountType = "adult";
-                                                        }
-                                                    })
-                                                    .addAction("Child", new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            accountType = "child";
-                                                        }
-                                                    }).build().showDialog(textGUI);
-                                            if (accountType != null) {
-                                                user = Login.createUser(username, password, accountType);
-                                                if (user != null) {
-                                                    loggedIn = true;
-                                                    MessageDialog.showMessageDialog(textGUI, "Sign up",
-                                                            "Account created.");
-                                                    updateSidebar();
+                                            default:
+                                                accountType = null;
+                                                new ActionListDialogBuilder()
+                                                        .setTitle("Sign up").setDescription("Select account type:")
+                                                        .addAction("Adult", new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                accountType = "adult";
+                                                            }
+                                                        })
+                                                        .addAction("Child", new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                accountType = "child";
+                                                            }
+                                                        }).build().showDialog(textGUI);
+                                                if (accountType != null) {
+                                                    user = Login.createUser(username, password, accountType);
+                                                    if (user != null) {
+                                                        loggedIn = true;
+                                                        MessageDialog.showMessageDialog(textGUI, "Sign up",
+                                                                "Account created.");
+                                                        updateSidebar();
+                                                    }
                                                 }
-                                            }
+                                        }
                                     }
+                                } else {
+                                    MessageDialog.showMessageDialog(textGUI, "Sign up", "Username unavailable.");
                                 }
                         }
                     }
@@ -413,7 +414,7 @@ public class JBKRMobile {
                 public void run() {
                     String depositAmount = new TextInputDialogBuilder().setTitle("Deposit")
                             .setDescription("Enter deposit amount:")
-                            .build().showDialog(textGUI).trim();
+                            .build().showDialog(textGUI);
                     if (depositAmount != null) {
                         switch (depositAmount) {
                             case "":
@@ -442,7 +443,7 @@ public class JBKRMobile {
                 public void run() {
                     String withdrawAmount = new TextInputDialogBuilder().setTitle("Withdraw")
                             .setDescription("Enter withdraw amount:")
-                            .build().showDialog(textGUI).trim();
+                            .build().showDialog(textGUI);
                     if (withdrawAmount != null) {
                         switch (withdrawAmount) {
                             case "":

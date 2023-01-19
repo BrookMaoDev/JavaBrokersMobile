@@ -211,7 +211,7 @@ abstract class Investor {
         }
         String output = "";
         for (int i = 0; i < numTransactions; i++) {
-            output += transactions.get(i).fileString() + "\n";
+            output += transactions.get(i).toString() + "\n";
         }
         return output;
     }
@@ -287,11 +287,10 @@ abstract class Investor {
 
     // Returns all information of the investor in a clean and organized manner
     public String toString() {
-        String output = "Balance: " + NumberFormat.getCurrencyInstance().format(balance) + "\n";
-        output += "Balance Spent: " + NumberFormat.getCurrencyInstance().format(totalFundsSpent) + "\n";
-        output += "Balance Added: " + NumberFormat.getCurrencyInstance().format(totalFundsAdded) + "\n";
-        output += "Net worth: " + NumberFormat.getCurrencyInstance().format(getNetWorth()) + "\n";
-        output += "Lifetime Profit: " + NumberFormat.getCurrencyInstance().format(calculateProfit() + "\n");
-        return output;
+        return String.format("Balance spent: %s\nBalance added: %s\nNet worth: %s\nProfit: %s\n",
+                NumberFormat.getCurrencyInstance().format(totalFundsSpent),
+                NumberFormat.getCurrencyInstance().format(totalFundsAdded),
+                NumberFormat.getCurrencyInstance().format(getNetWorth()),
+                NumberFormat.getCurrencyInstance().format(calculateProfit()));
     }
 }
