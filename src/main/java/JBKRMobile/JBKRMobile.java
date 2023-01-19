@@ -111,7 +111,7 @@ public class JBKRMobile {
                         } else {
                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
                                     String.format("Transaction limit exceeded (%s).", NumberFormat.getCurrencyInstance()
-                                            .format(Investor.getTransactionSpendLimit())));
+                                            .format(Child.getTransactionSpendLimit())));
                         }
                     } catch (NumberFormatException e) {
                         MessageDialog.showMessageDialog(textGUI, "Buy stock", "Invalid entry.");
