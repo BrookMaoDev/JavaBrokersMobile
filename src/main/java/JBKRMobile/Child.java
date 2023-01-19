@@ -58,7 +58,7 @@ public class Child extends Investor {
     }
 
     // Attempts to buy stock
-    public boolean buyStock(String ticker, int quantity) {
+    public int buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
         double price = API.getPrice();
         
@@ -67,12 +67,12 @@ public class Child extends Investor {
 
         // Check if the transaction exceeds the spending limit
         if (cost > TRANSACTION_SPEND_LIMIT) {
-            return false;
+            return 3;
         }
 
         // Check if the user has enough balance
         if (balance < cost) {
-            return false;
+            return 2;
         }
         balance -= cost;
         totalAmountSpent += cost;
@@ -93,7 +93,7 @@ public class Child extends Investor {
         }
 
         sortPortfolio();
-        return true;
+        return 1;
     }
 
     public void save() {

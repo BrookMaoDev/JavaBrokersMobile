@@ -51,7 +51,7 @@ public class Adult extends Investor {
     }
 
     // Attempts to buy stock
-    public boolean buyStock(String ticker, int quantity) {
+    public int buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
         double price = API.getPrice();
 
@@ -60,7 +60,7 @@ public class Adult extends Investor {
         double cost = purchase.costOfTransaction();
         
         if (balance < cost) {
-            return false;
+            return 2;
         }
 
         balance -= cost;
@@ -80,7 +80,7 @@ public class Adult extends Investor {
         }
 
         sortPortfolio();
-        return true;
+        return 1;
     }
 
     public void save() {

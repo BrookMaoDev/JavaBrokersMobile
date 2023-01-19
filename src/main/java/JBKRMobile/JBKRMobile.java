@@ -100,13 +100,18 @@ public class JBKRMobile {
 
                 default:
                     try {
-                        if (user.buyStock(ticker, Integer.parseInt(quantity))) {
+                        int flag = user.buyStock(ticker, Integer.parseInt(quantity));
+                        if (flag == 1) {
                             user.save();
                             updateSidebar();
                             return true;
-                        } else {
+                        } else if (flag == 2) {
                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
                                     "Insufficient funds.");
+                        } else {
+                            MessageDialog.showMessageDialog(textGUI, "Buy stock",
+                                    String.format("Transaction limit exceeded (%s).", NumberFormat.getCurrencyInstance()
+                                            .format(Investor.getTransactionSpendLimit())));
                         }
                     } catch (NumberFormatException e) {
                         MessageDialog.showMessageDialog(textGUI, "Buy stock", "Invalid entry.");
@@ -214,7 +219,7 @@ public class JBKRMobile {
                 }
             });
             tickerPanel.addComponent(table);
-            mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(DEFAULT_DATA_SETTING)));
+            mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine()));
 
             sidePanel = new Panel();
 

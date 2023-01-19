@@ -78,7 +78,7 @@ abstract class Investor {
      * method will add that quantity of stock to the investor's portfolio, and
      * remove the money spent. Creates a transaction object in the process.
      */
-    public abstract boolean buyStock(String ticker, int quantity);
+    public abstract int buyStock(String ticker, int quantity);
 
     /**
      * Abstract method that takes in an array of tickers. Also takes in a double
