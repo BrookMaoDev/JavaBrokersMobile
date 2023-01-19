@@ -41,6 +41,7 @@ public class JBKRMobile {
     private Button deposit;
     private Button withdraw;
     private Button buyMax;
+    private Button sellAll;
     private Button additionalInfo;
     private Button transactionHistory;
     private static int maxQuery = 50;
@@ -84,6 +85,7 @@ public class JBKRMobile {
         sidePanel.addComponent(search);
         sidePanel.addComponent(portfolio);
         sidePanel.addComponent(buyMax);
+        sidePanel.addComponent(sellAll);
         sidePanel.addComponent(additionalInfo);
         sidePanel.addComponent(transactionHistory);
         sidePanel.addComponent(deposit);
@@ -497,6 +499,24 @@ public class JBKRMobile {
                                     NumberFormat.getCurrencyInstance().format(user.getAddedFunds()),
                                     NumberFormat.getCurrencyInstance().format(user.getNetWorth()),
                                     NumberFormat.getCurrencyInstance().format(user.calculateProfit())));
+                }
+            });
+
+            sellAll = new Button("Sell all", new Runnable() {
+                @Override
+                public void run() {
+                    new ActionListDialogBuilder()
+                            .setTitle("Sell all")
+                            .setDescription(
+                                    "This will sell all your stocks.\n\nProceed?")
+                            .addAction("Yes", new Runnable() {
+                                @Override
+                                public void run() {
+                                    user.sellAll();
+                                    portfolioTable();
+                                }
+                            })
+                            .build().showDialog(textGUI);
                 }
             });
 

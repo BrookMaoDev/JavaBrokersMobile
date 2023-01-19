@@ -57,11 +57,11 @@ abstract class Investor {
         return totalAmountAdded;
     }
 
-    public int getNumTransactions() {
+    protected int getNumTransactions() {
         return numTransactions;
     }
 
-    public int getStocksInPortfolio() {
+    protected int getStocksInPortfolio() {
         return stocksInPortfolio;
     }
 
