@@ -187,6 +187,7 @@ public class JBKRMobile {
                             @Override
                             public void run() {
                                 buyStockWindow(table);
+                                updateSidebar();
                                 portfolioTable();
                             }
                         })
@@ -194,6 +195,7 @@ public class JBKRMobile {
                             @Override
                             public void run() {
                                 sellStockWindow(table);
+                                updateSidebar();
                                 portfolioTable();
                             }
                         }).build().showDialog(textGUI);
