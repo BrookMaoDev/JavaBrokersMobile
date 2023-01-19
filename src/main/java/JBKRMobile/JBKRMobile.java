@@ -62,6 +62,14 @@ public class JBKRMobile {
                 System.out.println(e);
             }
         }
+        table.setSelectAction(new Runnable() {
+            @Override
+            public void run() {
+                if (loggedIn) {
+                    buyStockWindow(table);
+                }
+            }
+        });
         return table;
     }
 
@@ -106,7 +114,6 @@ public class JBKRMobile {
                     try {
                         int flag = user.buyStock(ticker, Integer.parseInt(quantity));
                         if (flag == 1) {
-                            user.save();
                             updateSidebar();
                             return true;
                         } else if (flag == 2) {
@@ -145,7 +152,6 @@ public class JBKRMobile {
                 default:
                     try {
                         if (user.sellStock(ticker, Integer.parseInt(quantity))) {
-                            user.save();
                             updateSidebar();
                             return true;
                         } else {
@@ -198,9 +204,11 @@ public class JBKRMobile {
     }
 
     public void run() {
-        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
-                new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
-                        .filterMonospaced(new Font("Consolas", Font.PLAIN, 14), new Font("Monaco", Font.PLAIN, 14))));
+        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorTitle("JBKR Mobile")
+                .setTerminalEmulatorFontConfiguration(
+                        new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
+                                .filterMonospaced(new Font("Consolas", Font.PLAIN, 14),
+                                        new Font("Monaco", Font.PLAIN, 14))));
         Screen screen = null;
         try {
             screen = terminalFactory.createScreen();
@@ -210,34 +218,17 @@ public class JBKRMobile {
             mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
             textGUI = new MultiWindowTextGUI(screen);
 
-            // Create panel for tickers
+            // Create panels
             tickerPanel = new Panel();
-            // tickerPanel.setFillColorOverride(ANSI.WHITE);
             sidePanel = new Panel();
 
             table = generateData();
-            table.setSelectAction(new Runnable() {
-                @Override
-                public void run() {
-                    if (loggedIn) {
-                        buyStockWindow(table);
-                    }
-                }
-            });
 
             home = new Button("Home", new Runnable() {
                 @Override
                 public void run() {
                     tickerPanel.removeAllComponents();
                     table = generateData();
-                    table.setSelectAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loggedIn) {
-                                buyStockWindow(table);
-                            }
-                        }
-                    });
                     tickerPanel.addComponent(table);
                 }
             });
@@ -404,8 +395,8 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    updateSidebar();
                     portfolioTable();
+                    updateSidebar();
                 }
             });
 
@@ -424,7 +415,6 @@ public class JBKRMobile {
                             default:
                                 try {
                                     user.deposit(Double.parseDouble(depositAmount));
-                                    user.save();
                                     updateSidebar();
                                     MessageDialog.showMessageDialog(textGUI, "Deposit",
                                             String.format("%s added to balance.",
@@ -453,7 +443,6 @@ public class JBKRMobile {
                             default:
                                 try {
                                     if (user.withdraw(Double.parseDouble(withdrawAmount))) {
-                                        user.save();
                                         updateSidebar();
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
                                                 String.format("%s withdrew from balance.",
