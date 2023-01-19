@@ -115,8 +115,7 @@ abstract class Investor {
                     transactions.add(sell);
                     numTransactions++;
                     return true;
-<<<<<<< HEAD
-                } else if (quantity == portfolio.get(i).getQuantity())
+                } else if (quantity == portfolio.get(i).getQuantity()){
                     API.setSymbol(ticker);
                     Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
                     portfolio.remove(i);
@@ -125,10 +124,8 @@ abstract class Investor {
                     transactions.add(sell);
                     numTransactions++;
                     return true;
-=======
                 }
                 return false;
->>>>>>> 87e475d9ce46e68383a59f800f8b19296b0f7b8c
             }
         }
         return false;
