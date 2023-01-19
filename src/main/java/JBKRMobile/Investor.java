@@ -262,7 +262,7 @@ abstract class Investor {
     /**
      * Generates and returns a string describing everything about the investor
      */
-    public void save() {
+    protected void save() {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
             bw.write(Login.encryptPassword(password) + "\n");

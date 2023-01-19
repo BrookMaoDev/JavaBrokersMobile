@@ -204,9 +204,11 @@ public class JBKRMobile {
     }
 
     public void run() {
-        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(
-                new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
-                        .filterMonospaced(new Font("Consolas", Font.PLAIN, 14), new Font("Monaco", Font.PLAIN, 14))));
+        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorTitle("JBKR Mobile")
+                .setTerminalEmulatorFontConfiguration(
+                        new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
+                                .filterMonospaced(new Font("Consolas", Font.PLAIN, 14),
+                                        new Font("Monaco", Font.PLAIN, 14))));
         Screen screen = null;
         try {
             screen = terminalFactory.createScreen();
@@ -216,34 +218,17 @@ public class JBKRMobile {
             mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
             textGUI = new MultiWindowTextGUI(screen);
 
-            // Create panel for tickers
+            // Create panels
             tickerPanel = new Panel();
-            // tickerPanel.setFillColorOverride(ANSI.WHITE);
             sidePanel = new Panel();
 
             table = generateData();
-            table.setSelectAction(new Runnable() {
-                @Override
-                public void run() {
-                    if (loggedIn) {
-                        buyStockWindow(table);
-                    }
-                }
-            });
 
             home = new Button("Home", new Runnable() {
                 @Override
                 public void run() {
                     tickerPanel.removeAllComponents();
                     table = generateData();
-                    table.setSelectAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (loggedIn) {
-                                buyStockWindow(table);
-                            }
-                        }
-                    });
                     tickerPanel.addComponent(table);
                 }
             });
