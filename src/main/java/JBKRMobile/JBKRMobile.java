@@ -18,7 +18,6 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 
 public class JBKRMobile {
-    private static final StockData STOCK_DATA = new StockData();
     private static final String DEFAULT_DATA_SETTING = "most-active";
     WindowBasedTextGUI textGUI;
     Panel mainPanel;
@@ -26,7 +25,6 @@ public class JBKRMobile {
     Panel sidePanel;
     private boolean loggedIn;
     private Table<String> table;
-    private String dataSetting;
     private String username;
     private String password;
     private String accountType;
@@ -47,21 +45,13 @@ public class JBKRMobile {
     private static int maxQuery = 50;
 
     public JBKRMobile() {
-        dataSetting = DEFAULT_DATA_SETTING;
         loggedIn = false;
-    }
-
-    /**
-     * Data types: "most-active", "gainers", "losers", "crypto"
-     */
-    public void setDataSetting(String dataSetting) {
-        this.dataSetting = dataSetting;
     }
 
     // scrape data from site
     public Table<String> generateData() {
         Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
-        ArrayList<String> data = STOCK_DATA.getData(dataSetting);
+        ArrayList<String> data = StockData.getData(DEFAULT_DATA_SETTING);
         int c = maxQuery;
         for (int i = 0; i < c; i++) {
             try {
@@ -224,7 +214,7 @@ public class JBKRMobile {
                 }
             });
             tickerPanel.addComponent(table);
-            mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(dataSetting)));
+            mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine(DEFAULT_DATA_SETTING)));
 
             sidePanel = new Panel();
 
@@ -426,7 +416,7 @@ public class JBKRMobile {
                                     user.save();
                                     updateSidebar();
                                     MessageDialog.showMessageDialog(textGUI, "Deposit",
-                                            String.format("$s added to balance.",
+                                            String.format("%s added to balance.",
                                                     NumberFormat.getCurrencyInstance()
                                                             .format(Double.parseDouble(depositAmount))));
                                 } catch (NumberFormatException e) {

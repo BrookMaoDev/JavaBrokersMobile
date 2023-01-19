@@ -6,13 +6,10 @@ import org.jsoup.nodes.Element;
 import java.util.ArrayList;
 
 public class StockData {
-    public StockData() {
-    }
-
     /**
      * Data types: "most-active", "gainers", "losers", "crypto"
      */
-    public ArrayList<String> getData(String dataType) {
+    public static ArrayList<String> getData(String dataType) {
         try {
             // URL with data type to determine what data to scrape
             String url = "https://finance.yahoo.com/" + dataType + "?count=100&offset=0";
