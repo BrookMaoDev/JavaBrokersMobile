@@ -11,7 +11,7 @@ public class Buy extends Transaction {
     }
     
     public String fileString() {
-        return output "buy\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
+        return "buy\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
     }
 
     public String toString() {
