@@ -179,7 +179,7 @@ abstract class Investor {
         }
         String output = "";
         for (int i = 0; i < numTransactions; i++) {
-            output += transactions.get(i).fileString();
+            output += transactions.get(i).fileString() + "\n";
         }
         return output;
     }
