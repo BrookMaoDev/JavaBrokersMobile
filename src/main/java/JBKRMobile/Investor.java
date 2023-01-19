@@ -115,7 +115,7 @@ abstract class Investor {
                     transactions.add(sell);
                     numTransactions++;
                     return true;
-                } else if (quantity == portfolio.get(i).getQuantity()){
+                } else if (quantity == portfolio.get(i).getQuantity()) {
                     API.setSymbol(ticker);
                     Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
                     portfolio.remove(i);
@@ -135,7 +135,7 @@ abstract class Investor {
     // accordingly.
     public boolean sellAll() {
         try {
-            for (int i = 0; i < stocksInPortfolio; i++) {
+            for (int i = stocksInPortfolio - 1; i >= 0; i--) {
                 sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
             }
             stocksInPortfolio = 0;
