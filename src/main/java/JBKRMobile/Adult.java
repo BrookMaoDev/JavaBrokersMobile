@@ -67,12 +67,14 @@ public class Adult extends Investor {
             buyStock(output.get(i), Integer.parseInt(output.get(i + 1)));
         }
 
-        String out = "";
+        String out = "Stocks bought:\n";
 
         for (int i = 0; i < output.size(); i += 2) {
-            String ticker = output.get(i);
-            int quantity = Integer.parseInt(output.get(i + 1));
-            buyStock(ticker, quantity);
+            out += "Stock: " + output.get(i) + "\n";
+            out += "Quantity: " + output.get(i + 1) + "\n";
+            API.setSymbol(output.get(i).getTicker());
+            out += "Price: " + API.getPrice() + "\n";
+            out += "Price of this purchase: " + API.getPrice() * Integer.parseInt(output.get(i+1)) + "\n";
         }
 
         out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
