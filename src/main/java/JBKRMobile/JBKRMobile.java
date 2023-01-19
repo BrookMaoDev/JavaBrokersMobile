@@ -424,8 +424,9 @@ public class JBKRMobile {
                                     user.save();
                                     updateSidebar();
                                     MessageDialog.showMessageDialog(textGUI, "Deposit",
-                                            String.format("$%.2f added to balance.",
-                                                    Double.parseDouble(depositAmount)));
+                                            String.format("$s added to balance.",
+                                                    NumberFormat.getCurrencyInstance()
+                                                            .format(Double.parseDouble(depositAmount))));
                                 } catch (NumberFormatException e) {
                                     MessageDialog.showMessageDialog(textGUI, "Deposit", "Invalid entry");
                                 }
@@ -452,8 +453,9 @@ public class JBKRMobile {
                                         user.save();
                                         updateSidebar();
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
-                                                String.format("$%.2f withdrew from balance.",
-                                                        Double.parseDouble(withdrawAmount)));
+                                                String.format("%s withdrew from balance.",
+                                                        NumberFormat.getCurrencyInstance()
+                                                                .format(Double.parseDouble(withdrawAmount))));
                                     } else {
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
                                                 "Withdraw amount exceeds balance.");
