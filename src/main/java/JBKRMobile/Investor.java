@@ -107,7 +107,7 @@ abstract class Investor {
     public boolean sellStock(String ticker, int quantity) {
         for (int i = stocksInPortfolio - 1; i >= 0; i--) {
             if (portfolio.get(i).getTicker().equalsIgnoreCase(ticker)) {
-                if (quantity <= portfolio.get(i).getQuantity()) {
+                if (quantity < portfolio.get(i).getQuantity()) {
                     API.setSymbol(ticker);
                     Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
                     portfolio.get(i).subtractQuantity(quantity);
@@ -115,8 +115,20 @@ abstract class Investor {
                     transactions.add(sell);
                     numTransactions++;
                     return true;
+<<<<<<< HEAD
+                } else if (quantity == portfolio.get(i).getQuantity())
+                    API.setSymbol(ticker);
+                    Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
+                    portfolio.remove(i);
+                    stocksInPortfolio--;
+                    balance += sell.costOfTransaction();
+                    transactions.add(sell);
+                    numTransactions++;
+                    return true;
+=======
                 }
                 return false;
+>>>>>>> 87e475d9ce46e68383a59f800f8b19296b0f7b8c
             }
         }
         return false;
