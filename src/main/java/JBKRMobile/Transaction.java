@@ -37,15 +37,7 @@ public abstract class Transaction {
     }
 
     // String that contains information about the transaction to write to a file
-    public String fileString() {
-        String output;
-        if (this instanceof Buy) {
-            output = "buy\n";
-        } else {
-            output = "sell\n";
-        }
-        return output + date + "\n" + ticker + "\n" + quantity + "\n" + price;
-    }
+    public abstract String fileString();
 
     abstract double costOfTransaction();
 }
