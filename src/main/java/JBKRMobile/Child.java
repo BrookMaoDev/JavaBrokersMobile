@@ -26,7 +26,7 @@ public class Child extends Investor {
 
     public String buyMax(ArrayList<String> tickers, double balance) {
         if (balance > TRANSACTION_SPEND_LIMIT) {
-            return "You cannot spend more than the transaction spend limit of " + TRANSACTION_SPEND_LIMIT;
+            balance = TRANSACTION_SPEND_LIMIT;
         }
 
         ArrayList<String> bought = new ArrayList<String>();
