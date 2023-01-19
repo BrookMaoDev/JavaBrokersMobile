@@ -12,7 +12,7 @@ public class Sell extends Transaction {
     }
     
     public String fileString() {
-        return output "sell\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
+        return "sell\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
     }
 
     public String toString() {
