@@ -69,27 +69,33 @@ public class JBKRMobile {
         sidePanel.removeAllComponents();
         sidePanel.addComponent(new Label(
                 NumberFormat.getCurrencyInstance().format(user.getFunds())));
+        sidePanel.addComponent(new Label(""));
         sidePanel.addComponent(home);
         sidePanel.addComponent(search);
+        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(deposit);
+        sidePanel.addComponent(withdraw);
+        sidePanel.addComponent(new Label(""));
         sidePanel.addComponent(portfolio);
         sidePanel.addComponent(buyMax);
         sidePanel.addComponent(sellAll);
+        sidePanel.addComponent(new Label(""));
         sidePanel.addComponent(additionalInfo);
         sidePanel.addComponent(transactionHistory);
-        sidePanel.addComponent(deposit);
-        sidePanel.addComponent(withdraw);
+        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new Label(""));
         sidePanel.addComponent(logout);
     }
 
     private boolean buyStockWindow(Table<String> table) {
         String ticker = table.getTableModel()
-                .getRow(table.getSelectedRow()).get(0);
+                .getRow(table.getSelectedRow()).get(0).trim();
         String quantity = new TextInputDialogBuilder()
                 .setTitle("Buy stock")
                 .setDescription(
                         "Enter desired quantity of "
                                 + ticker + ":")
-                .build().showDialog(textGUI);
+                .build().showDialog(textGUI).trim();
         if (quantity != null) {
             switch (quantity) {
                 case "":
@@ -206,7 +212,8 @@ public class JBKRMobile {
 
             // Create panel for tickers
             tickerPanel = new Panel();
-            tickerPanel.setFillColorOverride(ANSI.WHITE);
+            // tickerPanel.setFillColorOverride(ANSI.WHITE);
+            sidePanel = new Panel();
 
             table = generateData();
             table.setSelectAction(new Runnable() {
@@ -217,10 +224,6 @@ public class JBKRMobile {
                     }
                 }
             });
-            tickerPanel.addComponent(table);
-            mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine()));
-
-            sidePanel = new Panel();
 
             home = new Button("Home", new Runnable() {
                 @Override
@@ -244,7 +247,7 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     String query = new TextInputDialogBuilder().setTitle("Search").setDescription("Enter ticker:")
-                            .build().showDialog(textGUI);
+                            .build().showDialog(textGUI).trim();
                     if (query != null) {
                         switch (query) {
                             case "":
@@ -277,28 +280,14 @@ public class JBKRMobile {
             });
             sidePanel.addComponent(search);
 
-            // Log out button
-            logout = new Button("Log out", new Runnable() {
-                @Override
-                public void run() {
-                    loggedIn = false;
-                    tickerPanel.removeAllComponents();
-                    table = generateData();
-                    tickerPanel.addComponent(table);
-                    sidePanel.removeAllComponents();
-                    sidePanel.addComponent(home);
-                    sidePanel.addComponent(search);
-                    sidePanel.addComponent(login);
-                    sidePanel.addComponent(signup);
-                }
-            });
+            sidePanel.addComponent(new Label(""));
 
             // Log In button
             login = new Button("Log in", new Runnable() {
                 @Override
                 public void run() {
                     username = new TextInputDialogBuilder().setTitle("Log in").setDescription("Enter username:")
-                            .build().showDialog(textGUI);
+                            .build().showDialog(textGUI).trim();
 
                     if (username != null) {
                         switch (username) {
@@ -309,7 +298,7 @@ public class JBKRMobile {
                             default:
                                 password = new TextInputDialogBuilder().setTitle("Log in")
                                         .setDescription("Enter password:")
-                                        .setPasswordInput(true).build().showDialog(textGUI);
+                                        .setPasswordInput(true).build().showDialog(textGUI).trim();
                                 if (password != null) {
                                     switch (password) {
                                         case "":
@@ -317,7 +306,7 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            user = Login.login(username, password);
+                                            user = Login.login(username.trim(), password.trim());
                                             if (user != null) {
                                                 loggedIn = true;
                                                 updateSidebar();
@@ -336,8 +325,12 @@ public class JBKRMobile {
             signup = new Button("Sign up", new Runnable() {
                 @Override
                 public void run() {
-                    username = new TextInputDialogBuilder().setTitle("Sign up").setDescription("Enter username:")
-                            .build().showDialog(textGUI);
+                    boolean usernameAvailable = false;
+                    do {
+                        username = new TextInputDialogBuilder().setTitle("Sign up").setDescription("Enter username:")
+                                .build().showDialog(textGUI).trim();
+                        usernameAvailable = Login.checkUsername(username);
+                    } while (!usernameAvailable);
 
                     if (username != null) {
                         switch (username) {
@@ -357,34 +350,29 @@ public class JBKRMobile {
                                             break;
 
                                         default:
-                                            if (Login.checkUsername(username)) {
-                                                accountType = null;
-                                                new ActionListDialogBuilder()
-                                                        .setTitle("Sign up").setDescription("Select account type:")
-                                                        .addAction("Adult", new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                accountType = "adult";
-                                                            }
-                                                        })
-                                                        .addAction("Child", new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                accountType = "child";
-                                                            }
-                                                        }).build().showDialog(textGUI);
-                                                if (accountType != null) {
-                                                    user = Login.createUser(username, password, accountType);
-                                                    if (user != null) {
-                                                        loggedIn = true;
-                                                        MessageDialog.showMessageDialog(textGUI, "Sign up",
-                                                                "Account created.");
-                                                        updateSidebar();
-                                                    }
+                                            accountType = null;
+                                            new ActionListDialogBuilder()
+                                                    .setTitle("Sign up").setDescription("Select account type:")
+                                                    .addAction("Adult", new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            accountType = "adult";
+                                                        }
+                                                    })
+                                                    .addAction("Child", new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            accountType = "child";
+                                                        }
+                                                    }).build().showDialog(textGUI);
+                                            if (accountType != null) {
+                                                user = Login.createUser(username, password, accountType);
+                                                if (user != null) {
+                                                    loggedIn = true;
+                                                    MessageDialog.showMessageDialog(textGUI, "Sign up",
+                                                            "Account created.");
+                                                    updateSidebar();
                                                 }
-                                            } else {
-                                                MessageDialog.showMessageDialog(textGUI, "Sign up",
-                                                        "Username unavailable.");
                                             }
                                     }
                                 }
@@ -393,6 +381,23 @@ public class JBKRMobile {
                 }
             });
             sidePanel.addComponent(signup);
+
+            // Log out button
+            logout = new Button("Log out", new Runnable() {
+                @Override
+                public void run() {
+                    loggedIn = false;
+                    tickerPanel.removeAllComponents();
+                    table = generateData();
+                    tickerPanel.addComponent(table);
+                    sidePanel.removeAllComponents();
+                    sidePanel.addComponent(home);
+                    sidePanel.addComponent(search);
+                    sidePanel.addComponent(new Label(""));
+                    sidePanel.addComponent(login);
+                    sidePanel.addComponent(signup);
+                }
+            });
 
             portfolio = new Button("Portfolio", new Runnable() {
                 @Override
@@ -408,7 +413,7 @@ public class JBKRMobile {
                 public void run() {
                     String depositAmount = new TextInputDialogBuilder().setTitle("Deposit")
                             .setDescription("Enter deposit amount:")
-                            .build().showDialog(textGUI);
+                            .build().showDialog(textGUI).trim();
                     if (depositAmount != null) {
                         switch (depositAmount) {
                             case "":
@@ -437,7 +442,7 @@ public class JBKRMobile {
                 public void run() {
                     String withdrawAmount = new TextInputDialogBuilder().setTitle("Withdraw")
                             .setDescription("Enter withdraw amount:")
-                            .build().showDialog(textGUI);
+                            .build().showDialog(textGUI).trim();
                     if (withdrawAmount != null) {
                         switch (withdrawAmount) {
                             case "":
@@ -487,13 +492,7 @@ public class JBKRMobile {
             additionalInfo = new Button("Additional info", new Runnable() {
                 @Override
                 public void run() {
-                    MessageDialog.showMessageDialog(textGUI, "Additional info",
-                            String.format(
-                                    "Total funds spent: %s\nTotal funds added: %s\nNet worth: %s\nTotal profit: %s",
-                                    NumberFormat.getCurrencyInstance().format(user.getSpentFunds()),
-                                    NumberFormat.getCurrencyInstance().format(user.getAddedFunds()),
-                                    NumberFormat.getCurrencyInstance().format(user.getNetWorth()),
-                                    NumberFormat.getCurrencyInstance().format(user.calculateProfit())));
+                    MessageDialog.showMessageDialog(textGUI, "Additional info", user.toString());
                 }
             });
 
@@ -522,6 +521,8 @@ public class JBKRMobile {
                 }
             });
 
+            tickerPanel.addComponent(table);
+            mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine()));
             mainPanel.addComponent(sidePanel);
             window.setHints(Arrays.asList(Window.Hint.CENTERED));
             window.setComponent(mainPanel);

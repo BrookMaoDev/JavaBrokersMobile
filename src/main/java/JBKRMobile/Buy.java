@@ -6,10 +6,10 @@ public class Buy extends Transaction {
     }
 
     public String fileString() {
-        return "buy\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
+        return String.format("buy\n%s\n%s\n%d\n%.2f", date, ticker, quantity, price);
     }
 
     public String toString() {
-        return "buy\n" + super.toString();
+        return "Buy\n" + super.toString();
     }
 }

@@ -1,8 +1,5 @@
 package JBKRMobile;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Child extends Investor {
@@ -13,15 +10,51 @@ public class Child extends Investor {
         super(username, password);
     }
 
-    public Child(String username, String password, double balance, double totalAmountSpent, double totalAmountAdded,
+    public Child(String username, String password, double balance, double totalFundsSpent, double totalFundsAdded,
             int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
             ArrayList<OwnedStock> portfolio) {
-        super(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions, transactions,
+        super(username, password, balance, totalFundsSpent, totalFundsAdded, numTransactions, transactions,
                 stocksInPortfolio, portfolio);
     }
-    
+
     public static double getTransactionSpendLimit() {
         return TRANSACTION_SPEND_LIMIT;
+    }
+
+    // Attempts to buy stock
+    public int buyStock(String ticker, int quantity) {
+        API.setSymbol(ticker);
+        double price = API.getPrice();
+        Buy purchase = new Buy(java.time.LocalDate.now().toString(), ticker, quantity, price);
+        double cost = purchase.costOfTransaction();
+
+        // Check if the transaction exceeds the spending limit
+        if (this instanceof Child && cost > TRANSACTION_SPEND_LIMIT) {
+            return 3;
+        }
+
+        // Check if the user has enough balance
+        if (cost > balance) {
+            return 2;
+        }
+        balance -= cost;
+        totalFundsSpent += cost;
+        transactions.add(purchase);
+        numTransactions++;
+
+        int tickerIndex = getTickerIndex(ticker);
+        // The user does not own this stock yet
+        if (tickerIndex < 0) {
+            OwnedStock boughtStock = new OwnedStock(ticker, quantity);
+            portfolio.add(boughtStock);
+            stocksInPortfolio++;
+        } else {
+            // The user owns this stock
+            portfolio.get(tickerIndex).addQuantity(quantity);
+        }
+
+        sortPortfolio();
+        return 1;
     }
 
     public String buyMax(ArrayList<String> tickers, double balance) {
@@ -49,75 +82,12 @@ public class Child extends Investor {
             buyStock(output.get(i), Integer.parseInt(output.get(i + 1)));
         }
 
-        String out = "";
-
         for (int i = 0; i < output.size(); i += 2) {
             String ticker = output.get(i);
             int quantity = Integer.parseInt(output.get(i + 1));
             buyStock(ticker, quantity);
         }
 
-        out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
-        return out;
-    }
-
-    // Attempts to buy stock
-    public int buyStock(String ticker, int quantity) {
-        API.setSymbol(ticker);
-        double price = API.getPrice();
-        
-        Buy purchase = new Buy(date, ticker, quantity, price);
-        double cost = purchase.costOfTransaction();
-
-        // Check if the transaction exceeds the spending limit
-        if (cost > TRANSACTION_SPEND_LIMIT) {
-            return 3;
-        }
-
-        // Check if the user has enough balance
-        if (balance < cost) {
-            return 2;
-        }
-        balance -= cost;
-        totalAmountSpent += cost;
-
-        transactions.add(purchase);
-        numTransactions++;
-
-        int tickerIndex = getTickerIndex(ticker);
-
-        // The user does not own this stock yet
-        if (tickerIndex < 0) {
-            OwnedStock boughtStock = new OwnedStock(ticker, quantity);
-            portfolio.add(boughtStock);
-            stocksInPortfolio++;
-        } else {
-            // The user owns this stock
-            portfolio.get(tickerIndex).addQuantity(quantity);
-        }
-
-        sortPortfolio();
-        return 1;
-    }
-
-    public void save() {
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
-            bw.write(Login.encryptPassword(password) + "\n");
-            bw.write("child\n");
-            bw.write(balance + "\n");
-            bw.write(totalAmountSpent + "\n");
-            bw.write(totalAmountAdded + "\n");
-            bw.write(numTransactions + "\n");
-            for (int i = 0; i < numTransactions; i++) {
-                bw.write(transactions.get(i).fileString() + "\n");
-            }
-            bw.write(stocksInPortfolio + "\n");
-            for (int i = 0; i < stocksInPortfolio; i++) {
-                bw.write(portfolio.get(i).fileString() + "\n");
-            }
-            bw.close();
-        } catch (IOException e) {
-        }
+        return "Total Price of Purchase: " + calcValueOfArray(bestCombo);
     }
 }

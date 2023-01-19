@@ -19,44 +19,50 @@ public class Login {
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
 
-            if (br.readLine().equals(encryptPassword(password))) {
-                String investorType = br.readLine();
-                double balance = Double.parseDouble(br.readLine());
-                double totalAmountSpent = Double.parseDouble(br.readLine());
-                double totalAmountAdded = Double.parseDouble(br.readLine());
-                int numTransactions = Integer.parseInt(br.readLine());
+            if (br.readLine().trim().equals(encryptPassword(password))) {
+                String investorType = br.readLine().trim();
+                double balance = Double.parseDouble(br.readLine().trim());
+                double totalFundsSpent = Double.parseDouble(br.readLine().trim());
+                double totalFundsAdded = Double.parseDouble(br.readLine().trim());
 
                 // get transactions
+                int numTransactions = Integer.parseInt(br.readLine().trim());
                 for (int i = 0; i < numTransactions; i++) {
-                    if (br.readLine().equalsIgnoreCase("buy")) {
+                    if (br.readLine().trim().equalsIgnoreCase("buy")) {
                         // date, ticker, quantity, price
-                        transactions.add(new Buy(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
-                                Double.parseDouble(br.readLine())));
+                        transactions.add(new Buy(br.readLine().trim(), br.readLine().trim(),
+                                Integer.parseInt(br.readLine().trim()),
+                                Double.parseDouble(br.readLine().trim())));
                     } else {
-                        transactions.add(new Sell(br.readLine(), br.readLine(), Integer.parseInt(br.readLine()),
-                                Double.parseDouble(br.readLine())));
+                        transactions.add(new Sell(br.readLine().trim(), br.readLine().trim(),
+                                Integer.parseInt(br.readLine().trim()),
+                                Double.parseDouble(br.readLine().trim())));
                     }
                 }
 
                 // get owned stocks
-                int stocksInPortfolio = Integer.parseInt(br.readLine());
+                int stocksInPortfolio = Integer.parseInt(br.readLine().trim());
                 for (int i = 0; i < stocksInPortfolio; i++) {
                     // ticker, quantity
-                    portfolio.add(new OwnedStock(br.readLine(), Integer.parseInt(br.readLine())));
+                    portfolio.add(new OwnedStock(br.readLine().trim(), Integer.parseInt(br.readLine().trim())));
                 }
+
                 br.close();
 
                 // Adult: 1. Child: anything else
-                if (investorType == "adult") {
-                    return new Adult(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions,
+                if (investorType.equalsIgnoreCase("adult")) {
+                    return new Adult(username, password, balance, totalFundsSpent, totalFundsAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 } else {
-                    return new Child(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions,
+                    return new Child(username, password, balance, totalFundsSpent, totalFundsAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 }
             }
             br.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (IOException e) {
+            System.out.println(e);
         }
         return null;
     }
@@ -77,7 +83,7 @@ public class Login {
                 bw.write("0\n"); // num transactions
                 bw.write("0\n"); // num stocks owned
                 bw.close();
-                if (accountType.equals("adult")) {
+                if (accountType.equalsIgnoreCase("adult")) {
                     return new Adult(username, password);
                 } else {
                     return new Child(username, password);
@@ -89,7 +95,7 @@ public class Login {
         return null;
     }
 
-    // returns true if username taken, false otherwise
+    // returns false if username taken, true otherwise
     public static boolean checkUsername(String username) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));

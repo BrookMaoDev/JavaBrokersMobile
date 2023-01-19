@@ -12,7 +12,7 @@ public class StockData {
     public static ArrayList<String> getData(String dataType) {
         try {
             // URL with data type to determine what data to scrape
-            String url = "https://finance.yahoo.com/" + dataType + "?count=100&offset=0";
+            String url = "https://finance.yahoo.com/" + dataType + "?offset=0&count=50";
             // Parse site to HTML
             Document doc = Jsoup.connect(url).get();
             // Retrieve elements from table

@@ -41,10 +41,6 @@ public class OwnedStock {
         return quantity - other.getQuantity();
     }
 
-    public String toString() {
-        return ticker + ": " + quantity;
-    }
-
     public String fileString() {
         return ticker + "\n" + quantity;
     }
