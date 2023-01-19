@@ -57,11 +57,14 @@ public class Adult extends Investor {
 
         // Check if the user has enough money
         Buy purchase = new Buy(date, ticker, quantity, price);
-        if (balance < purchase.costOfTransaction()) {
+        double cost = purchase.costOfTransaction();
+        
+        if (balance < cost) {
             return false;
         }
 
-        balance -= purchase.costOfTransaction();
+        balance -= cost;
+        totalAmountSpent += cost;
         transactions.add(purchase);
         numTransactions++;
 

@@ -75,6 +75,7 @@ public class Child extends Investor {
             return false;
         }
         balance -= cost;
+        totalAmountSpent += cost;
 
         transactions.add(purchase);
         numTransactions++;
