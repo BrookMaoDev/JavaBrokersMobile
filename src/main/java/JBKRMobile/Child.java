@@ -19,6 +19,10 @@ public class Child extends Investor {
         super(username, password, balance, totalAmountSpent, totalAmountAdded, numTransactions, transactions,
                 stocksInPortfolio, portfolio);
     }
+    
+    public static double getTransactionSpendLimit() {
+        return TRANSACTION_SPEND_LIMIT;
+    }
 
     public String buyMax(ArrayList<String> tickers, double balance) {
         if (balance > TRANSACTION_SPEND_LIMIT) {
