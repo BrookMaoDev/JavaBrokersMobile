@@ -105,7 +105,7 @@ abstract class Investor {
      * add the balance received. Creates a transaction object in the process.
      */
     public boolean sellStock(String ticker, int quantity) {
-        for (int i = 0; i < stocksInPortfolio; i++) {
+        for (int i = stocksInPortfolio - 1; i >= 0; i--) {
             if (portfolio.get(i).getTicker().equalsIgnoreCase(ticker)) {
                 if (quantity <= portfolio.get(i).getQuantity()) {
                     API.setSymbol(ticker);
@@ -116,6 +116,7 @@ abstract class Investor {
                     numTransactions++;
                     return true;
                 }
+                return false;
             }
         }
         return false;
