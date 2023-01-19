@@ -93,7 +93,8 @@ public class Adult extends Investor {
             bw.write(totalAmountAdded + "\n");
             bw.write(numTransactions + "\n");
             for (int i = 0; i < numTransactions; i++) {
-                bw.write(transactions.get(i).fileString() + "\n");
+                bw.write(transactions.get(i).fileString());
+                bw.newLine();
             }
             bw.write(stocksInPortfolio + "\n");
             for (int i = 0; i < stocksInPortfolio; i++) {
