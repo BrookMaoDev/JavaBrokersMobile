@@ -10,6 +10,10 @@ public class Sell extends Transaction {
     public double costOfTransaction() {
         return quantity * price;
     }
+    
+    public String fileString() {
+        return output "sell\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
+    }
 
     public String toString() {
         return "sell\n" + super.toString();
