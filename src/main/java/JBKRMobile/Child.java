@@ -20,7 +20,7 @@ public class Child extends Investor {
                 stocksInPortfolio, portfolio);
     }
     
-    public static double getTRANSACTION_SPEND_LIMIT() {
+    public static double getTransactionSpendLimit() {
         return TRANSACTION_SPEND_LIMIT;
     }
 
