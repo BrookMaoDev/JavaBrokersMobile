@@ -9,6 +9,10 @@ public class Buy extends Transaction {
     public double costOfTransaction() {
         return quantity * price;
     }
+    
+    public String fileString() {
+        return output "buy\n"+ date + "\n" + ticker + "\n" + quantity + "\n" + price;
+    }
 
     public String toString() {
         return "buy\n" + super.fileString();
