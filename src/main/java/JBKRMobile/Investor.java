@@ -75,10 +75,10 @@ abstract class Investor {
     }
 
     // Adds balance to the investor's account
-    public boolean deposit(double balance) {
+    public void deposit(double balance) {
         this.balance += balance;
         totalFundsAdded += balance;
-        return true;
+        save();
     }
 
     // Subtracts balance from the user
@@ -88,6 +88,7 @@ abstract class Investor {
         } else {
             this.balance -= balance;
             totalFundsAdded -= balance;
+            save();
             return true;
         }
     }
@@ -114,6 +115,7 @@ abstract class Investor {
                     balance += sell.costOfTransaction();
                     transactions.add(sell);
                     numTransactions++;
+                    save();
                     return true;
                 }
             }
@@ -129,6 +131,7 @@ abstract class Investor {
                 sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
             }
             stocksInPortfolio = 0;
+            save();
             return true;
         } catch (Exception e) {
             System.out.println(e);

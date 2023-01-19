@@ -54,6 +54,7 @@ public class Child extends Investor {
         }
 
         sortPortfolio();
+        save();
         return 1;
     }
 
@@ -88,6 +89,7 @@ public class Child extends Investor {
             buyStock(ticker, quantity);
         }
 
+        save();
         return "Total Price of Purchase: " + calcValueOfArray(bestCombo);
     }
 }

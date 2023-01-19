@@ -41,6 +41,7 @@ public class Adult extends Investor {
         }
 
         sortPortfolio();
+        save();
         return 1;
     }
 
@@ -74,6 +75,7 @@ public class Adult extends Investor {
         }
 
         out += "Total Price of Purchase: " + calcValueOfArray(bestCombo);
+        save();
         return out;
     }
 }

@@ -62,6 +62,14 @@ public class JBKRMobile {
                 System.out.println(e);
             }
         }
+        table.setSelectAction(new Runnable() {
+            @Override
+            public void run() {
+                if (loggedIn) {
+                    buyStockWindow(table);
+                }
+            }
+        });
         return table;
     }
 
@@ -106,7 +114,6 @@ public class JBKRMobile {
                     try {
                         int flag = user.buyStock(ticker, Integer.parseInt(quantity));
                         if (flag == 1) {
-                            user.save();
                             updateSidebar();
                             return true;
                         } else if (flag == 2) {
@@ -145,7 +152,6 @@ public class JBKRMobile {
                 default:
                     try {
                         if (user.sellStock(ticker, Integer.parseInt(quantity))) {
-                            user.save();
                             updateSidebar();
                             return true;
                         } else {
@@ -404,8 +410,8 @@ public class JBKRMobile {
                 @Override
                 public void run() {
                     // Retrieve saved tickers
-                    updateSidebar();
                     portfolioTable();
+                    updateSidebar();
                 }
             });
 
@@ -424,7 +430,6 @@ public class JBKRMobile {
                             default:
                                 try {
                                     user.deposit(Double.parseDouble(depositAmount));
-                                    user.save();
                                     updateSidebar();
                                     MessageDialog.showMessageDialog(textGUI, "Deposit",
                                             String.format("%s added to balance.",
@@ -453,7 +458,6 @@ public class JBKRMobile {
                             default:
                                 try {
                                     if (user.withdraw(Double.parseDouble(withdrawAmount))) {
-                                        user.save();
                                         updateSidebar();
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
                                                 String.format("%s withdrew from balance.",
