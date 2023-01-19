@@ -32,6 +32,8 @@ public abstract class Transaction {
         return price;
     }
     
+    // The profit gained from this transaction
+    // Profit is calculated by quantity * price;
     public double costOfTransaction() {
         return quantity * price;
     }
