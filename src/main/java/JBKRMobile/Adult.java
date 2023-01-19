@@ -64,7 +64,7 @@ public class Adult extends Investor {
         }
 
         balance -= cost;
-        spentMoney += cost;
+        totalAmountSpent += cost;
         transactions.add(purchase);
         numTransactions++;
 
