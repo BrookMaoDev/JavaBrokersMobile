@@ -35,6 +35,7 @@ public class Adult extends Investor {
             OwnedStock boughtStock = new OwnedStock(ticker, quantity);
             portfolio.add(boughtStock);
             stocksInPortfolio++;
+            sortPortfolio();
         } else {
             // The user owns this stock
             portfolio.get(tickerIndex).addQuantity(quantity);
