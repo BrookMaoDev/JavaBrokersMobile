@@ -1,7 +1,6 @@
 package JBKRMobile;
 
 import java.util.ArrayList;
-import java.time.*;
 
 abstract class Investor {
     protected static String date;

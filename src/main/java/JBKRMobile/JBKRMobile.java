@@ -28,7 +28,6 @@ public class JBKRMobile {
     private String username;
     private String password;
     private String accountType;
-    private Label balance;
     private Button home;
     private Button search;
     private Button login;
@@ -60,7 +59,7 @@ public class JBKRMobile {
                         API.getChange() + "",
                         API.getPercentChange() + "%");
             } catch (Exception e) {
-                c++;
+                System.out.println(e);
             }
         }
         return table;
@@ -68,9 +67,8 @@ public class JBKRMobile {
 
     private void updateSidebar() {
         sidePanel.removeAllComponents();
-        balance = new Label(
-                NumberFormat.getCurrencyInstance().format(user.getFunds()));
-        sidePanel.addComponent(balance);
+        sidePanel.addComponent(new Label(
+                NumberFormat.getCurrencyInstance().format(user.getFunds())));
         sidePanel.addComponent(home);
         sidePanel.addComponent(search);
         sidePanel.addComponent(portfolio);
@@ -87,7 +85,7 @@ public class JBKRMobile {
         String ticker = table.getTableModel()
                 .getRow(table.getSelectedRow()).get(0);
         String quantity = new TextInputDialogBuilder()
-                .setTitle(ticker)
+                .setTitle("Buy stock")
                 .setDescription(
                         "Enter desired quantity of "
                                 + ticker + ":")
@@ -108,7 +106,7 @@ public class JBKRMobile {
                         } else if (flag == 2) {
                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
                                     "Insufficient funds.");
-                        } else {
+                        } else if (flag == 3) {
                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
                                     String.format("Transaction limit exceeded (%s).", NumberFormat.getCurrencyInstance()
                                             .format(Child.getTransactionSpendLimit())));
@@ -166,6 +164,7 @@ public class JBKRMobile {
                         API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
             }
         } catch (Exception e) {
+            System.out.println(e);
         }
         table.setSelectAction(new Runnable() {
             @Override
@@ -260,6 +259,7 @@ public class JBKRMobile {
                                             API.getChange() + "",
                                             API.getPercentChange() + "%");
                                 } catch (Exception e) {
+                                    System.out.println(e);
                                 }
                                 tickerPanel.removeAllComponents();
                                 table.setSelectAction(new Runnable() {
@@ -531,7 +531,7 @@ public class JBKRMobile {
                     new EmptySpace(ANSI.BLACK));
             gui.addWindowAndWait(window);
         } catch (IOException e) {
-            System.exit(0);
+            System.out.println(e);
         }
     }
 }
