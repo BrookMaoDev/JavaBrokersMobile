@@ -107,7 +107,7 @@ abstract class Investor {
     public boolean sellStock(String ticker, int quantity) {
         for (int i = 0; i < stocksInPortfolio; i++) {
             if (portfolio.get(i).getTicker().equalsIgnoreCase(ticker)) {
-                if (quantity < portfolio.get(i).getQuantity()) {
+                if (quantity <= portfolio.get(i).getQuantity()) {
                     API.setSymbol(ticker);
                     Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
                     portfolio.get(i).subtractQuantity(quantity);
@@ -115,17 +115,7 @@ abstract class Investor {
                     transactions.add(sell);
                     numTransactions++;
                     return true;
-                } else if (portfolio.get(i).getQuantity() == quantity) {
-                    API.setSymbol(ticker);
-                    Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
-                    portfolio.remove(i); // Removes ownership of stock from portfolio since they sold them all
-                    stocksInPortfolio--;
-                    balance = balance + sell.costOfTransaction();
-                    transactions.add(sell);
-                    numTransactions++;
-                    return true;
                 }
-                return false;
             }
         }
         return false;
