@@ -32,8 +32,8 @@ public class Adult extends Investor {
         int tickerIndex = getTickerIndex(ticker);
         // The user does not own this stock yet
         if (tickerIndex < 0) {
-            // THIS IS CAUSING CRASH
-            portfolio.add(new OwnedStock(ticker, quantity));
+            OwnedStock newStock = new OwnedStock(ticker, quantity);
+            portfolio.add(newStock);
             stocksInPortfolio++;
         } else {
             // The user owns this stock
