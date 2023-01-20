@@ -241,6 +241,7 @@ abstract class Investor {
     }
 
     // Helper method for the buyMax method. Uses recursion.
+    @SuppressWarnings("unchecked")
     protected ArrayList<String> permute(ArrayList<String> tickers, double balance, ArrayList<String> bought) {
         ArrayList<String> bestCombo = (ArrayList<String>) bought.clone();
         for (int i = 0; i < tickers.size(); i++) {

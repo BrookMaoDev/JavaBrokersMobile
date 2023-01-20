@@ -72,26 +72,24 @@ public class Adult extends Investor {
         String out = "Stocks bought:\n";
 
         // for (int i = 0; i < bestCombo.size(); i++) {
-        //     out += bestCombo.get(i) + " ";
+        // out += bestCombo.get(i) + " ";
         // }
 
         for (int i = 0; i < output.size(); i += 2) {
-        out += "Stock: " + output.get(i) + "\n";
-        out += "Quantity: " + output.get(i + 1) + "\n";
-        API.setSymbol(output.get(i));
-        out += "Price: " + NumberFormat.getCurrencyInstance().format(API.getPrice())
-        + "\n";
-        out += "Price of this purchase: "
-        + NumberFormat.getCurrencyInstance().format(API.getPrice() *
-        Integer.parseInt(output.get(i + 1)))
-        + "\n";
+            out += "Stock: " + output.get(i) + "\n";
+            out += "Quantity: " + output.get(i + 1) + "\n";
+            API.setSymbol(output.get(i));
+            out += "Price: " + NumberFormat.getCurrencyInstance().format(API.getPrice())
+                    + "\n";
+            out += "Price of this purchase: "
+                    + NumberFormat.getCurrencyInstance().format(API.getPrice() *
+                            Integer.parseInt(output.get(i + 1)))
+                    + "\n";
         }
 
         out += "Total Price of Purchase: " +
-        NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
+                NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
         save();
-        return out;
-        }
         return out;
     }
 }
