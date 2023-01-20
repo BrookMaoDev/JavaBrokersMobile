@@ -23,6 +23,7 @@ public class JBKRMobile {
     Panel mainPanel;
     Panel tickerPanel;
     Panel sidePanel;
+    private static int maxQuery = 50;
     private boolean loggedIn;
     private Table<String> table;
     private String username;
@@ -41,7 +42,7 @@ public class JBKRMobile {
     private Button sellAll;
     private Button additionalInfo;
     private Button transactionHistory;
-    private static int maxQuery = 50;
+    private Button exit;
 
     public JBKRMobile() {
         loggedIn = false;
@@ -93,6 +94,9 @@ public class JBKRMobile {
         sidePanel.addComponent(new Label(""));
         sidePanel.addComponent(new Label(""));
         sidePanel.addComponent(logout);
+        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(exit);
     }
 
     private boolean buyStockWindow(Table<String> table) {
@@ -390,6 +394,9 @@ public class JBKRMobile {
                     sidePanel.addComponent(new Label(""));
                     sidePanel.addComponent(login);
                     sidePanel.addComponent(signup);
+                    sidePanel.addComponent(new Label(""));
+                    sidePanel.addComponent(new Label(""));
+                    sidePanel.addComponent(exit);
                 }
             });
 
@@ -512,6 +519,16 @@ public class JBKRMobile {
                     MessageDialog.showMessageDialog(textGUI, "Transaction history", user.getTransactionHistory());
                 }
             });
+
+            exit = new Button("Exit", new Runnable() {
+                @Override
+                public void run() {
+                    System.exit(0);
+                }
+            });
+            sidePanel.addComponent(new Label(""));
+            sidePanel.addComponent(new Label(""));
+            sidePanel.addComponent(exit);
 
             tickerPanel.addComponent(table);
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine()));
