@@ -53,14 +53,10 @@ public class JBKRMobile {
         ArrayList<String> data = StockData.getData(DEFAULT_DATA_SETTING);
         int c = maxQuery;
         for (int i = 0; i < c; i++) {
-            try {
-                API.setSymbol(data.get(i));
-                table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
-                        API.getChange() + "",
-                        API.getPercentChange() + "%");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            API.setSymbol(data.get(i));
+            table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                    API.getChange() + "",
+                    API.getPercentChange() + "%");
         }
         table.setSelectAction(new Runnable() {
             @Override
@@ -131,8 +127,6 @@ public class JBKRMobile {
                         }
                     } catch (NumberFormatException e) {
                         MessageDialog.showMessageDialog(textGUI, "Buy stock", "Invalid entry.");
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
             }
         }
@@ -175,14 +169,10 @@ public class JBKRMobile {
     private void portfolioTable() {
         table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE", "QUANTITY");
         ArrayList<OwnedStock> data = user.getPortfolio();
-        try {
-            for (int i = 0; i < data.size(); i++) {
-                API.setSymbol(data.get(i).getTicker());
-                table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
-                        API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (int i = 0; i < data.size(); i++) {
+            API.setSymbol(data.get(i).getTicker());
+            table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                    API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
         }
         table.setSelectAction(new Runnable() {
             @Override
@@ -255,14 +245,10 @@ public class JBKRMobile {
 
                             default:
                                 table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
-                                try {
                                     API.setSymbol(query.toUpperCase());
                                     table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
                                             API.getChange() + "",
                                             API.getPercentChange() + "%");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
                                 tickerPanel.removeAllComponents();
                                 table.setSelectAction(new Runnable() {
                                     @Override

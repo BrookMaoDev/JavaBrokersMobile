@@ -2,7 +2,6 @@ package JBKRMobile;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,10 +57,7 @@ public class Login {
                 }
             }
             br.close();
-        } catch (FileNotFoundException e) {
-            return null;
         } catch (IOException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -71,7 +67,7 @@ public class Login {
             // Write username and encrypted password to file
             BufferedReader checkUsername = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
             checkUsername.close();
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db", true));
                 bw.write(encryptPassword(password) + "\n");
@@ -87,8 +83,8 @@ public class Login {
                     return new Child(username, password);
                 }
             } catch (IOException i) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
         }
         return null;
     }

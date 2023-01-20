@@ -13,6 +13,7 @@ class API {
         try {
             stock = YahooFinance.get(symbol.toUpperCase()).getQuote();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
