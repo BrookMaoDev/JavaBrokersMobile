@@ -84,22 +84,19 @@ abstract class Investor {
     public boolean sellStock(String ticker, int quantity) {
         for (int i = portfolio.size(); i > 0; i--) {
             if (portfolio.get(i).getTicker().equalsIgnoreCase(ticker)) {
+                API.setSymbol(ticker);
+                Transaction transaction = new Transaction("Sell", java.time.LocalDate.now().toString(), ticker,
+                        quantity, API.getPrice());
                 if (quantity < portfolio.get(i).getQuantity()) {
-                    API.setSymbol(ticker);
-                    Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
                     portfolio.get(i).subtractQuantity(quantity);
-                    balance += sell.costOfTransaction();
-                    transactions.add(sell);
-                    return true;
                 } else if (quantity == portfolio.get(i).getQuantity()) {
-                    API.setSymbol(ticker);
-                    Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
                     portfolio.remove(i);
-                    balance += sell.costOfTransaction();
-                    transactions.add(sell);
-                    return true;
+                } else {
+                    return false;
                 }
-                return false;
+                balance += transaction.costOfTransaction();
+                transactions.add(transaction);
+                return true;
             }
         }
         return false;
@@ -232,9 +229,9 @@ abstract class Investor {
             BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
             bw.write(Login.encryptPassword(password) + "\n");
             if (this instanceof Adult) {
-                bw.write("adult\n");
+                bw.write("Adult\n");
             } else {
-                bw.write("child\n");
+                bw.write("Child\n");
             }
             bw.write(balance + "\n");
             bw.write(totalFundsAdded + "\n");

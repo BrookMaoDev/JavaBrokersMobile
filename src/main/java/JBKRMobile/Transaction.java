@@ -2,13 +2,14 @@ package JBKRMobile;
 
 import java.text.NumberFormat;
 
-public abstract class Transaction {
+public class Transaction {
+    protected String transactionType;
     protected String date;
     protected String ticker;
     protected int quantity;
     protected double price;
 
-    public Transaction(String date, String ticker, int quantity, double price) {
+    public Transaction(String transactionType, String date, String ticker, int quantity, double price) {
         this.date = date;
         this.ticker = ticker;
         this.quantity = quantity;
@@ -22,10 +23,12 @@ public abstract class Transaction {
     }
 
     // String that contains information about the transaction to write to a file
-    public abstract String fileString();
+    public String fileString() {
+        return String.format("%s\n%s\n%s\n%d\n%.2f", transactionType, date, ticker, quantity, price);
+    }
 
     public String toString() {
-        return String.format("Date: %s\nTicker: %s\nQuantity: %d\nPrice: %s\n", date, ticker,
+        return String.format("%s\nDate: %s\nTicker: %s\nQuantity: %d\nPrice: %s\n", transactionType, date, ticker,
                 quantity, NumberFormat.getCurrencyInstance().format(price));
     }
 }

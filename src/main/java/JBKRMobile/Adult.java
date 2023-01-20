@@ -17,14 +17,14 @@ public class Adult extends Investor {
     public int buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
         double price = API.getPrice();
-        Buy purchase = new Buy(java.time.LocalDate.now().toString(), ticker, quantity, price);
-        double cost = purchase.costOfTransaction();
+        Transaction transaction = new Transaction("buy", java.time.LocalDate.now().toString(), ticker, quantity, price);
+        double cost = transaction.costOfTransaction();
 
         if (cost > balance) {
             return 2;
         }
         balance -= cost;
-        transactions.add(purchase);
+        transactions.add(transaction);
 
         int tickerIndex = getTickerIndex(ticker);
         // The user does not own this stock yet

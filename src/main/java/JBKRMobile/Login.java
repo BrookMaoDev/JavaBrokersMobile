@@ -36,11 +36,11 @@ public class Login {
                 for (int i = 0; i < numTransactions; i++) {
                     if (br.readLine().equalsIgnoreCase("buy")) {
                         // date, ticker, quantity, price
-                        transactions.add(new Buy(br.readLine(), br.readLine(),
+                        transactions.add(new Transaction(br.readLine(), br.readLine(), br.readLine(),
                                 Integer.parseInt(br.readLine()),
                                 Double.parseDouble(br.readLine())));
                     } else {
-                        transactions.add(new Sell(br.readLine(), br.readLine(),
+                        transactions.add(new Transaction(br.readLine(), br.readLine(), br.readLine(),
                                 Integer.parseInt(br.readLine()),
                                 Double.parseDouble(br.readLine())));
                     }
@@ -48,7 +48,7 @@ public class Login {
                 br.close();
 
                 // Adult: 1. Child: anything else
-                if (investorType.equalsIgnoreCase("adult")) {
+                if (investorType.equalsIgnoreCase("Adult")) {
                     return new Adult(username, password, balance, totalFundsAdded, portfolio, transactions);
                 } else {
                     return new Child(username, password, balance, totalFundsAdded, portfolio, transactions);
@@ -78,7 +78,7 @@ public class Login {
                 bw.write("0\n"); // stocks
                 bw.write("0\n"); // transactions
                 bw.close();
-                if (accountType.equalsIgnoreCase("adult")) {
+                if (accountType.equalsIgnoreCase("Adult")) {
                     return new Adult(username, password);
                 } else {
                     return new Child(username, password);

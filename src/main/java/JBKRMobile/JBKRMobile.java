@@ -492,12 +492,8 @@ public class JBKRMobile {
                 }
             });
 
-            additionalInfo = new Button("Additional info", new Runnable() {
-                @Override
-                public void run() {
-                    MessageDialog.showMessageDialog(textGUI, "Additional info", user.toString());
-                }
-            });
+            additionalInfo = new Button("Additional info", () -> MessageDialog.showMessageDialog(textGUI,
+                    "Additional info", user.toString()));
 
             sellAll = new Button("Sell all", new Runnable() {
                 @Override
@@ -518,19 +514,10 @@ public class JBKRMobile {
                 }
             });
 
-            transactionHistory = new Button("Transaction history", new Runnable() {
-                @Override
-                public void run() {
-                    MessageDialog.showMessageDialog(textGUI, "Transaction history", user.getTransactionHistory());
-                }
-            });
+            transactionHistory = new Button("Transaction history", () -> MessageDialog.showMessageDialog(textGUI,
+                    "Transaction history", user.getTransactionHistory()));
 
-            exit = new Button("Exit", new Runnable() {
-                @Override
-                public void run() {
-                    System.exit(0);
-                }
-            });
+            exit = new Button("Exit", WINDOW::close);
             sidePanel.addComponent(new EmptySpace());
             sidePanel.addComponent(new EmptySpace());
             sidePanel.addComponent(exit);
@@ -538,13 +525,13 @@ public class JBKRMobile {
             tickerPanel.addComponent(table);
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine()));
             mainPanel.addComponent(sidePanel);
-            WINDOW.setHints(Arrays.asList(Window.Hint.CENTERED));
+            WINDOW.setHints(Arrays.asList(Window.Hint.CENTERED, Window.Hint.NO_POST_RENDERING));
             WINDOW.setComponent(mainPanel);
 
             // Start gui
             textGUI.addWindowAndWait(WINDOW);
         } catch (IOException e) {
-            
+
         } finally {
             if (screen != null) {
                 try {
