@@ -50,47 +50,48 @@ public class Adult extends Investor {
     public String buyMax(ArrayList<String> tickers, double balance) {
         ArrayList<String> bought = new ArrayList<String>();
         ArrayList<String> bestCombo = permute(tickers, balance, bought);
-        // ArrayList<String> output = new ArrayList<String>();
-        // for (int i = 0; i < bestCombo.size(); i++) {
-        //     int index = output.indexOf(bestCombo.get(i));
-        //     if (index == -1) {
-        //         output.add(bestCombo.get(i));
-        //         output.add("1");
-        //     } else {
-        //         String prevQuantity = output.get(index + 1);
-        //         String newQuantity = (Integer.parseInt(prevQuantity) + 1) + "";
-        //         output.set(index + 1, newQuantity);
-        //     }
-        // }
 
-        // for (int i = 0; i < output.size(); i += 2) {
-        //     API.setSymbol(output.get(i));
-        //     buyStock(output.get(i), Integer.parseInt(output.get(i + 1)));
-        // }
+        ArrayList<String> output = new ArrayList<String>();
+        for (int i = 0; i < bestCombo.size(); i++) {
+            int index = output.indexOf(bestCombo.get(i));
+            if (index == -1) {
+                output.add(bestCombo.get(i));
+                output.add("1");
+            } else {
+                String prevQuantity = output.get(index + 1);
+                String newQuantity = (Integer.parseInt(prevQuantity) + 1) + "";
+                output.set(index + 1, newQuantity);
+            }
+        }
+
+        for (int i = 0; i < output.size(); i += 2) {
+            API.setSymbol(output.get(i));
+            buyStock(output.get(i), Integer.parseInt(output.get(i + 1)));
+        }
 
         String out = "Stocks bought:\n";
 
-        for (int i = 0; i < bestCombo.size(); i++) {
-            out += bestCombo.get(i) + " ";
+        // for (int i = 0; i < bestCombo.size(); i++) {
+        //     out += bestCombo.get(i) + " ";
+        // }
+
+        for (int i = 0; i < output.size(); i += 2) {
+        out += "Stock: " + output.get(i) + "\n";
+        out += "Quantity: " + output.get(i + 1) + "\n";
+        API.setSymbol(output.get(i));
+        out += "Price: " + NumberFormat.getCurrencyInstance().format(API.getPrice())
+        + "\n";
+        out += "Price of this purchase: "
+        + NumberFormat.getCurrencyInstance().format(API.getPrice() *
+        Integer.parseInt(output.get(i + 1)))
+        + "\n";
         }
 
-        // for (int i = 0; i < output.size(); i += 2) {
-        // out += "Stock: " + output.get(i) + "\n";
-        // out += "Quantity: " + output.get(i + 1) + "\n";
-        // API.setSymbol(output.get(i));
-        // out += "Price: " + NumberFormat.getCurrencyInstance().format(API.getPrice())
-        // + "\n";
-        // out += "Price of this purchase: "
-        // + NumberFormat.getCurrencyInstance().format(API.getPrice() *
-        // Integer.parseInt(output.get(i + 1)))
-        // + "\n";
-        // }
-
-        // out += "Total Price of Purchase: " +
-        // NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
-        // save();
-        // return out;
-        // }
+        out += "Total Price of Purchase: " +
+        NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
+        save();
+        return out;
+        }
         return out;
     }
 }
