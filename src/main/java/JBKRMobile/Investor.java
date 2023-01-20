@@ -11,8 +11,6 @@ abstract class Investor {
     protected String password;
     protected double balance;
     protected double totalFundsAdded;
-    protected int numTransactions;
-    protected int stocksInPortfolio;
     protected ArrayList<Transaction> transactions;
     protected ArrayList<OwnedStock> portfolio;
     protected final static String DB_PATH = "src/main/java/JBKRMobile/Database/";
@@ -23,24 +21,19 @@ abstract class Investor {
         this.password = password;
         this.balance = 0;
         this.totalFundsAdded = 0;
-        this.numTransactions = 0;
-        this.stocksInPortfolio = 0;
-        this.transactions = new ArrayList<Transaction>();
         this.portfolio = new ArrayList<OwnedStock>();
+        this.transactions = new ArrayList<Transaction>();
     }
 
     // Creates investor objects for existing investors with previous data
     public Investor(String username, String password, double balance, double totalFundsAdded,
-            int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
-            ArrayList<OwnedStock> portfolio) {
+            ArrayList<OwnedStock> portfolio, ArrayList<Transaction> transactions) {
         this.username = username;
         this.password = password;
         this.balance = balance;
         this.totalFundsAdded = totalFundsAdded;
-        this.numTransactions = numTransactions;
-        this.stocksInPortfolio = stocksInPortfolio;
-        this.transactions = transactions;
         this.portfolio = portfolio;
+        this.transactions = transactions;
     }
 
     public double getFunds() {
@@ -49,14 +42,6 @@ abstract class Investor {
 
     public double getAddedFunds() {
         return totalFundsAdded;
-    }
-
-    protected int getNumTransactions() {
-        return numTransactions;
-    }
-
-    protected int getStocksInPortfolio() {
-        return stocksInPortfolio;
     }
 
     public ArrayList<OwnedStock> getPortfolio() {
@@ -97,7 +82,7 @@ abstract class Investor {
      * add the balance received. Creates a transaction object in the process.
      */
     public boolean sellStock(String ticker, int quantity) {
-        for (int i = stocksInPortfolio - 1; i >= 0; i--) {
+        for (int i = portfolio.size(); i > 0; i--) {
             if (portfolio.get(i).getTicker().equalsIgnoreCase(ticker)) {
                 if (quantity < portfolio.get(i).getQuantity()) {
                     API.setSymbol(ticker);
@@ -105,16 +90,13 @@ abstract class Investor {
                     portfolio.get(i).subtractQuantity(quantity);
                     balance += sell.costOfTransaction();
                     transactions.add(sell);
-                    numTransactions++;
                     return true;
                 } else if (quantity == portfolio.get(i).getQuantity()) {
                     API.setSymbol(ticker);
                     Sell sell = new Sell(java.time.LocalDate.now().toString(), ticker, quantity, API.getPrice());
                     portfolio.remove(i);
-                    stocksInPortfolio--;
                     balance += sell.costOfTransaction();
                     transactions.add(sell);
-                    numTransactions++;
                     return true;
                 }
                 return false;
@@ -126,10 +108,9 @@ abstract class Investor {
     // Sells every stock the user owns. Credits the balance to the account
     // accordingly.
     public void sellAll() {
-        for (int i = stocksInPortfolio - 1; i >= 0; i--) {
+        for (int i = portfolio.size() - 1; i >= 0; i--) {
             sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
         }
-        stocksInPortfolio = 0;
     }
 
     /**
@@ -146,7 +127,7 @@ abstract class Investor {
      */
     public double getNetWorth() {
         double netWorth = 0;
-        for (int i = 0; i < stocksInPortfolio; i++) {
+        for (int i = 0; i < portfolio.size(); i++) {
             API.setSymbol(portfolio.get(i).getTicker());
             netWorth += portfolio.get(i).getQuantity() * API.getPrice();
         }
@@ -174,7 +155,7 @@ abstract class Investor {
      */
     public ArrayList<String> getTickersOfPortfolio() {
         ArrayList<String> tickers = new ArrayList<String>();
-        for (int i = 0; i < stocksInPortfolio; i++) {
+        for (int i = 0; i < portfolio.size(); i++) {
             tickers.add(portfolio.get(i).getTicker());
         }
         return tickers;
@@ -182,7 +163,7 @@ abstract class Investor {
 
     // Gets the index of the specified ticker if it exists. Returns -1 otherwise
     public int getTickerIndex(String ticker) {
-        for (int i = 0; i < stocksInPortfolio; i++) {
+        for (int i = 0; i < portfolio.size(); i++) {
             if (portfolio.get(i).getTicker().equals(ticker)) {
                 return i;
             }
@@ -192,11 +173,11 @@ abstract class Investor {
 
     // Gets transaction history
     public String getTransactionHistory() {
-        if (numTransactions == 0) {
+        if (transactions.isEmpty()) {
             return "You have not made any transactions.";
         }
         String output = "";
-        for (int i = 0; i < numTransactions; i++) {
+        for (int i = 0; i < transactions.size(); i++) {
             output += transactions.get(i).toString() + "\n";
         }
         return output;
@@ -250,20 +231,20 @@ abstract class Investor {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
             bw.write(Login.encryptPassword(password) + "\n");
-            if (this instanceof Child) {
-                bw.write("child\n");
-            } else {
+            if (this instanceof Adult) {
                 bw.write("adult\n");
+            } else {
+                bw.write("child\n");
             }
             bw.write(balance + "\n");
             bw.write(totalFundsAdded + "\n");
-            bw.write(numTransactions + "\n");
-            for (int i = 0; i < numTransactions; i++) {
-                bw.write(transactions.get(i).fileString() + "\n");
-            }
-            bw.write(stocksInPortfolio + "\n");
-            for (int i = 0; i < stocksInPortfolio; i++) {
+            bw.write(portfolio.size() + "\n");
+            for (int i = 0; i < portfolio.size(); i++) {
                 bw.write(portfolio.get(i).fileString() + "\n");
+            }
+            bw.write(transactions.size() + "\n");
+            for (int i = 0; i < transactions.size(); i++) {
+                bw.write(transactions.get(i).fileString() + "\n");
             }
             bw.close();
         } catch (IOException e) {

@@ -9,10 +9,8 @@ public class Adult extends Investor {
     }
 
     public Adult(String username, String password, double balance, double totalFundsAdded,
-            int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
-            ArrayList<OwnedStock> portfolio) {
-        super(username, password, balance, totalFundsAdded, numTransactions, transactions,
-                stocksInPortfolio, portfolio);
+            ArrayList<OwnedStock> portfolio, ArrayList<Transaction> transactions) {
+        super(username, password, balance, totalFundsAdded, portfolio, transactions);
     }
 
     // Attempts to buy stock
@@ -27,14 +25,11 @@ public class Adult extends Investor {
         }
         balance -= cost;
         transactions.add(purchase);
-        numTransactions++;
 
         int tickerIndex = getTickerIndex(ticker);
         // The user does not own this stock yet
         if (tickerIndex < 0) {
-            OwnedStock newStock = new OwnedStock(ticker, quantity);
-            portfolio.add(newStock);
-            stocksInPortfolio++;
+            portfolio.add(new OwnedStock(ticker, quantity));
         } else {
             // The user owns this stock
             portfolio.get(tickerIndex).addQuantity(quantity);
