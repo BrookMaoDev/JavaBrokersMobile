@@ -8,10 +8,10 @@ public class Adult extends Investor {
         super(username, password);
     }
 
-    public Adult(String username, String password, double balance, double totalFundsSpent, double totalFundsAdded,
+    public Adult(String username, String password, double balance, double totalFundsAdded,
             int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
             ArrayList<OwnedStock> portfolio) {
-        super(username, password, balance, totalFundsSpent, totalFundsAdded, numTransactions, transactions,
+        super(username, password, balance, totalFundsAdded, numTransactions, transactions,
                 stocksInPortfolio, portfolio);
     }
 
@@ -26,7 +26,6 @@ public class Adult extends Investor {
             return 2;
         }
         balance -= cost;
-        totalFundsSpent += cost;
         transactions.add(purchase);
         numTransactions++;
 
@@ -36,14 +35,12 @@ public class Adult extends Investor {
             OwnedStock boughtStock = new OwnedStock(ticker, quantity);
             portfolio.add(boughtStock);
             stocksInPortfolio++;
-            sortPortfolio();
         } else {
             // The user owns this stock
             portfolio.get(tickerIndex).addQuantity(quantity);
         }
 
         sortPortfolio();
-        save();
         return 1;
     }
 
@@ -89,7 +86,6 @@ public class Adult extends Investor {
 
         out += "Total Price of Purchase: " +
                 NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
-        save();
         return out;
     }
 }

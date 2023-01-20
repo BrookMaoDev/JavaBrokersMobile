@@ -10,7 +10,6 @@ abstract class Investor {
     protected String username;
     protected String password;
     protected double balance;
-    protected double totalFundsSpent;
     protected double totalFundsAdded;
     protected int numTransactions;
     protected int stocksInPortfolio;
@@ -23,7 +22,6 @@ abstract class Investor {
         this.username = username;
         this.password = password;
         this.balance = 0;
-        this.totalFundsSpent = 0;
         this.totalFundsAdded = 0;
         this.numTransactions = 0;
         this.stocksInPortfolio = 0;
@@ -32,13 +30,12 @@ abstract class Investor {
     }
 
     // Creates investor objects for existing investors with previous data
-    public Investor(String username, String password, double balance, double totalFundsSpent, double totalFundsAdded,
+    public Investor(String username, String password, double balance, double totalFundsAdded,
             int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
             ArrayList<OwnedStock> portfolio) {
         this.username = username;
         this.password = password;
         this.balance = balance;
-        this.totalFundsSpent = totalFundsSpent;
         this.totalFundsAdded = totalFundsAdded;
         this.numTransactions = numTransactions;
         this.stocksInPortfolio = stocksInPortfolio;
@@ -48,10 +45,6 @@ abstract class Investor {
 
     public double getFunds() {
         return balance;
-    }
-
-    public double getSpentFunds() {
-        return totalFundsSpent;
     }
 
     public double getAddedFunds() {
@@ -78,7 +71,6 @@ abstract class Investor {
     public void deposit(double balance) {
         this.balance += balance;
         totalFundsAdded += balance;
-        save();
     }
 
     // Subtracts balance from the user
@@ -88,7 +80,6 @@ abstract class Investor {
         } else {
             this.balance -= balance;
             totalFundsAdded -= balance;
-            save();
             return true;
         }
     }
@@ -115,7 +106,6 @@ abstract class Investor {
                     balance += sell.costOfTransaction();
                     transactions.add(sell);
                     numTransactions++;
-                    save();
                     return true;
                 } else if (quantity == portfolio.get(i).getQuantity()) {
                     API.setSymbol(ticker);
@@ -135,18 +125,11 @@ abstract class Investor {
 
     // Sells every stock the user owns. Credits the balance to the account
     // accordingly.
-    public boolean sellAll() {
-        try {
-            for (int i = stocksInPortfolio - 1; i >= 0; i--) {
-                sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
-            }
-            stocksInPortfolio = 0;
-            save();
-            return true;
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
+    public void sellAll() {
+        for (int i = stocksInPortfolio - 1; i >= 0; i--) {
+            sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
         }
+        stocksInPortfolio = 0;
     }
 
     /**
@@ -273,7 +256,6 @@ abstract class Investor {
                 bw.write("adult\n");
             }
             bw.write(balance + "\n");
-            bw.write(totalFundsSpent + "\n");
             bw.write(totalFundsAdded + "\n");
             bw.write(numTransactions + "\n");
             for (int i = 0; i < numTransactions; i++) {
@@ -285,15 +267,13 @@ abstract class Investor {
             }
             bw.close();
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
     // Returns all information of the investor in a clean and organized manner
     public String toString() {
-        return String.format("Balance spent: %s\nBalance added: %s\nNet worth: %s\nProfit: %s\n",
-                NumberFormat.getCurrencyInstance().format(totalFundsSpent),
-                NumberFormat.getCurrencyInstance().format(totalFundsAdded),
+        return String.format("Net worth: %s\nProfit: %s\n",
                 NumberFormat.getCurrencyInstance().format(getNetWorth()),
                 NumberFormat.getCurrencyInstance().format(calculateProfit()));
     }

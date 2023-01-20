@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.io.*;
 import java.text.NumberFormat;
 
-import com.googlecode.lanterna.TextColor.ANSI;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
@@ -60,7 +59,7 @@ public class JBKRMobile {
                         API.getChange() + "",
                         API.getPercentChange() + "%");
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
         table.setSelectAction(new Runnable() {
@@ -78,24 +77,24 @@ public class JBKRMobile {
         sidePanel.removeAllComponents();
         sidePanel.addComponent(new Label(
                 NumberFormat.getCurrencyInstance().format(user.getFunds())));
-        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(home);
         sidePanel.addComponent(search);
-        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(deposit);
         sidePanel.addComponent(withdraw);
-        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(portfolio);
         sidePanel.addComponent(buyMax);
         sidePanel.addComponent(sellAll);
-        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(additionalInfo);
         sidePanel.addComponent(transactionHistory);
-        sidePanel.addComponent(new Label(""));
-        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new EmptySpace());
+        sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(logout);
-        sidePanel.addComponent(new Label(""));
-        sidePanel.addComponent(new Label(""));
+        sidePanel.addComponent(new EmptySpace());
+        sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(exit);
     }
 
@@ -118,6 +117,7 @@ public class JBKRMobile {
                     try {
                         int flag = user.buyStock(ticker, Integer.parseInt(quantity));
                         if (flag == 1) {
+                            user.save();
                             updateSidebar();
                             return true;
                         } else if (flag == 2) {
@@ -125,13 +125,14 @@ public class JBKRMobile {
                                     "Insufficient funds.");
                         } else if (flag == 3) {
                             MessageDialog.showMessageDialog(textGUI, "Buy stock",
-                                    String.format("Transaction limit exceeded (%s).", NumberFormat.getCurrencyInstance()
-                                            .format(Child.getTransactionSpendLimit())));
+                                    String.format("Transaction limit exceeded (%s).",
+                                            NumberFormat.getCurrencyInstance()
+                                                    .format(Child.getTransactionSpendLimit())));
                         }
                     } catch (NumberFormatException e) {
                         MessageDialog.showMessageDialog(textGUI, "Buy stock", "Invalid entry.");
                     } catch (Exception e) {
-                        MessageDialog.showMessageDialog(textGUI, "Buy stock", e + "");
+                        e.printStackTrace();
                     }
             }
         }
@@ -156,6 +157,7 @@ public class JBKRMobile {
                 default:
                     try {
                         if (user.sellStock(ticker, Integer.parseInt(quantity))) {
+                            user.save();
                             updateSidebar();
                             return true;
                         } else {
@@ -180,7 +182,7 @@ public class JBKRMobile {
                         API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         table.setSelectAction(new Runnable() {
             @Override
@@ -191,7 +193,6 @@ public class JBKRMobile {
                             @Override
                             public void run() {
                                 buyStockWindow(table);
-                                updateSidebar();
                                 portfolioTable();
                             }
                         })
@@ -199,7 +200,6 @@ public class JBKRMobile {
                             @Override
                             public void run() {
                                 sellStockWindow(table);
-                                updateSidebar();
                                 portfolioTable();
                             }
                         }).build().showDialog(textGUI);
@@ -210,19 +210,21 @@ public class JBKRMobile {
     }
 
     public void run() {
-        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setTerminalEmulatorTitle("JBKR Mobile")
+        DefaultTerminalFactory terminal = new DefaultTerminalFactory().setTerminalEmulatorTitle("JBKR Mobile")
                 .setTerminalEmulatorFontConfiguration(
                         new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
                                 .filterMonospaced(new Font("Consolas", Font.PLAIN, 14),
                                         new Font("Monaco", Font.PLAIN, 14))));
         Screen screen = null;
         try {
-            screen = terminalFactory.createScreen();
+            screen = terminal.createScreen();
             screen.startScreen();
-            Window window = new BasicWindow("JBKR Mobile");
+            screen.setCursorPosition(null);
+            textGUI = new MultiWindowTextGUI(screen);
+
+            final Window WINDOW = new BasicWindow("JBKR Mobile");
             mainPanel = new Panel();
             mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
-            textGUI = new MultiWindowTextGUI(screen);
 
             // Create panels
             tickerPanel = new Panel();
@@ -259,7 +261,7 @@ public class JBKRMobile {
                                             API.getChange() + "",
                                             API.getPercentChange() + "%");
                                 } catch (Exception e) {
-                                    System.out.println(e);
+                                    e.printStackTrace();
                                 }
                                 tickerPanel.removeAllComponents();
                                 table.setSelectAction(new Runnable() {
@@ -277,7 +279,7 @@ public class JBKRMobile {
             });
             sidePanel.addComponent(search);
 
-            sidePanel.addComponent(new Label(""));
+            sidePanel.addComponent(new EmptySpace());
 
             // Log In button
             login = new Button("Log in", new Runnable() {
@@ -364,9 +366,9 @@ public class JBKRMobile {
                                                     user = Login.createUser(username, password, accountType);
                                                     if (user != null) {
                                                         loggedIn = true;
+                                                        updateSidebar();
                                                         MessageDialog.showMessageDialog(textGUI, "Sign up",
                                                                 "Account created.");
-                                                        updateSidebar();
                                                     }
                                                 }
                                         }
@@ -384,6 +386,7 @@ public class JBKRMobile {
             logout = new Button("Log out", new Runnable() {
                 @Override
                 public void run() {
+                    user = null;
                     loggedIn = false;
                     tickerPanel.removeAllComponents();
                     table = generateData();
@@ -391,11 +394,11 @@ public class JBKRMobile {
                     sidePanel.removeAllComponents();
                     sidePanel.addComponent(home);
                     sidePanel.addComponent(search);
-                    sidePanel.addComponent(new Label(""));
+                    sidePanel.addComponent(new EmptySpace());
                     sidePanel.addComponent(login);
                     sidePanel.addComponent(signup);
-                    sidePanel.addComponent(new Label(""));
-                    sidePanel.addComponent(new Label(""));
+                    sidePanel.addComponent(new EmptySpace());
+                    sidePanel.addComponent(new EmptySpace());
                     sidePanel.addComponent(exit);
                 }
             });
@@ -424,6 +427,7 @@ public class JBKRMobile {
                             default:
                                 try {
                                     user.deposit(Double.parseDouble(depositAmount));
+                                    user.save();
                                     updateSidebar();
                                     MessageDialog.showMessageDialog(textGUI, "Deposit",
                                             String.format("%s added to balance.",
@@ -452,6 +456,7 @@ public class JBKRMobile {
                             default:
                                 try {
                                     if (user.withdraw(Double.parseDouble(withdrawAmount))) {
+                                        user.save();
                                         updateSidebar();
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
                                                 String.format("%s withdrew from balance.",
@@ -481,6 +486,7 @@ public class JBKRMobile {
                                 public void run() {
                                     MessageDialog.showMessageDialog(textGUI, "Buy max",
                                             user.buyMax(user.getTickersOfPortfolio(), user.getFunds()));
+                                    user.save();
                                     portfolioTable();
                                 }
                             })
@@ -506,6 +512,7 @@ public class JBKRMobile {
                                 @Override
                                 public void run() {
                                     user.sellAll();
+                                    user.save();
                                     portfolioTable();
                                 }
                             })
@@ -526,22 +533,28 @@ public class JBKRMobile {
                     System.exit(0);
                 }
             });
-            sidePanel.addComponent(new Label(""));
-            sidePanel.addComponent(new Label(""));
+            sidePanel.addComponent(new EmptySpace());
+            sidePanel.addComponent(new EmptySpace());
             sidePanel.addComponent(exit);
 
             tickerPanel.addComponent(table);
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine()));
             mainPanel.addComponent(sidePanel);
-            window.setHints(Arrays.asList(Window.Hint.CENTERED));
-            window.setComponent(mainPanel);
+            WINDOW.setHints(Arrays.asList(Window.Hint.CENTERED));
+            WINDOW.setComponent(mainPanel);
 
-            // Create gui and start gui
-            MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(),
-                    new EmptySpace(ANSI.BLACK));
-            gui.addWindowAndWait(window);
+            // Start gui
+            textGUI.addWindowAndWait(WINDOW);
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
+        } finally {
+            if (screen != null) {
+                try {
+                    screen.stopScreen();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

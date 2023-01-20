@@ -11,10 +11,10 @@ public class Child extends Investor {
         super(username, password);
     }
 
-    public Child(String username, String password, double balance, double totalFundsSpent, double totalFundsAdded,
+    public Child(String username, String password, double balance, double totalFundsAdded,
             int numTransactions, ArrayList<Transaction> transactions, int stocksInPortfolio,
             ArrayList<OwnedStock> portfolio) {
-        super(username, password, balance, totalFundsSpent, totalFundsAdded, numTransactions, transactions,
+        super(username, password, balance, totalFundsAdded, numTransactions, transactions,
                 stocksInPortfolio, portfolio);
     }
 
@@ -39,7 +39,6 @@ public class Child extends Investor {
             return 2;
         }
         balance -= cost;
-        totalFundsSpent += cost;
         transactions.add(purchase);
         numTransactions++;
 
@@ -55,7 +54,6 @@ public class Child extends Investor {
         }
 
         sortPortfolio();
-        save();
         return 1;
     }
 
@@ -103,7 +101,6 @@ public class Child extends Investor {
         }
 
         out += "Total Price of Purchase: " + NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
-        save();
         return out;
     }
 }

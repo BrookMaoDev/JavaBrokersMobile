@@ -22,7 +22,6 @@ public class Login {
             if (br.readLine().equals(encryptPassword(password))) {
                 String investorType = br.readLine();
                 double balance = Double.parseDouble(br.readLine());
-                double totalFundsSpent = Double.parseDouble(br.readLine());
                 double totalFundsAdded = Double.parseDouble(br.readLine());
 
                 // get transactions
@@ -51,10 +50,10 @@ public class Login {
 
                 // Adult: 1. Child: anything else
                 if (investorType.equalsIgnoreCase("adult")) {
-                    return new Adult(username, password, balance, totalFundsSpent, totalFundsAdded, numTransactions,
+                    return new Adult(username, password, balance, totalFundsAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 } else {
-                    return new Child(username, password, balance, totalFundsSpent, totalFundsAdded, numTransactions,
+                    return new Child(username, password, balance, totalFundsAdded, numTransactions,
                             transactions, stocksInPortfolio, portfolio);
                 }
             }
@@ -62,7 +61,7 @@ public class Login {
         } catch (FileNotFoundException e) {
             return null;
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -79,7 +78,6 @@ public class Login {
                 bw.write(accountType + "\n");
                 bw.write("0.0\n"); // balance
                 bw.write("0.0\n"); // amount added
-                bw.write("0.0\n"); // amount spent
                 bw.write("0\n"); // num transactions
                 bw.write("0\n"); // num stocks owned
                 bw.close();
