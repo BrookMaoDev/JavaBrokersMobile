@@ -14,6 +14,8 @@ import com.googlecode.lanterna.gui2.table.Table;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorColorConfiguration;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorPalette;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 
 /**
@@ -237,10 +239,12 @@ public class JBKRMobile {
 
     public void run() {
         DefaultTerminalFactory terminal = new DefaultTerminalFactory().setTerminalEmulatorTitle("JBKR Mobile")
+                .setTerminalEmulatorColorConfiguration(
+                        TerminalEmulatorColorConfiguration.newInstance(TerminalEmulatorPalette.MAC_OS_X_TERMINAL_APP))
                 .setTerminalEmulatorFontConfiguration(
                         new SwingTerminalFontConfiguration(true, null, AWTTerminalFontConfiguration
-                                .filterMonospaced(new Font("Consolas", Font.PLAIN, 14),
-                                        new Font("Monaco", Font.PLAIN, 14))));
+                                .filterMonospaced(new Font("Consolas", Font.PLAIN, 21),
+                                        new Font("Monaco", Font.PLAIN, 21))));
         Screen screen = null;
         try {
             screen = terminal.createScreen();
