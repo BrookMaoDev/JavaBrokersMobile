@@ -1,6 +1,6 @@
 /**
 Class Name: Investor
-Author: Wing Li, Brook Mao
+Author: Brook Mao, Wing Li
 Date: January 20, 2023
 School: A Y Jackson Secondary School
 Purpose: Represents an investor.
