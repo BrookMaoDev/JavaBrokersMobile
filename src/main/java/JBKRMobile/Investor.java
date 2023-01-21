@@ -283,11 +283,12 @@ abstract class Investor {
     protected ArrayList<String> permute(ArrayList<String> tickers, double balance, ArrayList<String> bought) {
         ArrayList<String> bestCombo = (ArrayList<String>) bought.clone();
         for (int i = 0; i < tickers.size(); i++) {
-            ArrayList<String> newArray = (ArrayList<String>) bought.clone();
-            newArray.add(tickers.get(i));
-            if (calcValueOfArray(newArray) < balance) {
-                API.setSymbol(tickers.get(i));
-                ArrayList<String> potentialBestCombo = permute(tickers, balance, newArray);
+            API.setSymbol(tickers.get(i));
+            double price = API.getPrice();
+            if (price < balance) {
+                ArrayList<String> newArray = (ArrayList<String>) bought.clone();
+                newArray.add(tickers.get(i));
+                ArrayList<String> potentialBestCombo = permute(tickers, balance - price, newArray);
                 if (calcValueOfArray(potentialBestCombo) > calcValueOfArray(bestCombo)) {
                     bestCombo = potentialBestCombo;
                 }
