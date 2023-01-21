@@ -1,3 +1,11 @@
+/**
+Class Name: Child
+Author: Wing Li, Brook Mao
+Date: January 20, 2023
+School: A Y Jackson Secondary School
+Purpose: Represents a child investor. The difference between a child investor and an adult investor is the transaction spend limit.
+ */
+
 package JBKRMobile;
 
 import java.util.ArrayList;

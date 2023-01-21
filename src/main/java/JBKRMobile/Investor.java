@@ -1,3 +1,11 @@
+/**
+Class Name: Investor
+Author: Wing Li, Brook Mao
+Date: January 20, 2023
+School: A Y Jackson Secondary School
+Purpose: Represents an investor.
+ */
+
 package JBKRMobile;
 
 import java.util.ArrayList;

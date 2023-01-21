@@ -1,3 +1,11 @@
+/**
+Class Name: JBKRMobile
+Author: Owen Wang
+Date: January 20, 2023
+School: A Y Jackson Secondary School
+Purpose: This class displays menu options and allows the user to perform certain actions, resulting in methods in it's user field (which is an investor object) being called. The outputs are returned in a useful and organized fashion.
+ */
+
 package JBKRMobile;
 
 import java.awt.Font;

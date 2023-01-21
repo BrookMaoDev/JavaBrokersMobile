@@ -1,3 +1,11 @@
+/**
+Class Name: Adult
+Author: Wing Li, Brook Mao
+Date: January 20, 2023
+School: A Y Jackson Secondary School
+Purpose: Helps with pulling data from YahooFinance.
+ */
+
 package JBKRMobile;
 
 import org.jsoup.Jsoup;

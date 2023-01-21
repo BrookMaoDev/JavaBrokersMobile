@@ -1,3 +1,11 @@
+/**
+Class Name: API
+Author: Owen Wang
+Date: January 20, 2023
+School: A Y Jackson Secondary School
+Purpose: Pulls live information from YahooFinance
+ */
+
 package JBKRMobile;
 
 import yahoofinance.quotes.stock.StockQuote;

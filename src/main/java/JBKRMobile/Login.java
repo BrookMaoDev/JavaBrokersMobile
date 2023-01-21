@@ -1,3 +1,11 @@
+/**
+Class Name: Login
+Author: Owen Wang
+Date: January 20, 2023
+School: A Y Jackson Secondary School
+Purpose: Allows the user to log in to their account.
+ */
+
 package JBKRMobile;
 
 import java.io.BufferedReader;
