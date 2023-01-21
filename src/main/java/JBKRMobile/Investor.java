@@ -292,7 +292,9 @@ abstract class Investor {
                 if (calcValueOfArray(potentialBestCombo) > calcValueOfArray(bestCombo)) {
                     bestCombo = potentialBestCombo;
                 }
-            } else if (calcValueOfArray(newArray) == balance) {
+            } else if (price == balance) {
+                ArrayList<String> newArray = (ArrayList<String>) bought.clone();
+                newArray.add(tickers.get(i));
                 return newArray;
             }
         }
