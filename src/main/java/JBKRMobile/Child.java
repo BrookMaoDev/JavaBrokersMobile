@@ -11,14 +11,31 @@ package JBKRMobile;
 import java.util.ArrayList;
 import java.text.NumberFormat;
 
+
 public class Child extends Investor {
     // Spend limit for all child investors
     private final static double TRANSACTION_SPEND_LIMIT = 500;
 
+    /**
+    @param username: the username the investor signed up with
+    @param password: the password the investor signed up with (unencrypted)
+    @return does not return anything.
+    Creates an instance of Child. This constructor is used when someone SIGNS UP.
+     */
     public Child(String username, String password) {
         super(username, password);
     }
 
+    /**
+    @param username: the username of the investor
+    @param password: the password of the investor (unencrypted)
+    @param balance: the money the investor has
+    @param totalFundsAdded: how much the investor has added to the account
+    @param portfolio: array of OwnedStock that the investor has purchased before
+    @param transactions: array of transaction that the investor has made before
+    @return does not return anything.
+    Creates an instance of Child. This constructor is used when someone LOGS IN.
+     */
     public Child(String username, String password, double balance, double totalFundsAdded,
             ArrayList<OwnedStock> portfolio, ArrayList<Transaction> transactions) {
         super(username, password, balance, totalFundsAdded, portfolio, transactions);
@@ -28,7 +45,16 @@ public class Child extends Investor {
         return TRANSACTION_SPEND_LIMIT;
     }
 
-    // Attempts to buy stock
+    /**
+    @param ticker: the ticker of the stock that the user wants to purchase
+    @param quantity: how much of the stock the user wants to purchase
+    @return int
+            1 means the stock was bought successfully
+            2 means the user has insufficient funds
+            3 means the child is exceeding their transaction spend limit
+    Buys the specified quantity of the stock with the specified ticker.
+    Updates the portfolio and balance accordingly.
+     */
     public int buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
         double price = API.getPrice();
@@ -61,6 +87,14 @@ public class Child extends Investor {
         return 1;
     }
 
+    /**
+    @param tickers: an arrayList of ticker symbols that the user is okay with spending money on.
+    @param balance: the amount of money the user is willing to spend. This method cannot spend more than this amount.
+                    If this value is greater than the child transaction spend limit, it will be adjusted to the child transaction spend limit.
+    @return String
+            Returns a list of stocks bought in an organized fashion.
+    This program will spend as much of the balance as possible on the specified list of tickers passed in.
+     */
     public String buyMax(ArrayList<String> tickers, double balance) {
 
         if (balance > TRANSACTION_SPEND_LIMIT) {
