@@ -19,7 +19,6 @@ abstract class Investor {
     protected double totalFundsAdded;
     protected ArrayList<Transaction> transactions;
     protected ArrayList<OwnedStock> portfolio;
-    protected final static String DB_PATH = "src/main/java/JBKRMobile/Database/";
 
     /**
      * @param username: the username the investor signed up with
@@ -356,7 +355,7 @@ abstract class Investor {
      */
     protected void save() {
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(username + ".db"));
             bw.write(Login.encryptPassword(password) + "\n");
             if (this instanceof Adult) {
                 bw.write("Adult\n");

@@ -16,7 +16,6 @@ import java.util.ArrayList;
  */
 public class Login {
     private static final int KEY = 5; // key that encrypts the password
-    private static final String DB_PATH = "src/main/java/JBKRMobile/Database/"; // String outlining the path of all investor files
 
     /**
     @param username: username the user is attempting to sign in with
@@ -26,7 +25,7 @@ public class Login {
     public static Investor login(String username, String password) {
         try {
             // Searches for username & password combination
-            BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
+            BufferedReader br = new BufferedReader(new FileReader(username + ".db"));
             ArrayList<OwnedStock> portfolio = new ArrayList<OwnedStock>();
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
@@ -83,11 +82,11 @@ public class Login {
     public static Investor createUser(String username, String password, String accountType) {
         try {
             // Write username and encrypted password to file
-            BufferedReader checkUsername = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
+            BufferedReader checkUsername = new BufferedReader(new FileReader(username + ".db"));
             checkUsername.close();
         } catch (IOException e) {
             try {
-                BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db", true));
+                BufferedWriter bw = new BufferedWriter(new FileWriter(username + ".db", true));
                 bw.write(encryptPassword(password) + "\n");
                 bw.write(accountType + "\n");
                 if (accountType.equalsIgnoreCase("Adult")) {
@@ -119,7 +118,7 @@ public class Login {
      */
     public static boolean checkUsername(String username) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(DB_PATH + username + ".db"));
+            BufferedReader br = new BufferedReader(new FileReader(username + ".db"));
             br.close();
             return false;
         } catch (IOException e) {
