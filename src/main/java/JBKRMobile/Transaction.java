@@ -31,6 +31,14 @@ public class Transaction {
         this.price = price;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public boolean dateEquals(String date) {
+        return this.date.equals(date);
+    }
+
     // The profit gained from this transaction
     // Profit is calculated by quantity * price;
     public double costOfTransaction() {
