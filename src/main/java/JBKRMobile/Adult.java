@@ -35,7 +35,7 @@ public class Adult extends Investor {
             portfolio.get(tickerIndex).addQuantity(quantity);
         }
 
-        sortPortfolio();
+        sortPortfolioByQuantity();
         return 1;
     }
 
