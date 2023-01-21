@@ -2,7 +2,7 @@ package JBKRMobile;
 
 import java.text.NumberFormat;
 
-/*
+/**
  * Transaction
  * Wing Li, Brook Mao
  * Last modified: Jan 20, 2023
