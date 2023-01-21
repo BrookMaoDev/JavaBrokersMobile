@@ -186,11 +186,11 @@ abstract class Investor {
      */
     public boolean sortPortfolioByQuantity() {
         for (int i = 1; i < portfolio.size(); i++) {
-            int moved = portfolio.get(i);
+            OwnedStock moved = portfolio.get(i);
             int empty = i;
             for (int j = i - 1; j >= 0 && portfolio.get(j).compareQuantity(moved) < 0; j--) {
                 portfolio.set(j + 1, portfolio.get(j));
-                emptyIndex = j;
+                empty = j;
             }
             portfolio.set(empty, moved);
         }
@@ -200,11 +200,11 @@ abstract class Investor {
     // Sorts portfolio by price, most expensive stocks will be at the front of the array after the sort
     public boolean sortPortfolioByPrice() {
         for (int i = 1; i < portfolio.size(); i++) {
-            int moved = portfolio.get(i);
+            OwnedStock moved = portfolio.get(i);
             int empty = i;
             for (int j = i - 1; j >= 0 && portfolio.get(j).comparePrice(moved) < 0; j--) {
                 portfolio.set(j + 1, portfolio.get(j));
-                emptyIndex = j;
+                empty = j;
             }
             portfolio.set(empty, moved);
         }
