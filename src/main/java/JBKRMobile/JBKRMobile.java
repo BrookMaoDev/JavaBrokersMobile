@@ -55,6 +55,8 @@ public class JBKRMobile {
     private Button transactionHistory;
     private Button transactionSearch;
     private Button resetAccount;
+    private Button sortByQuantity;
+    private Button sortByPrice;
     private Button exit;
 
     public JBKRMobile() {
@@ -62,7 +64,7 @@ public class JBKRMobile {
     }
 
     /**
-    @return Returns a table containing scraped data about stocks
+     * @return Returns a table containing scraped data about stocks
      */
     public Table<String> generateData() {
         Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
@@ -138,6 +140,9 @@ public class JBKRMobile {
                 default:
                     try {
                         if (user.buyStock(ticker, Integer.parseInt(quantity))) {
+                            API.setSymbol(ticker);
+                            MessageDialog.showMessageDialog(textGUI, "Buy stock",
+                                    String.format("Total: $%.2f", Integer.parseInt(quantity) * API.getPrice()));
                             user.save();
                             updateSidebar();
                             return true;
@@ -170,6 +175,9 @@ public class JBKRMobile {
                 default:
                     try {
                         if (user.sellStock(ticker, Integer.parseInt(quantity))) {
+                            API.setSymbol(ticker);
+                            MessageDialog.showMessageDialog(textGUI, "Sell stock",
+                                    String.format("Total: $%.2f", Integer.parseInt(quantity) * API.getPrice()));
                             user.save();
                             updateSidebar();
                             return true;
@@ -219,6 +227,11 @@ public class JBKRMobile {
             }
         });
         tickerPanel.removeAllComponents();
+        Panel sort = new Panel().setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
+        sort.addComponent(new Label("Sort by:"));
+        sort.addComponent(sortByPrice);
+        sort.addComponent(sortByQuantity);
+        tickerPanel.addComponent(sort);
         tickerPanel.addComponent(table);
     }
 
@@ -236,11 +249,10 @@ public class JBKRMobile {
             textGUI = new MultiWindowTextGUI(screen);
 
             final Window WINDOW = new BasicWindow("JBKR Mobile");
-            mainPanel = new Panel();
-            mainPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
+            mainPanel = new Panel().setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
 
             // Create panels
-            tickerPanel = new Panel();
+            tickerPanel = new Panel().setLayoutManager(new LinearLayout(Direction.VERTICAL));
             sidePanel = new Panel();
 
             table = generateData();
@@ -413,6 +425,22 @@ public class JBKRMobile {
                     sidePanel.addComponent(new EmptySpace());
                     sidePanel.addComponent(new EmptySpace());
                     sidePanel.addComponent(exit);
+                }
+            });
+
+            sortByQuantity = new Button("Quantity", new Runnable() {
+                @Override
+                public void run() {
+                    user.sortPortfolioByQuantity();
+                    portfolioTable();
+                }
+            });
+
+            sortByPrice = new Button("Price", new Runnable() {
+                @Override
+                public void run() {
+                    user.sortPortfolioByPrice();
+                    portfolioTable();
                 }
             });
 

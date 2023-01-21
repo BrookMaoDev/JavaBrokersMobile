@@ -268,15 +268,21 @@ abstract class Investor {
     }
 
     /**
-     * @return String of all transactions in a clean and organized manner
+     * @return String of last 5 transactions
      */
     public String getTransactionHistory() {
         if (transactions.isEmpty()) {
             return "You have not made any transactions.";
         }
         String output = "";
-        for (int i = 0; i < transactions.size(); i++) {
-            output += transactions.get(i).toString() + "\n";
+        if (transactions.size() > 5) {
+            for (int i = 0; i < transactions.size(); i++) {
+                output += transactions.get(i).toString() + "\n";
+            }
+        } else {
+            for (int i = 0; i < 5; i++) {
+                output += transactions.get(i).toString() + "\n";
+            }
         }
         return output;
     }
