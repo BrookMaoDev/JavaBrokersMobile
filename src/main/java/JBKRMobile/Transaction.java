@@ -1,15 +1,13 @@
-/**
- *Class Name: Transaction
- *Author: Wing Li, Brook Mao
- *Date: January 20, 2023
- *School: A Y Jackson Secondary School
- *Purpose: Represents a transaction.
- */
-
 package JBKRMobile;
 
 import java.text.NumberFormat;
 
+/*
+ * Transaction
+ * Wing Li, Brook Mao
+ * Last modified: Jan 20, 2023
+ * Represents a user transaction.
+ */
 public class Transaction {
     protected String transactionType;
     protected String date;
