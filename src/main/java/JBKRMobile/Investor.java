@@ -374,24 +374,28 @@ abstract class Investor {
     }
 
     /**
-    @param date: the date the transactions should be on
-    @return returns an ArrayList of transactions that took place on a certain day
+     * @param date: the date the transactions should be on
+     * @return returns an ArrayList of transactions that took place on a certain day
      */
     public ArrayList<Transaction> transactionsOnDay(String date) {
-        ArrayList<Transaction> trans = new ArrayList<Transaction>();
-        int firstIndex = firstIndex(date);
-        int lastIndex = lastIndex(date);
-        for (int i = firstIndex; i <= lastIndex; i++) {
-            trans.add(transactions.get(i));
+        try {
+            ArrayList<Transaction> trans = new ArrayList<Transaction>();
+            int firstIndex = firstIndex(date);
+            int lastIndex = lastIndex(date);
+            for (int i = firstIndex; i <= lastIndex; i++) {
+                trans.add(transactions.get(i));
+            }
+            return trans;
+        } catch (Exception e) {
+            return null;
         }
-        return trans;
     }
 
     /**
-    @param date: the date
-    @return returns the index of the last transaction on that given day
+     * @param date: the date
+     * @return returns the index of the last transaction on that given day
      */
-     private int lastIndex(String date) {
+    private int lastIndex(String date) {
         int top = transactions.size() - 1;
         int bottom = 0;
         int mid;
@@ -410,13 +414,13 @@ abstract class Investor {
             }
         }
         return -1;
-     }
+    }
 
     /**
-    @param date: the date
-    @return returns the index of the first transaction on that given day
+     * @param date: the date
+     * @return returns the index of the first transaction on that given day
      */
-     private int firstIndex(String date) {
+    private int firstIndex(String date) {
         int top = transactions.size() - 1;
         int bottom = 0;
         int mid;
@@ -435,27 +439,27 @@ abstract class Investor {
             }
         }
         return -1;
-     }
+    }
 
     /**
-    @param date1: a date
-    @param date2: another date
-    @return return 1 if date1 > date2
-            return 0 if date1 == date2
-            return -1 if date1 < date2
+     * @param date1: a date
+     * @param date2: another date
+     * @return return 1 if date1 > date2
+     *         return 0 if date1 == date2
+     *         return -1 if date1 < date2
      */
-     private int compareDates(String date1, String date2) {
+    private int compareDates(String date1, String date2) {
         int intd1 = Integer.parseInt(date1.substring(0, 4) + date1.substring(5, 7) + date1.substring(8, 10));
         int intd2 = Integer.parseInt(date2.substring(0, 4) + date2.substring(5, 7) + date2.substring(8, 10));
 
         if (intd1 > intd2) {
             return 1;
         } else if (intd1 < intd2) {
-            return -1
+            return -1;
         } else {
             return 0;
         }
-     }
+    }
 
     /**
      * Returns all information about the investor in a clean and organized manner

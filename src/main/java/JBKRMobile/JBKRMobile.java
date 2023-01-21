@@ -47,6 +47,7 @@ public class JBKRMobile {
     private Button sellAll;
     private Button additionalInfo;
     private Button transactionHistory;
+    private Button transactionSearch;
     private Button resetAccount;
     private Button exit;
 
@@ -99,6 +100,7 @@ public class JBKRMobile {
         sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(additionalInfo);
         sidePanel.addComponent(transactionHistory);
+        sidePanel.addComponent(transactionSearch);
         sidePanel.addComponent(new EmptySpace());
         if (user instanceof Child) {
             sidePanel.addComponent(resetAccount);
@@ -539,6 +541,33 @@ public class JBKRMobile {
 
             transactionHistory = new Button("Transaction history", () -> MessageDialog.showMessageDialog(textGUI,
                     "Transaction history", user.getTransactionHistory()));
+
+            transactionSearch = new Button("Transaction search", new Runnable() {
+                @Override
+                public void run() {
+                    String date = new TextInputDialogBuilder().setTitle("Transaction search")
+                            .setDescription("Enter transaction date in format YYYY-MM-DD:").build().showDialog(textGUI);
+                    if (date != null) {
+                        if (date.length() == 10 && date.charAt(4) == '-' && date.charAt(7) == '-') {
+                            switch (date) {
+                                case "":
+                                    MessageDialog.showMessageDialog(textGUI, "Transaction search", "Invalid entry.");
+                                    break;
+
+                                default:
+                                    ArrayList<Transaction> transactionsOnDay = new ArrayList<>();
+                                    String output = "";
+                                    for (int i = 0; i < transactionsOnDay.size(); i++) {
+                                        output += transactionsOnDay.get(i).toString() + "\n";
+                                    }
+                                    MessageDialog.showMessageDialog(textGUI, "Transaction search", output);
+                            }
+                        } else {
+                            MessageDialog.showMessageDialog(textGUI, "Transaction search", "Invalid input");
+                        }
+                    }
+                }
+            });
 
             exit = new Button("Exit", WINDOW::close);
             sidePanel.addComponent(new EmptySpace());
