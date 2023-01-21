@@ -105,7 +105,7 @@ abstract class Investor {
     // Sells every stock the user owns. Credits the balance to the account
     // accordingly.
     public void sellAll() {
-        for (int i = portfolio.size() - 1; i >= 0; i--) {
+        for (int i = portfolio.size(); i > 0; i--) {
             sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
         }
     }
@@ -197,7 +197,8 @@ abstract class Investor {
         return true;
     }
 
-    // Sorts portfolio by price, most expensive stocks will be at the front of the array after the sort
+    // Sorts portfolio by price, most expensive stocks will be at the front of the
+    // array after the sort
     public boolean sortPortfolioByPrice() {
         for (int i = 1; i < portfolio.size(); i++) {
             OwnedStock moved = portfolio.get(i);
