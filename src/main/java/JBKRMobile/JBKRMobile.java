@@ -555,7 +555,11 @@ public class JBKRMobile {
                                     break;
 
                                 default:
-                                    ArrayList<Transaction> transactionsOnDay = new ArrayList<>();
+                                    ArrayList<Transaction> transactionsOnDay = user.transactionsOnDay(date);
+                                    if (transactionsOnDay.isEmpty()) {
+                                        MessageDialog.showMessageDialog(textGUI, "Transaction search",
+                                                String.format("No transactions made on %s.", date));
+                                    }
                                     String output = "";
                                     for (int i = 0; i < transactionsOnDay.size(); i++) {
                                         output += transactionsOnDay.get(i).toString() + "\n";
