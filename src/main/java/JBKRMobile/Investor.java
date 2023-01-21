@@ -184,7 +184,7 @@ abstract class Investor {
      * Sorts portfolio by quantity owned. Most owned stocks will be at the front of
      * the array after the sort. Uses insertion sort.
      */
-    public boolean sortPortfolio() {
+    public boolean sortPortfolioByQuantity() {
         for (int i = 1; i < portfolio.size(); i++) {
             int moved = portfolio.get(i);
             int empty = i;
