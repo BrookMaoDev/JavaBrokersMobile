@@ -3,6 +3,7 @@ package JBKRMobile;
 import java.util.ArrayList;
 import java.text.NumberFormat;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ abstract class Investor {
     protected double totalFundsAdded;
     protected ArrayList<Transaction> transactions;
     protected ArrayList<OwnedStock> portfolio;
+    protected final static String DB_PATH = "src/main/java/JBKRMobile/Database/";
 
     /**
      * @param username: the username the investor signed up with
@@ -354,8 +356,12 @@ abstract class Investor {
      * Saves investor info to file
      */
     protected void save() {
+        File dbPath = new File(DB_PATH);
+        if (!dbPath.exists()) {
+            dbPath.mkdirs();
+        }
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(username + ".db"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db"));
             bw.write(Login.encryptPassword(password) + "\n");
             if (this instanceof Adult) {
                 bw.write("Adult\n");
