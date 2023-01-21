@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/*
+/**
  * Login
  * Owen Wang
  * Last modified: Jan 20, 2023

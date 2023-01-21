@@ -1,6 +1,6 @@
 package JBKRMobile;
 
-/*
+/**
  * OwnedStock
  * Wing Li, Brook Mao
  * Last modified: Jan 20, 2023

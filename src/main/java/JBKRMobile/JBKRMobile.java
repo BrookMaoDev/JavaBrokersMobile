@@ -16,11 +16,12 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 
-/*
+/**
  * JBKRMobile
  * Owen Wang
  * Last modified: Jan 20, 2023
- * Displays menu options and allows user to perform certain actions which calls methods in user field.
+ * Displays menu options and allows user to perform certain actions which calls
+ * methods in user field.
  */
 public class JBKRMobile {
     private static final String DEFAULT_DATA_SETTING = "most-active";
