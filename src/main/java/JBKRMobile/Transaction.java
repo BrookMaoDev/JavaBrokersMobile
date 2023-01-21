@@ -18,6 +18,7 @@ public class Transaction {
     protected double price;
 
     public Transaction(String transactionType, String date, String ticker, int quantity, double price) {
+        this.transactionType = transactionType;
         this.date = date;
         this.ticker = ticker;
         this.quantity = quantity;
