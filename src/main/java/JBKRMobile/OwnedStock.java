@@ -1,13 +1,11 @@
-/**
-Class Name: OwnedStock
-Author: Wing Li, Brook Mao
-Date: January 20, 2023
-School: A Y Jackson Secondary School
-Purpose: Represents ownership of stock. Investor holds an array of these.
- */
-
 package JBKRMobile;
 
+/*
+ * OwnedStock
+ * Wing Li, Brook Mao
+ * Last modified: Jan 20, 2023
+ * Represents an owned stock; Investor holds array of this object.
+ */
 public class OwnedStock {
     private String ticker;
     private int quantity;

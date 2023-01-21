@@ -1,11 +1,3 @@
-/**
-Class Name: Adult
-Author: Owen Wang
-Date: January 20, 2023
-School: A Y Jackson Secondary School
-Purpose: Helps with pulling data from YahooFinance.
- */
-
 package JBKRMobile;
 
 import org.jsoup.Jsoup;
@@ -13,6 +5,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.util.ArrayList;
 
+/*
+ * StockData
+ * Owen Wang
+ * Last Modified: Jan 20, 2023
+ * Scrapes data from YahooFinance using Jsoup library
+ */
 public class StockData {
     /**
      * Data types: "most-active", "gainers", "losers", "crypto"

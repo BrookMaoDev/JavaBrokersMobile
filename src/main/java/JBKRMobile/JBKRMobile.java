@@ -1,11 +1,3 @@
-/**
-Class Name: JBKRMobile
-Author: Owen Wang
-Date: January 20, 2023
-School: A Y Jackson Secondary School
-Purpose: This class displays menu options and allows the user to perform certain actions, resulting in methods in it's user field (which is an investor object) being called. The outputs are returned in a useful and organized fashion.
- */
-
 package JBKRMobile;
 
 import java.awt.Font;
@@ -24,6 +16,12 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 
+/*
+ * JBKRMobile
+ * Owen Wang
+ * Last modified: Jan 20, 2023
+ * Displays menu options and allows user to perform certain actions which calls methods in user field.
+ */
 public class JBKRMobile {
     private static final String DEFAULT_DATA_SETTING = "most-active";
     WindowBasedTextGUI textGUI;
@@ -493,6 +491,7 @@ public class JBKRMobile {
                                     MessageDialog.showMessageDialog(textGUI, "Buy max",
                                             user.buyMax(user.getTickersOfPortfolio(), user.getFunds()));
                                     user.save();
+                                    updateSidebar();
                                     portfolioTable();
                                 }
                             })

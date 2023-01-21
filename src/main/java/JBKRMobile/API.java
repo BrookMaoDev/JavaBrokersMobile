@@ -1,11 +1,3 @@
-/**
-Class Name: API
-Author: Owen Wang
-Date: January 20, 2023
-School: A Y Jackson Secondary School
-Purpose: Pulls live information from YahooFinance
- */
-
 package JBKRMobile;
 
 import yahoofinance.quotes.stock.StockQuote;
@@ -14,6 +6,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
+/*
+ * API
+ * Owen Wang
+ * Last modified: Jan 20, 2023
+ * Pulls data from YahooFinance using YahooFinance API
+ */
 class API {
     private static StockQuote stock;
 

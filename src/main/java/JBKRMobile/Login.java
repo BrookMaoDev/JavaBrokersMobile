@@ -1,11 +1,3 @@
-/**
-Class Name: Login
-Author: Owen Wang
-Date: January 20, 2023
-School: A Y Jackson Secondary School
-Purpose: Allows the user to log in to their account.
- */
-
 package JBKRMobile;
 
 import java.io.BufferedReader;
@@ -16,6 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/*
+ * Login
+ * Owen Wang
+ * Last modified: Jan 20, 2023
+ * Manages account file IO.
+ */
 public class Login {
     private static final int KEY = 5;
     private static final String DB_PATH = "src/main/java/JBKRMobile/Database/";
