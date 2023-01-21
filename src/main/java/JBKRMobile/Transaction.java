@@ -9,11 +9,11 @@ import java.text.NumberFormat;
  * Represents a user transaction.
  */
 public class Transaction {
-    protected String transactionType;
-    protected String date;
-    protected String ticker;
-    protected int quantity;
-    protected double price;
+    protected String transactionType;   // the type of transaction, either "Buy" or "Sell"
+    protected String date;              // the date of the transaction in form: YYYY-MM-DD
+    protected String ticker;            // the ticker of the stock being bought/sold
+    protected int quantity;             // the amount being bought/sold
+    protected double price;             // the price of the stock at the time of buy/sell
 
     /**
      * @param transactionType: the type of the transaction (currently either "buy" or "sell")
