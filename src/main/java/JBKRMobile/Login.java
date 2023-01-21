@@ -40,13 +40,13 @@ public class Login {
                 // get transactions
                 int numTransactions = Integer.parseInt(br.readLine());
                 for (int i = 0; i < numTransactions; i++) {
-                    if (br.readLine().equalsIgnoreCase("buy")) {
+                    if (br.readLine().equalsIgnoreCase("Buy")) {
                         // date, ticker, quantity, price
-                        transactions.add(new Transaction(br.readLine(), br.readLine(), br.readLine(),
+                        transactions.add(new Transaction("Buy", br.readLine(), br.readLine(),
                                 Integer.parseInt(br.readLine()),
                                 Double.parseDouble(br.readLine())));
                     } else {
-                        transactions.add(new Transaction(br.readLine(), br.readLine(), br.readLine(),
+                        transactions.add(new Transaction("Sell", br.readLine(), br.readLine(),
                                 Integer.parseInt(br.readLine()),
                                 Double.parseDouble(br.readLine())));
                     }

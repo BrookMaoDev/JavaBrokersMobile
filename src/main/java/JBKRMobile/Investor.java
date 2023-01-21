@@ -130,7 +130,7 @@ abstract class Investor {
      *         Updates the portfolio and balance accordingly.
      */
     public boolean sellStock(String ticker, int quantity) {
-        for (int i = portfolio.size(); i > 0; i--) {
+        for (int i = 0; i < portfolio.size(); i++) {
             if (portfolio.get(i).getTicker().equalsIgnoreCase(ticker)) {
                 API.setSymbol(ticker);
                 Transaction transaction = new Transaction("Sell", java.time.LocalDate.now().toString(), ticker,
@@ -155,7 +155,7 @@ abstract class Investor {
      *         Sells all stocks the user owns.
      */
     public void sellAll() {
-        for (int i = portfolio.size(); i > 0; i--) {
+        for (int i = portfolio.size() - 1; i >= 0; i--) {
             sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
         }
     }
@@ -325,8 +325,8 @@ abstract class Investor {
             } else {
                 bw.write("Child\n");
             }
-            bw.write(balance + "\n");
-            bw.write(totalFundsAdded + "\n");
+            bw.write(String.format("%.2f\n", balance));
+            bw.write(String.format("%.2f\n", totalFundsAdded));
             bw.write(portfolio.size() + "\n");
             for (int i = 0; i < portfolio.size(); i++) {
                 bw.write(portfolio.get(i).fileString() + "\n");

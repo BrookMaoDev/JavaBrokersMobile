@@ -514,6 +514,7 @@ public class JBKRMobile {
                                 public void run() {
                                     user.sellAll();
                                     user.save();
+                                    updateSidebar();
                                     portfolioTable();
                                 }
                             })
