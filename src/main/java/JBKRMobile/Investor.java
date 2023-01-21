@@ -188,8 +188,21 @@ abstract class Investor {
         for (int i = 1; i < portfolio.size(); i++) {
             int moved = portfolio.get(i);
             int empty = i;
-            for (int j = i - 1; j >= 0 && array.get(j) > moved; j--) {
-                portfolio.set(j + 1, array.get(j));
+            for (int j = i - 1; j >= 0 && portfolio.get(j).compareQuantity(moved) < 0; j--) {
+                portfolio.set(j + 1, portfolio.get(j));
+                emptyIndex = j;
+            }
+            portfolio.set(empty, moved);
+        }
+        return true;
+    }
+
+    public boolean sortPortfolioByPrice() {
+        for (int i = 1; i < portfolio.size(); i++) {
+            int moved = portfolio.get(i);
+            int empty = i;
+            for (int j = i - 1; j >= 0 && portfolio.get(j).comparePrice(moved) < 0; j--) {
+                portfolio.set(j + 1, portfolio.get(j));
                 emptyIndex = j;
             }
             portfolio.set(empty, moved);

@@ -41,6 +41,14 @@ public class OwnedStock {
         return quantity - other.getQuantity();
     }
 
+    public double comparePrice(OwnedStock other) {
+        API.setSymbol(ticker);
+        double thisPrice = API.getPrice();
+        API.setSumbol(other.getTicker());
+        double otherPrice = API.getPrice();
+        return thisPrice - otherPrice;
+    }
+
     public String fileString() {
         return ticker + "\n" + quantity;
     }
