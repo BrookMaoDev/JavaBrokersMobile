@@ -49,7 +49,7 @@ public class Child extends Investor {
             portfolio.get(tickerIndex).addQuantity(quantity);
         }
 
-        sortPortfolio();
+        sortPortfolioByQuantity();
         return 1;
     }
 
