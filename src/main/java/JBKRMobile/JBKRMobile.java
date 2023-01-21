@@ -29,19 +29,24 @@ public class JBKRMobile {
     Panel mainPanel;
     Panel tickerPanel;
     Panel sidePanel;
+
     private static int maxQuery = 50;
-    private boolean loggedIn;
     private Table<String> table;
-    private String username;
-    private String password;
-    private String accountType;
+    private boolean loggedIn; // true if the user is logged in
+
+    private String username; // username of investor
+    private String password; // password of investor
+    private String accountType; // either "adult" or "child"
+
+    private Investor user; // The investor who is currently logged in
+
+    // Buttons the user can click to perform various actions
     private Button home;
     private Button search;
     private Button login;
     private Button signup;
     private Button logout;
     private Button portfolio;
-    private Investor user;
     private Button deposit;
     private Button withdraw;
     private Button buyMax;
@@ -56,7 +61,9 @@ public class JBKRMobile {
         loggedIn = false;
     }
 
-    // scrape data from site
+    /**
+    @return Returns a table containing scraped data about stocks
+     */
     public Table<String> generateData() {
         Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
         ArrayList<String> data = StockData.getData(DEFAULT_DATA_SETTING);
