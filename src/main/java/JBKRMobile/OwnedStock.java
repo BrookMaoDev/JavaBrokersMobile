@@ -50,7 +50,7 @@ public class OwnedStock {
     public double comparePrice(OwnedStock other) {
         API.setSymbol(ticker);
         double thisPrice = API.getPrice();
-        API.setSumbol(other.getTicker());
+        API.setSymbol(other.getTicker());
         double otherPrice = API.getPrice();
         return thisPrice - otherPrice;
     }
