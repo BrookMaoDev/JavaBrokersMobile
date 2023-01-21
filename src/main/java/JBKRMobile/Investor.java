@@ -197,6 +197,7 @@ abstract class Investor {
         return true;
     }
 
+    // Sorts portfolio by price, most expensive stocks will be at the front of the array after the sort
     public boolean sortPortfolioByPrice() {
         for (int i = 1; i < portfolio.size(); i++) {
             int moved = portfolio.get(i);
