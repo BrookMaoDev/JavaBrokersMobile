@@ -1,8 +1,10 @@
-// Class Name: OwnedStock
-// Author: Wing Li, Brook Mao
-// Date: January 20, 2023
-// School: A Y Jackson Secondary School
-// Purpose: Represents ownership of stock. Investor holds an array of these.
+/**
+Class Name: OwnedStock
+Author: Wing Li, Brook Mao
+Date: January 20, 2023
+School: A Y Jackson Secondary School
+Purpose: Represents ownership of stock. Investor holds an array of these.
+ */
 
 package JBKRMobile;
 
