@@ -6,7 +6,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-/*
+/**
  * Investor
  * Brook Mao, Wing Li, Owen Wang
  * Last modified: Jan 20, 2023
