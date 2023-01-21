@@ -406,7 +406,7 @@ abstract class Investor {
             } else if (compareDates(transactions.get(mid).getDate(), date) < 0) {
                 bottom = mid + 1;
             } else {
-                if (mid == 0 || transactions.get(mid + 1).dateEquals(date) == false) {
+                if (mid == (transactions.size() - 1) || transactions.get(mid + 1).dateEquals(date) == false) {
                     return mid;
                 } else {
                     bottom = mid + 1;
