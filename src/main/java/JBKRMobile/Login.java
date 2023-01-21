@@ -79,14 +79,19 @@ public class Login {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(DB_PATH + username + ".db", true));
                 bw.write(encryptPassword(password) + "\n");
                 bw.write(accountType + "\n");
-                bw.write("0.00\n"); // balance
-                bw.write("0.00\n"); // funds added
-                bw.write("0\n"); // stocks
-                bw.write("0\n"); // transactions
-                bw.close();
                 if (accountType.equalsIgnoreCase("Adult")) {
+                    bw.write("0.00\n"); // balance
+                    bw.write("0.00\n"); // funds added
+                    bw.write("0\n");
+                    bw.write("0\n");
+                    bw.close();
                     return new Adult(username, password);
                 } else {
+                    bw.write(Child.getStartingBalance() + "\n");
+                    bw.write(Child.getStartingBalance() + "\n");
+                    bw.write("0\n");
+                    bw.write("0\n");
+                    bw.close();
                     return new Child(username, password);
                 }
             } catch (IOException i) {

@@ -47,6 +47,7 @@ public class JBKRMobile {
     private Button sellAll;
     private Button additionalInfo;
     private Button transactionHistory;
+    private Button resetAccount;
     private Button exit;
 
     public JBKRMobile() {
@@ -87,9 +88,11 @@ public class JBKRMobile {
         sidePanel.addComponent(home);
         sidePanel.addComponent(search);
         sidePanel.addComponent(new EmptySpace());
-        sidePanel.addComponent(deposit);
-        sidePanel.addComponent(withdraw);
-        sidePanel.addComponent(new EmptySpace());
+        if (user instanceof Adult) {
+            sidePanel.addComponent(deposit);
+            sidePanel.addComponent(withdraw);
+            sidePanel.addComponent(new EmptySpace());
+        }
         sidePanel.addComponent(portfolio);
         sidePanel.addComponent(buyMax);
         sidePanel.addComponent(sellAll);
@@ -97,7 +100,10 @@ public class JBKRMobile {
         sidePanel.addComponent(additionalInfo);
         sidePanel.addComponent(transactionHistory);
         sidePanel.addComponent(new EmptySpace());
-        sidePanel.addComponent(new EmptySpace());
+        if (user instanceof Child) {
+            sidePanel.addComponent(resetAccount);
+            sidePanel.addComponent(new EmptySpace());
+        }
         sidePanel.addComponent(logout);
         sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(new EmptySpace());
@@ -121,20 +127,13 @@ public class JBKRMobile {
 
                 default:
                     try {
-                        int flag = user.buyStock(ticker, Integer.parseInt(quantity));
-                        if (flag == 1) {
+                        if (user.buyStock(ticker, Integer.parseInt(quantity))) {
                             user.save();
                             updateSidebar();
                             return true;
-                        } else if (flag == 2) {
-                            MessageDialog.showMessageDialog(textGUI, "Buy stock",
-                                    "Insufficient funds.");
-                        } else if (flag == 3) {
-                            MessageDialog.showMessageDialog(textGUI, "Buy stock",
-                                    String.format("Transaction limit exceeded (%s).",
-                                            NumberFormat.getCurrencyInstance()
-                                                    .format(Child.getTransactionSpendLimit())));
                         }
+                        MessageDialog.showMessageDialog(textGUI, "Buy stock",
+                                "Insufficient funds.");
                     } catch (NumberFormatException e) {
                         MessageDialog.showMessageDialog(textGUI, "Buy stock", "Invalid entry.");
                     }
@@ -430,7 +429,7 @@ public class JBKRMobile {
 
                             default:
                                 try {
-                                    user.deposit(Double.parseDouble(depositAmount));
+                                    ((Adult) user).deposit(Double.parseDouble(depositAmount));
                                     user.save();
                                     updateSidebar();
                                     MessageDialog.showMessageDialog(textGUI, "Deposit",
@@ -459,7 +458,7 @@ public class JBKRMobile {
 
                             default:
                                 try {
-                                    if (user.withdraw(Double.parseDouble(withdrawAmount))) {
+                                    if (((Adult) user).withdraw(Double.parseDouble(withdrawAmount))) {
                                         user.save();
                                         updateSidebar();
                                         MessageDialog.showMessageDialog(textGUI, "Withdraw",
@@ -522,6 +521,22 @@ public class JBKRMobile {
                 }
             });
 
+            resetAccount = new Button("Reset account", new Runnable() {
+                @Override
+                public void run() {
+                    new ActionListDialogBuilder().setTitle("Reset account")
+                            .setDescription("THIS WILL RESET YOUR ACCOUNT BACK TO DEFAULT CHILD SETTINGS.\n\nProceed?")
+                            .addAction("Yes", new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((Child) user).resetAccount();
+                                    user.save();
+                                    updateSidebar();
+                                }
+                            }).build().showDialog(textGUI);
+                }
+            });
+
             transactionHistory = new Button("Transaction history", () -> MessageDialog.showMessageDialog(textGUI,
                     "Transaction history", user.getTransactionHistory()));
 
@@ -539,7 +554,6 @@ public class JBKRMobile {
             // Start gui
             textGUI.addWindowAndWait(WINDOW);
         } catch (IOException e) {
-
         } finally {
             if (screen != null) {
                 try {

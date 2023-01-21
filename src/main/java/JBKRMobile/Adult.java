@@ -1,7 +1,6 @@
 package JBKRMobile;
 
 import java.util.ArrayList;
-import java.text.NumberFormat;
 
 /*
  * Adult
@@ -41,87 +40,30 @@ public class Adult extends Investor {
     }
 
     /**
-     * @param ticker:   the ticker of the stock that the user wants to purchase
-     * @param quantity: how much of the stock the user wants to purchase
-     * @return int
-     *         1 means the stock was bought successfully
-     *         2 means the user has insufficient funds
-     *         Buys the specified quantity of the stock with the specified ticker.
-     *         Updates the portfolio and balance accordingly.
+     * @param balance: the amount of money the user wants to add to their account.
+     * @return returns true if the deposit was successful.
+     *         This method allows users to add money to their account.
      */
-    public int buyStock(String ticker, int quantity) {
-        API.setSymbol(ticker);
-        double price = API.getPrice();
-        Transaction transaction = new Transaction("buy", java.time.LocalDate.now().toString(), ticker, quantity, price);
-        double cost = transaction.costOfTransaction();
-
-        if (cost > balance) {
-            return 2;
-        }
-        balance -= cost;
-        transactions.add(transaction);
-
-        int tickerIndex = getTickerIndex(ticker);
-        // The user does not own this stock yet
-        if (tickerIndex < 0) {
-            portfolio.add(new OwnedStock(ticker, quantity));
-        } else {
-            // The user owns this stock
-            portfolio.get(tickerIndex).addQuantity(quantity);
-        }
-
-        sortPortfolioByQuantity();
-        return 1;
+    public boolean deposit(double balance) {
+        this.balance += balance;
+        totalFundsAdded += balance;
+        return true;
     }
 
     /**
-     * @param tickers: an arrayList of ticker symbols that the user is okay with
-     *                 spending money on.
-     * @param balance: the amount of money the user is willing to spend. This method
-     *                 cannot spend more than this amount.
-     * @return String
-     *         Returns a list of stocks bought in an organized fashion.
-     *         This program will spend as much of the balance as possible on the
-     *         specified list of tickers passed in.
+     * @param balance: the amount of money the user wants to withdraw from their
+     *                 account.
+     * @return returns true if the withdraw was successful.
+     *         returns false if the user tries to withdraw more than they have.
+     *         This method allow users to take money out of their account.
      */
-    public String buyMax(ArrayList<String> tickers, double balance) {
-        ArrayList<String> bought = new ArrayList<String>();
-        ArrayList<String> bestCombo = permute(tickers, balance, bought);
-
-        ArrayList<String> output = new ArrayList<String>();
-        for (int i = 0; i < bestCombo.size(); i++) {
-            int index = output.indexOf(bestCombo.get(i));
-            if (index == -1) {
-                output.add(bestCombo.get(i));
-                output.add("1");
-            } else {
-                String prevQuantity = output.get(index + 1);
-                String newQuantity = (Integer.parseInt(prevQuantity) + 1) + "";
-                output.set(index + 1, newQuantity);
-            }
+    public boolean withdraw(double balance) {
+        if (balance > this.balance) {
+            return false;
+        } else {
+            this.balance -= balance;
+            totalFundsAdded -= balance;
+            return true;
         }
-
-        for (int i = 0; i < output.size(); i += 2) {
-            API.setSymbol(output.get(i));
-            buyStock(output.get(i), Integer.parseInt(output.get(i + 1)));
-        }
-
-        String out = "Stocks bought:\n";
-
-        for (int i = 0; i < output.size(); i += 2) {
-            out += "Stock: " + output.get(i) + "\n";
-            out += "Quantity: " + output.get(i + 1) + "\n";
-            API.setSymbol(output.get(i));
-            out += "Price: " + NumberFormat.getCurrencyInstance().format(API.getPrice())
-                    + "\n";
-            out += "Price of this purchase: "
-                    + NumberFormat.getCurrencyInstance().format(API.getPrice() *
-                            Integer.parseInt(output.get(i + 1)))
-                    + "\n";
-        }
-
-        out += "Total Price of Purchase: " +
-                NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
-        return out;
     }
 }
