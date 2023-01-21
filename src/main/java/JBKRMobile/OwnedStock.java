@@ -7,8 +7,8 @@ package JBKRMobile;
  * Represents an owned stock; Investor holds array of this object.
  */
 public class OwnedStock {
-    private String ticker;
-    private int quantity;
+    private String ticker;  // the ticker of the stock they own
+    private int quantity;   // how much of that stock they own
 
     /**
      * Creates a new OwnedStock object
