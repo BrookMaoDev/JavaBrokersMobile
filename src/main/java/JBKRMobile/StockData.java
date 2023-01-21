@@ -1,6 +1,6 @@
 /**
 Class Name: Adult
-Author: Wing Li, Brook Mao
+Author: Owen Wang
 Date: January 20, 2023
 School: A Y Jackson Secondary School
 Purpose: Helps with pulling data from YahooFinance.

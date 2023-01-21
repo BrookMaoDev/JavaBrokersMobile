@@ -1,5 +1,5 @@
 /**
-Class Name: Adult
+Class Name: Transaction
 Author: Wing Li, Brook Mao
 Date: January 20, 2023
 School: A Y Jackson Secondary School
