@@ -63,10 +63,6 @@ public class Adult extends Investor {
 
         String out = "Stocks bought:\n";
 
-        // for (int i = 0; i < bestCombo.size(); i++) {
-        // out += bestCombo.get(i) + " ";
-        // }
-
         for (int i = 0; i < output.size(); i += 2) {
             out += "Stock: " + output.get(i) + "\n";
             out += "Quantity: " + output.get(i + 1) + "\n";

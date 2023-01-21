@@ -54,12 +54,14 @@ public class Child extends Investor {
     }
 
     public String buyMax(ArrayList<String> tickers, double balance) {
+
         if (balance > TRANSACTION_SPEND_LIMIT) {
             balance = TRANSACTION_SPEND_LIMIT;
         }
 
         ArrayList<String> bought = new ArrayList<String>();
         ArrayList<String> bestCombo = permute(tickers, balance, bought);
+
         ArrayList<String> output = new ArrayList<String>();
         for (int i = 0; i < bestCombo.size(); i++) {
             int index = output.indexOf(bestCombo.get(i));
@@ -78,25 +80,22 @@ public class Child extends Investor {
             buyStock(output.get(i), Integer.parseInt(output.get(i + 1)));
         }
 
-        for (int i = 0; i < output.size(); i += 2) {
-            String ticker = output.get(i);
-            int quantity = Integer.parseInt(output.get(i + 1));
-            buyStock(ticker, quantity);
-        }
-
         String out = "Stocks bought:\n";
 
         for (int i = 0; i < output.size(); i += 2) {
             out += "Stock: " + output.get(i) + "\n";
             out += "Quantity: " + output.get(i + 1) + "\n";
             API.setSymbol(output.get(i));
-            out += "Price: " + NumberFormat.getCurrencyInstance().format(API.getPrice()) + "\n";
+            out += "Price: " + NumberFormat.getCurrencyInstance().format(API.getPrice())
+                    + "\n";
             out += "Price of this purchase: "
-                    + NumberFormat.getCurrencyInstance().format(API.getPrice() * Integer.parseInt(output.get(i + 1)))
+                    + NumberFormat.getCurrencyInstance().format(API.getPrice() *
+                            Integer.parseInt(output.get(i + 1)))
                     + "\n";
         }
 
-        out += "Total Price of Purchase: " + NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
+        out += "Total Price of Purchase: " +
+                NumberFormat.getCurrencyInstance().format(calcValueOfArray(bestCombo));
         return out;
     }
 }
