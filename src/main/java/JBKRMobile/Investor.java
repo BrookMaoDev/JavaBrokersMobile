@@ -14,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 abstract class Investor {
     protected String username;
     protected String password;
@@ -23,7 +24,12 @@ abstract class Investor {
     protected ArrayList<OwnedStock> portfolio;
     protected final static String DB_PATH = "src/main/java/JBKRMobile/Database/";
 
-    // Creates investor objects for when they sign up
+    /**
+    @param username: the username the investor signed up with
+    @param password: the password the investor signed up with (unencrypted)
+    @return does not return anything.
+    Called from child classes only. This constructor is used when someone SIGNS UP.
+     */
     public Investor(String username, String password) {
         this.username = username;
         this.password = password;
@@ -33,7 +39,16 @@ abstract class Investor {
         this.transactions = new ArrayList<Transaction>();
     }
 
-    // Creates investor objects for existing investors with previous data
+    /**
+    @param username: the username of the investor
+    @param password: the password of the investor (unencrypted)
+    @param balance: the money the investor has
+    @param totalFundsAdded: how much the investor has added to the account
+    @param portfolio: array of OwnedStock that the investor has purchased before
+    @param transactions: array of transaction that the investor has made before
+    @return does not return anything.
+    Called from child classes only. This constructor is used when someone LOGS IN.
+     */
     public Investor(String username, String password, double balance, double totalFundsAdded,
             ArrayList<OwnedStock> portfolio, ArrayList<Transaction> transactions) {
         this.username = username;
@@ -43,6 +58,8 @@ abstract class Investor {
         this.portfolio = portfolio;
         this.transactions = transactions;
     }
+
+    // Accessors and mutators
 
     public double getFunds() {
         return balance;
@@ -60,13 +77,23 @@ abstract class Investor {
         return transactions;
     }
 
-    // Adds balance to the investor's account
-    public void deposit(double balance) {
+    /**
+    @param balance: the amount of money the user wants to add to their account.
+    @return returns true if the deposit was successful.
+    This method allows users to add money to their account.
+     */
+    public boolean deposit(double balance) {
         this.balance += balance;
         totalFundsAdded += balance;
+        return true;
     }
 
-    // Subtracts balance from the user
+    /**
+    @param balance: the amount of money the user wants to withdraw from their account.
+    @return returns true if the withdraw was successful.
+            returns false if the user tries to withdraw more than they have.
+    This method allow users to take money out of their account.
+     */
     public boolean withdraw(double balance) {
         if (balance > this.balance) {
             return false;
@@ -78,16 +105,25 @@ abstract class Investor {
     }
 
     /**
-     * Abstract method that takes in ticker symbol of a stock and the quantity. The
-     * method will add that quantity of stock to the investor's portfolio, and
-     * remove the money spent. Creates a transaction object in the process.
+    @param ticker: the ticker of the stock the user wants to purchase
+    @param quantity: the amount of the stock the user wants to purchase
+    @return int
+            1 means the stock was bought successfully
+            2 means the user has insufficient funds
+            3 (only applies if the investor is a child) means the child is exceeding their transaction spend limit
+    Buys the specified quantity of the stock with the specified ticker.
+    Updates the portfolio and balance accordingly.
      */
     public abstract int buyStock(String ticker, int quantity);
 
     /**
-     * Method that takes in ticker symbol of a stock and the quantity. The
-     * method will remove that quantity of stock from the investor's portfolio, and
-     * add the balance received. Creates a transaction object in the process.
+    @param ticker: the ticker of the stock the user wants to sell
+    @param quantity: the ticker of the stock the user wants to sell
+    @return boolean
+            Returns true if the stocks were successfully sold
+            Returns false if the user does not own the stock with the given ticker, or they do not own enough to sell the specified quantity
+    Sells the specified quantity of the stock with the specified ticker.
+    Updates the portfolio and balance accordingly.
      */
     public boolean sellStock(String ticker, int quantity) {
         for (int i = portfolio.size(); i > 0; i--) {
@@ -110,8 +146,10 @@ abstract class Investor {
         return false;
     }
 
-    // Sells every stock the user owns. Credits the balance to the account
-    // accordingly.
+    /**
+    @return nothing
+    Sells all stocks the user owns.
+     */
     public void sellAll() {
         for (int i = portfolio.size(); i > 0; i--) {
             sellStock(portfolio.get(i).getTicker(), portfolio.get(i).getQuantity());
@@ -119,33 +157,40 @@ abstract class Investor {
     }
 
     /**
-     * Abstract method that takes in an array of tickers. Also takes in a double
-     * representing amount the user wants to spend. The method return the
-     * combination of stocks, from the list, that will spend as much money as
-     * possible without going over the limit.
+    @param tickers: an arrayList of ticker symbols that the user is okay with spending money on.
+    @param balance: the amount of money the user is willing to spend. This method cannot spend more than this amount.
+    @return String
+            Returns a list of stocks bought in an organized fashion.
+    This program will spend as much of the balance as possible on the specified list of tickers passed in.
      */
     public abstract String buyMax(ArrayList<String> tickers, double balance);
 
     /**
-     * Returns a double which represents the net worth of the investor. Is
-     * calculated by finding value of all stocks and adding balance onto that.
+    @return double which represents the user's net worth
+    Calculates the user's net worth. Adds up the value of all their OwnedStock and any leftover balance.
      */
     public double getNetWorth() {
         double netWorth = 0;
         for (int i = 0; i < portfolio.size(); i++) {
             API.setSymbol(portfolio.get(i).getTicker());
-            netWorth += portfolio.get(i).getQuantity() * API.getPrice();
+            netWorth += portfolio.get(i).getValue();
         }
         return netWorth + balance;
     }
 
-    // Returns the lifetime profit of the user
+    /**
+    @return double which represents the amount of profit the user had made since creating the account
+    Returns the lifetime profit of the user.
+     */
     public double calculateProfit() {
-        return balance - totalFundsAdded;
+        return getNetWorth() - totalFundsAdded;
     }
 
-    // Helper method for the buyMax method. Returns value of all stocks in a string
-    // array.
+    /**
+    @param array: represents an array of tickers
+    @return double representing the value of all the tickers added up
+    Helper method that can calculate the value of an array of STRING tickers
+     */
     protected double calcValueOfArray(ArrayList<String> array) {
         double value = 0;
         for (int i = 0; i < array.size(); i++) {
@@ -156,7 +201,7 @@ abstract class Investor {
     }
 
     /**
-     * Method that returns an ArrayList<String> of the portfolio's tickers
+    @return returns an arrayList of Strings which are the ticker symbols of all stocks in the portfolio.
      */
     public ArrayList<String> getTickersOfPortfolio() {
         ArrayList<String> tickers = new ArrayList<String>();
@@ -166,7 +211,10 @@ abstract class Investor {
         return tickers;
     }
 
-    // Gets the index of the specified ticker if it exists. Returns -1 otherwise
+    /**
+    @param ticker: the ticker we want to find
+    @return int - index of the OwnedStock with the ticker in the portfolio array
+     */
     public int getTickerIndex(String ticker) {
         for (int i = 0; i < portfolio.size(); i++) {
             if (portfolio.get(i).getTicker().equals(ticker)) {
@@ -176,7 +224,9 @@ abstract class Investor {
         return -1;
     }
 
-    // Gets transaction history
+    /**
+    @return String of all transactions in a clean and organized manner
+     */
     public String getTransactionHistory() {
         if (transactions.isEmpty()) {
             return "You have not made any transactions.";
@@ -189,8 +239,8 @@ abstract class Investor {
     }
 
     /**
-     * Sorts portfolio by quantity owned. Most owned stocks will be at the front of
-     * the array after the sort. Uses insertion sort.
+    @return true if the sort is successful
+    Sorts the portfolio by quantity, with most owned at the front
      */
     public boolean sortPortfolioByQuantity() {
         for (int i = 1; i < portfolio.size(); i++) {
@@ -205,8 +255,10 @@ abstract class Investor {
         return true;
     }
 
-    // Sorts portfolio by price, most expensive stocks will be at the front of the
-    // array after the sort
+    /**
+    @return true if the sort is successful
+    Sorts the portfolio by price, with most expensive at the front
+     */
     public boolean sortPortfolioByPrice() {
         for (int i = 1; i < portfolio.size(); i++) {
             OwnedStock moved = portfolio.get(i);
@@ -220,7 +272,13 @@ abstract class Investor {
         return true;
     }
 
-    // Helper method for the buyMax method. Uses recursion.
+    /**
+    @param tickers: tickers the method is allowed to buy
+    @param balance: the amount the method is allowed to spend
+    @param bought: a list of already bought tickers
+    @return an array of Strings which represent the combination of tickers that spends the most balance as possible
+    Helper method for the buyMax method.
+     */
     @SuppressWarnings("unchecked")
     protected ArrayList<String> permute(ArrayList<String> tickers, double balance, ArrayList<String> bought) {
         ArrayList<String> bestCombo = (ArrayList<String>) bought.clone();
@@ -241,7 +299,7 @@ abstract class Investor {
     }
 
     /**
-     * Generates and returns a string describing everything about the investor
+    Saves investor info to file
      */
     protected void save() {
         try {
@@ -268,7 +326,9 @@ abstract class Investor {
         }
     }
 
-    // Returns all information of the investor in a clean and organized manner
+    /**
+    Returns all information about the investor in a clean and organized manner
+     */
     public String toString() {
         return String.format("Net worth: %s\nProfit: %s\n",
                 NumberFormat.getCurrencyInstance().format(getNetWorth()),

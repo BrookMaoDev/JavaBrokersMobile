@@ -30,6 +30,11 @@ public class OwnedStock {
         quantity += amount;
     }
 
+    public double getValue() {
+        API.setSymbol(ticker);
+        return API.getPrice() * quantity;
+    }
+
     /**
      * Subtracts an int from quantity. If amount is greater than quantity, then
      * returns false before subtracting.
