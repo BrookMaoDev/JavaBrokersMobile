@@ -54,12 +54,12 @@ public class Login {
                     if (br.readLine().equalsIgnoreCase("Buy")) {
                         // date, ticker, quantity, price
                         transactions.add(new Transaction("Buy", br.readLine(), br.readLine(),
-                                Integer.parseInt(br.readLine()),
-                                Double.parseDouble(br.readLine())));
+                                Double.parseDouble(br.readLine()),
+                                Integer.parseInt(br.readLine())));
                     } else {
                         transactions.add(new Transaction("Sell", br.readLine(), br.readLine(),
-                                Integer.parseInt(br.readLine()),
-                                Double.parseDouble(br.readLine())));
+                                Double.parseDouble(br.readLine()),
+                                Integer.parseInt(br.readLine())));
                     }
                 }
                 br.close();

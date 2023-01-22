@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.io.*;
 import java.text.NumberFormat;
 
+import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
@@ -69,7 +70,7 @@ public class JBKRMobile {
      * @return Returns a table containing scraped data about stocks
      */
     public Table<String> generateData() {
-        Table<String> table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
+        Table<String> table = new Table<String>("Ticker", "Price", "Change", "% Change");
         ArrayList<String> data = StockData.getData(DEFAULT_DATA_SETTING);
         int c = maxQuery;
         for (int i = 0; i < c; i++) {
@@ -95,8 +96,14 @@ public class JBKRMobile {
 
     private void updateSidebar() {
         sidePanel.removeAllComponents();
-        sidePanel.addComponent(new Label(
-                NumberFormat.getCurrencyInstance().format(user.getFunds())));
+        double funds = user.getFunds();
+        if (funds == 0) {
+            sidePanel.addComponent(new Label(
+                    NumberFormat.getCurrencyInstance().format(funds)).addStyle(SGR.BLINK));
+        } else {
+            sidePanel.addComponent(new Label(
+                    NumberFormat.getCurrencyInstance().format(user.getFunds())));
+        }
         sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(home);
         sidePanel.addComponent(search);
@@ -107,19 +114,15 @@ public class JBKRMobile {
             sidePanel.addComponent(new EmptySpace());
         }
         sidePanel.addComponent(portfolio);
-        sidePanel.addComponent(buyMax);
-        sidePanel.addComponent(sellAll);
         sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(additionalInfo);
         sidePanel.addComponent(transactionHistory);
-        sidePanel.addComponent(transactionSearch);
         sidePanel.addComponent(new EmptySpace());
         if (user instanceof Child) {
             sidePanel.addComponent(resetAccount);
             sidePanel.addComponent(new EmptySpace());
         }
         sidePanel.addComponent(logout);
-        sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(new EmptySpace());
         sidePanel.addComponent(exit);
     }
@@ -196,16 +199,12 @@ public class JBKRMobile {
     }
 
     private void portfolioTable() {
-        table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE", "QUANTITY");
+        table = new Table<String>("Ticker", "Price", "Change", "% Change", "Quantity");
         ArrayList<OwnedStock> data = user.getPortfolio();
-        try {
-            for (int i = 0; i < data.size(); i++) {
-                API.setSymbol(data.get(i).getTicker());
-                table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
-                        API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (int i = 0; i < data.size(); i++) {
+            API.setSymbol(data.get(i).getTicker());
+            table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                    API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
         }
         table.setSelectAction(new Runnable() {
             @Override
@@ -229,12 +228,18 @@ public class JBKRMobile {
             }
         });
         tickerPanel.removeAllComponents();
+        tickerPanel.addComponent(new Label("Portfolio").addStyle(SGR.BOLD).addStyle(SGR.UNDERLINE));
+        Panel functions = new Panel().setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
+        functions.addComponent(buyMax);
+        functions.addComponent(sellAll);
+        tickerPanel.addComponent(functions);
         Panel sort = new Panel().setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
-        sort.addComponent(new Label("Sort by:"));
+        sort.addComponent(new Label("Sort by:").addStyle(SGR.ITALIC));
         sort.addComponent(sortByPrice);
         sort.addComponent(sortByQuantity);
         tickerPanel.addComponent(sort);
         tickerPanel.addComponent(table);
+
     }
 
     public void run() {
@@ -264,8 +269,9 @@ public class JBKRMobile {
             home = new Button("Home", new Runnable() {
                 @Override
                 public void run() {
-                    tickerPanel.removeAllComponents();
                     table = generateData();
+                    tickerPanel.removeAllComponents();
+                    tickerPanel.addComponent(new Label("Home").addStyle(SGR.BOLD).addStyle(SGR.UNDERLINE));
                     tickerPanel.addComponent(table);
                 }
             });
@@ -283,7 +289,7 @@ public class JBKRMobile {
                                 break;
 
                             default:
-                                table = new Table<String>("TICKER", "PRICE", "CHANGE", "% CHANGE");
+                                table = new Table<String>("Ticker", "Price", "Change", "% Change");
                                 try {
                                     API.setSymbol(query.toUpperCase());
                                     table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
@@ -292,7 +298,6 @@ public class JBKRMobile {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                tickerPanel.removeAllComponents();
                                 table.setSelectAction(new Runnable() {
                                     @Override
                                     public void run() {
@@ -301,6 +306,9 @@ public class JBKRMobile {
                                         }
                                     }
                                 });
+                                tickerPanel.removeAllComponents();
+                                tickerPanel
+                                        .addComponent(new Label("Search").addStyle(SGR.BOLD).addStyle(SGR.UNDERLINE));
                                 tickerPanel.addComponent(table);
                         }
                     }
@@ -579,35 +587,61 @@ public class JBKRMobile {
                 }
             });
 
-            transactionHistory = new Button("Transaction history", () -> MessageDialog.showMessageDialog(textGUI,
-                    "Transaction history", user.getTransactionHistory()));
-
-            transactionSearch = new Button("Transaction search", new Runnable() {
+            transactionHistory = new Button("Transaction history", new Runnable() {
                 @Override
                 public void run() {
-                    String date = new TextInputDialogBuilder().setTitle("Transaction search")
+                    ArrayList<Transaction> data = user.getTransactions();
+                    if (data.isEmpty()) {
+                        MessageDialog.showMessageDialog(textGUI, "Transaction history",
+                                "You have not made any transactions.");
+                    } else {
+                        table = new Table<String>("Type", "Date", "Ticker", "Quantity", "Price");
+                        for (Transaction t : data) {
+                            table.getTableModel().addRow(t.getTransactionType(), t.getDate(), t.getTicker(),
+                                    t.getQuantity() + "", NumberFormat.getCurrencyInstance().format(t.getPrice()));
+                        }
+                        tickerPanel.removeAllComponents();
+                        tickerPanel.addComponent(
+                                new Label("Transaction history").addStyle(SGR.BOLD).addStyle(SGR.UNDERLINE));
+                        tickerPanel.addComponent(transactionSearch);
+                        tickerPanel.addComponent(table);
+                    }
+                }
+            });
+
+            transactionSearch = new Button("Search", new Runnable() {
+                @Override
+                public void run() {
+                    String date = new TextInputDialogBuilder().setTitle("Search")
                             .setDescription("Enter transaction date in format YYYY-MM-DD:").build().showDialog(textGUI);
                     if (date != null) {
                         if (date.length() == 10 && date.charAt(4) == '-' && date.charAt(7) == '-') {
                             switch (date) {
                                 case "":
-                                    MessageDialog.showMessageDialog(textGUI, "Transaction search", "Invalid entry.");
+                                    MessageDialog.showMessageDialog(textGUI, "Search", "Invalid entry.");
                                     break;
 
                                 default:
                                     ArrayList<Transaction> transactionsOnDay = user.transactionsOnDay(date);
-                                    if (transactionsOnDay.isEmpty()) {
-                                        MessageDialog.showMessageDialog(textGUI, "Transaction search",
+                                    if (transactionsOnDay == null || transactionsOnDay.isEmpty()) {
+                                        MessageDialog.showMessageDialog(textGUI, "Search",
                                                 String.format("No transactions made on %s.", date));
+                                    } else {
+                                        table = new Table<String>("Type", "Date", "Ticker", "Quantity", "Price");
+                                        for (Transaction t : transactionsOnDay) {
+                                            table.getTableModel().addRow(t.getTransactionType(), t.getDate(),
+                                                    t.getTicker(),
+                                                    t.getQuantity() + "",
+                                                    NumberFormat.getCurrencyInstance().format(t.getPrice()));
+                                        }
+                                        tickerPanel.removeAllComponents();
+                                        tickerPanel.addComponent(new Label("Transactions on " + date).addStyle(SGR.BOLD)
+                                                .addStyle(SGR.UNDERLINE));
+                                        tickerPanel.addComponent(table);
                                     }
-                                    String output = "";
-                                    for (int i = 0; i < transactionsOnDay.size(); i++) {
-                                        output += transactionsOnDay.get(i).toString() + "\n";
-                                    }
-                                    MessageDialog.showMessageDialog(textGUI, "Transaction search", output);
                             }
                         } else {
-                            MessageDialog.showMessageDialog(textGUI, "Transaction search", "Invalid input");
+                            MessageDialog.showMessageDialog(textGUI, "Search", "Invalid input");
                         }
                     }
                 }
@@ -618,6 +652,7 @@ public class JBKRMobile {
             sidePanel.addComponent(new EmptySpace());
             sidePanel.addComponent(exit);
 
+            tickerPanel.addComponent(new Label("Home").addStyle(SGR.BOLD).addStyle(SGR.UNDERLINE));
             tickerPanel.addComponent(table);
             mainPanel.addComponent(tickerPanel.withBorder(Borders.singleLine()));
             mainPanel.addComponent(sidePanel);

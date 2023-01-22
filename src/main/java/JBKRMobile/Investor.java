@@ -91,7 +91,7 @@ abstract class Investor {
     public boolean buyStock(String ticker, int quantity) {
         API.setSymbol(ticker);
         double price = API.getPrice();
-        Transaction transaction = new Transaction("Buy", java.time.LocalDate.now().toString(), ticker, quantity, price);
+        Transaction transaction = new Transaction("Buy", java.time.LocalDate.now().toString(), ticker, price, quantity);
         double cost = transaction.costOfTransaction();
 
         if (cost > balance) {
@@ -128,7 +128,7 @@ abstract class Investor {
             if (portfolio.get(i).getTicker().equalsIgnoreCase(ticker)) {
                 API.setSymbol(ticker);
                 Transaction transaction = new Transaction("Sell", java.time.LocalDate.now().toString(), ticker,
-                        quantity, API.getPrice());
+                        API.getPrice(), quantity);
                 if (quantity < portfolio.get(i).getQuantity()) {
                     portfolio.get(i).subtractQuantity(quantity);
                 } else if (quantity == portfolio.get(i).getQuantity()) {
@@ -266,26 +266,6 @@ abstract class Investor {
             }
         }
         return -1;
-    }
-
-    /**
-     * @return String of last 5 transactions
-     */
-    public String getTransactionHistory() {
-        if (transactions.isEmpty()) {
-            return "You have not made any transactions.";
-        }
-        String output = "";
-        if (transactions.size() > 5) {
-            for (int i = 0; i < transactions.size(); i++) {
-                output += transactions.get(i).toString() + "\n";
-            }
-        } else {
-            for (int i = 0; i < 5; i++) {
-                output += transactions.get(i).toString() + "\n";
-            }
-        }
-        return output;
     }
 
     /**
