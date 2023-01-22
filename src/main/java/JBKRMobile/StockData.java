@@ -29,7 +29,6 @@ public class StockData {
             }
             return data;
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }

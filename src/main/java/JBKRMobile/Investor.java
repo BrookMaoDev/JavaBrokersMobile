@@ -360,7 +360,6 @@ abstract class Investor {
             }
             bw.close();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

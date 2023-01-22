@@ -70,27 +70,28 @@ public class JBKRMobile {
      * @return Returns a table containing scraped data about stocks
      */
     public Table<String> generateData() {
-        Table<String> table = new Table<String>("Ticker", "Price", "Change", "% Change");
         ArrayList<String> data = StockData.getData(DEFAULT_DATA_SETTING);
-        int c = maxQuery;
-        for (int i = 0; i < c; i++) {
-            try {
-                API.setSymbol(data.get(i));
-                table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
-                        API.getChange() + "",
-                        API.getPercentChange() + "%");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        table.setSelectAction(new Runnable() {
-            @Override
-            public void run() {
-                if (loggedIn) {
-                    buyStockWindow(table);
+        Table<String> table = new Table<String>("Ticker", "Price", "Change", "% Change");
+        if (!data.isEmpty()) {
+            int c = maxQuery;
+            for (int i = 0; i < c; i++) {
+                try {
+                    API.setSymbol(data.get(i));
+                    table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                            API.getChange() + "",
+                            API.getPercentChange() + "%");
+                } catch (Exception e) {
                 }
             }
-        });
+            table.setSelectAction(new Runnable() {
+                @Override
+                public void run() {
+                    if (loggedIn) {
+                        buyStockWindow(table);
+                    }
+                }
+            });
+        }
         return table;
     }
 
@@ -199,34 +200,36 @@ public class JBKRMobile {
     }
 
     private void portfolioTable() {
-        table = new Table<String>("Ticker", "Price", "Change", "% Change", "Quantity");
         ArrayList<OwnedStock> data = user.getPortfolio();
-        for (int i = 0; i < data.size(); i++) {
-            API.setSymbol(data.get(i).getTicker());
-            table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
-                    API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
-        }
-        table.setSelectAction(new Runnable() {
-            @Override
-            public void run() {
-                new ActionListDialogBuilder()
-                        .setTitle("Portfolio").setDescription("Select action:")
-                        .addAction("Buy", new Runnable() {
-                            @Override
-                            public void run() {
-                                buyStockWindow(table);
-                                portfolioTable();
-                            }
-                        })
-                        .addAction("Sell", new Runnable() {
-                            @Override
-                            public void run() {
-                                sellStockWindow(table);
-                                portfolioTable();
-                            }
-                        }).build().showDialog(textGUI);
+        table = new Table<String>("Ticker", "Price", "Change", "% Change", "Quantity");
+        if (!data.isEmpty()) {
+            for (int i = 0; i < data.size(); i++) {
+                API.setSymbol(data.get(i).getTicker());
+                table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
+                        API.getChange() + "", API.getPercentChange() + "%", data.get(i).getQuantity() + "");
             }
-        });
+            table.setSelectAction(new Runnable() {
+                @Override
+                public void run() {
+                    new ActionListDialogBuilder()
+                            .setTitle("Portfolio").setDescription("Select action:")
+                            .addAction("Buy", new Runnable() {
+                                @Override
+                                public void run() {
+                                    buyStockWindow(table);
+                                    portfolioTable();
+                                }
+                            })
+                            .addAction("Sell", new Runnable() {
+                                @Override
+                                public void run() {
+                                    sellStockWindow(table);
+                                    portfolioTable();
+                                }
+                            }).build().showDialog(textGUI);
+                }
+            });
+        }
         tickerPanel.removeAllComponents();
         tickerPanel.addComponent(new Label("Portfolio").addStyle(SGR.BOLD).addStyle(SGR.UNDERLINE));
         Panel functions = new Panel().setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
@@ -295,17 +298,17 @@ public class JBKRMobile {
                                     table.getTableModel().addRow(API.getSymbol() + "", API.getPrice() + "",
                                             API.getChange() + "",
                                             API.getPercentChange() + "%");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                table.setSelectAction(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (loggedIn) {
-                                            buyStockWindow(table);
+
+                                    table.setSelectAction(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (loggedIn) {
+                                                buyStockWindow(table);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                } catch (Exception e) {
+                                }
                                 tickerPanel.removeAllComponents();
                                 tickerPanel
                                         .addComponent(new Label("Search").addStyle(SGR.BOLD).addStyle(SGR.UNDERLINE));
@@ -667,7 +670,6 @@ public class JBKRMobile {
                 try {
                     screen.stopScreen();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }

@@ -75,7 +75,6 @@ public class Login {
         } catch (FileNotFoundException e) {
             return null;
         } catch (IOException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -118,7 +117,6 @@ public class Login {
                     return new Child(username, password);
                 }
             } catch (IOException i) {
-                e.printStackTrace();
             }
         }
         return null;
