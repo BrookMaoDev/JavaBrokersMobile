@@ -37,6 +37,22 @@ public class Transaction {
         return date;
     }
 
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public String getTicker() {
+        return ticker;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
     /**
      * Determines whether or not this transaction occured in the provided date
      *
