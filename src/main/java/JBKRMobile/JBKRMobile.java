@@ -67,7 +67,7 @@ public class JBKRMobile {
     }
 
     /**
-     * @return Returns a table containing scraped data about stocks
+     * @return Returns a table containing stock data from StockData class
      */
     public Table<String> generateData() {
         ArrayList<String> data = StockData.getData(DEFAULT_DATA_SETTING);
@@ -95,6 +95,9 @@ public class JBKRMobile {
         return table;
     }
 
+    /**
+     * Updates TUI sidebar buttons depending on state
+     */
     private void updateSidebar() {
         sidePanel.removeAllComponents();
         double funds = user.getFunds();
@@ -128,6 +131,10 @@ public class JBKRMobile {
         sidePanel.addComponent(exit);
     }
 
+    /**
+     * @param table: Table of clicked ticker
+     * @return boolean indicating stock purchase status
+     */
     private boolean buyStockWindow(Table<String> table) {
         String ticker = table.getTableModel()
                 .getRow(table.getSelectedRow()).get(0);
@@ -163,6 +170,10 @@ public class JBKRMobile {
         return false;
     }
 
+    /**
+     * @param table: Table of clicked ticker
+     * @return boolean indicating stock sell status
+     */
     private boolean sellStockWindow(Table<String> table) {
         String ticker = table.getTableModel()
                 .getRow(table.getSelectedRow()).get(0);
@@ -199,6 +210,9 @@ public class JBKRMobile {
         return false;
     }
 
+    /**
+     * Displays table containing stocks in portfolio
+     */
     private void portfolioTable() {
         ArrayList<OwnedStock> data = user.getPortfolio();
         table = new Table<String>("Ticker", "Price", "Change", "% Change", "Quantity");
@@ -245,6 +259,9 @@ public class JBKRMobile {
 
     }
 
+    /**
+     * Run method that initiates TUI and buttons
+     */
     public void run() {
         DefaultTerminalFactory terminal = new DefaultTerminalFactory().setTerminalEmulatorTitle("JBKR Mobile")
                 .setTerminalEmulatorColorConfiguration(
