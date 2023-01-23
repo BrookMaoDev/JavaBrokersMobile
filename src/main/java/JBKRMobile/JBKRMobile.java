@@ -33,8 +33,8 @@ public class JBKRMobile {
     Panel tickerPanel;
     Panel sidePanel;
 
-    private static int maxQuery = 50;
-    private Table<String> table;
+    private static int maxQuery = 50; // max amount of stocks being displayed
+    private Table<String> table; // table displaying stocks
     private boolean loggedIn; // true if the user is logged in
 
     private String username; // username of investor
