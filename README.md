@@ -2,7 +2,7 @@
 
 ---
 
-JBKR Mobile is a stock trading simulator inspired by hollywood movies, where stock data in white text is displayed on several black monitors for a stock broker to ignore.
+JBKR Mobile (Java Brokers Mobile) is a stock trading simulator inspired by hollywood movies, where stock data in white text is displayed on several black monitors for a stock broker to ignore.
 We decided to build this project in order to add color to these stock trading interfaces, so now stock brokers can ignore colorful monitors rather than black and white ones.
 The desktop app was built using [**Lanterna**](https://github.com/mabe02/lanterna) for the TUI, and [**yahoofinance-api**](https://github.com/sstrickx/yahoofinance-api) to pull stock data from the NYSE and NASDAQ</td>
 
