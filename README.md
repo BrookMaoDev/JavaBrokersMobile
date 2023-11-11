@@ -4,6 +4,8 @@ JBKR Mobile (Java Brokers Mobile) is a stock trading simulator inspired by Holly
 
 ![JBKR Mobile](https://github.com/wang-owen/JBKR-Mobile/assets/69203168/9bc91515-cfc4-459c-a814-54f108e8fa7a)
 
+### Check out our software planning UML diagram on [Lucidchart](https://lucid.app/documents/view/7044a729-50ac-48f7-a6cd-f85f6570feef).
+
 ## Features
 
 ### 📈 Stock Data
